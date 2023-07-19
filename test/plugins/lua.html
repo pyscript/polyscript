@@ -10,10 +10,10 @@
             }
         </style>
         <script type="importmap">
-            { "imports": { "@pyscript/core": "../../core.js" } }
+            { "imports": { "polyscript": "../../core.js" } }
         </script>
         <script type="module">
-            import { define } from "@pyscript/core";
+            import { define } from "polyscript";
             define("lua", {
                 interpreter: "wasmoon",
                 async onInterpreterReady(wasmoon, element) {

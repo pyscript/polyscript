@@ -10,10 +10,10 @@
             }
         </style>
         <script type="importmap">
-            { "imports": { "@pyscript/core": "../../core.js" } }
+            { "imports": { "polyscript": "../../core.js" } }
         </script>
         <script type="module">
-            import { define, whenDefined } from "@pyscript/core";
+            import { define, whenDefined } from "polyscript";
             whenDefined("mpy").then(console.log);
             define("mpy", {
                 interpreter: "micropython",
