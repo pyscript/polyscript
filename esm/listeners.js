@@ -1,16 +1,11 @@
-import { $x } from "basic-devtools";
+import { $x } from 'basic-devtools';
 
-import { interpreters } from "./script-handler.js";
-import { all, create, defineProperty } from "./utils.js";
-import { registry, prefixes } from "./interpreters.js";
+import { interpreters } from './script-handler.js';
+import { all, create } from './utils.js';
+import { registry, prefixes } from './interpreters.js';
 
-// TODO: this is ugly; need to find a better way
-defineProperty(globalThis, "polyscript", {
-    value: {
-        env: new Proxy(create(null), {
-            get: (_, name) => awaitInterpreter(name),
-        }),
-    },
+export const env = new Proxy(create(null), {
+    get: (_, name) => awaitInterpreter(name),
 });
 
 /* c8 ignore start */ // attributes are tested via integration / e2e
@@ -24,8 +19,8 @@ const awaitInterpreter = async (key) => {
     const available = interpreters.size
         ? `Available interpreters are: ${[...interpreters.keys()]
               .map((r) => `"${r}"`)
-              .join(", ")}.`
-        : `There are no interpreters in this page.`;
+              .join(', ')}.`
+        : 'There are no interpreters in this page.';
 
     throw new Error(`The interpreter "${key}" was not found. ${available}`);
 };
@@ -33,7 +28,7 @@ const awaitInterpreter = async (key) => {
 export const listener = async (event) => {
     const { type, currentTarget } = event;
     for (let { name, value, ownerElement: el } of $x(
-        `./@*[${prefixes.map((p) => `name()="${p}${type}"`).join(" or ")}]`,
+        `./@*[${prefixes.map((p) => `name()="${p}${type}"`).join(' or ')}]`,
         currentTarget,
     )) {
         name = name.slice(0, -(type.length + 1));
@@ -53,11 +48,11 @@ export const addAllListeners = (root) => {
     for (let { name, ownerElement: el } of $x(
         `.//@*[${prefixes
             .map((p) => `starts-with(name(),"${p}")`)
-            .join(" or ")}]`,
+            .join(' or ')}]`,
         root,
     )) {
-        name = name.slice(name.lastIndexOf("-") + 1);
-        if (name !== "env") el.addEventListener(name, listener);
+        name = name.slice(name.lastIndexOf('-') + 1);
+        if (name !== 'env') el.addEventListener(name, listener);
     }
 };
 /* c8 ignore stop */

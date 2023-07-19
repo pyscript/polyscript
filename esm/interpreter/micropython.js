@@ -1,17 +1,17 @@
-import { fetchPaths, stdio, writeFile } from "./_utils.js";
-import { registerJSModule, run, runAsync, runEvent } from "./_python.js";
+import { fetchPaths, stdio, writeFile } from './_utils.js';
+import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 
-const type = "micropython";
+const type = 'micropython';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 export default {
     type,
-    module: (version = "1.20.0-297") =>
+    module: (version = '1.20.0-297') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url) {
         const { stderr, stdout, get } = stdio();
-        url = url.replace(/\.m?js$/, ".wasm");
+        url = url.replace(/\.m?js$/, '.wasm');
         const interpreter = await get(loadMicroPython({ stderr, stdout, url }));
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         return interpreter;

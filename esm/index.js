@@ -1,32 +1,33 @@
-import { $$ } from "basic-devtools";
+import { $$ } from 'basic-devtools';
 
-import xworker from "./worker/class.js";
-import { handle } from "./script-handler.js";
-import { assign } from "./utils.js";
-import { selectors, prefixes } from "./interpreters.js";
-import { CUSTOM_SELECTORS, handleCustomType } from "./custom.js";
-import { listener, addAllListeners } from "./listeners.js";
+import xworker from './worker/class.js';
+import { handle } from './script-handler.js';
+import { assign } from './utils.js';
+import { selectors, prefixes } from './interpreters.js';
+import { CUSTOM_SELECTORS, handleCustomType } from './custom.js';
+import { listener, addAllListeners } from './listeners.js';
 
-export { define, whenDefined } from "./custom.js";
+export { define, whenDefined } from './custom.js';
+export { env } from './listeners.js';
 export const XWorker = xworker();
 
-const INTERPRETER_SELECTORS = selectors.join(",");
+const INTERPRETER_SELECTORS = selectors.join(',');
 
 const mo = new MutationObserver((records) => {
     for (const { type, target, attributeName, addedNodes } of records) {
         // attributes are tested via integration / e2e
         /* c8 ignore start */
-        if (type === "attributes") {
-            const i = attributeName.lastIndexOf("-") + 1;
+        if (type === 'attributes') {
+            const i = attributeName.lastIndexOf('-') + 1;
             if (i) {
                 const prefix = attributeName.slice(0, i);
                 for (const p of prefixes) {
                     if (prefix === p) {
                         const type = attributeName.slice(i);
-                        if (type !== "env") {
+                        if (type !== 'env') {
                             const method = target.hasAttribute(attributeName)
-                                ? "add"
-                                : "remove";
+                                ? 'add'
+                                : 'remove';
                             target[`${method}EventListener`](type, listener);
                         }
                         break;
@@ -43,7 +44,7 @@ const mo = new MutationObserver((records) => {
                     $$(INTERPRETER_SELECTORS, node).forEach(handle);
                     if (!CUSTOM_SELECTORS.length) continue;
                     handleCustomType(node);
-                    $$(CUSTOM_SELECTORS.join(","), node).forEach(
+                    $$(CUSTOM_SELECTORS.join(','), node).forEach(
                         handleCustomType,
                     );
                 }

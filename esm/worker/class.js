@@ -1,9 +1,9 @@
-import * as JSON from "@ungap/structured-clone/json";
-import coincident from "coincident/window";
-import xworker from "./xworker.js";
-import { assign, defineProperties, absoluteURL } from "../utils.js";
-import { getText } from "../fetch-utils.js";
-import { Hook } from "./hooks.js";
+import * as JSON from '@ungap/structured-clone/json';
+import coincident from 'coincident/window';
+import xworker from './xworker.js';
+import { assign, defineProperties, absoluteURL } from '../utils.js';
+import { getText } from '../fetch-utils.js';
+import { Hook } from './hooks.js';
 
 /**
  * @typedef {Object} WorkerOptions custom configuration
@@ -53,7 +53,7 @@ export default (...args) =>
 
         if (isHook) this.onWorkerReady?.(this.interpreter, worker);
 
-        worker.addEventListener("message", (event) => {
+        worker.addEventListener('message', (event) => {
             if (event.data instanceof Error) {
                 event.stopImmediatePropagation();
                 worker.onerror(event);

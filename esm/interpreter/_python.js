@@ -1,4 +1,4 @@
-import { clean } from "./_utils.js";
+import { clean } from './_utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -14,7 +14,7 @@ export const runAsync = (interpreter, code) =>
 export const runEvent = async (interpreter, code, event) => {
     // allows method(event) as well as namespace.method(event)
     // it does not allow fancy brackets names for now
-    const [name, ...keys] = code.split(".");
+    const [name, ...keys] = code.split('.');
     let target = interpreter.globals.get(name);
     let context;
     for (const key of keys) [context, target] = [target, target[key]];

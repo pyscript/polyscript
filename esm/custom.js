@@ -1,17 +1,13 @@
-import "@ungap/with-resolvers";
-import { $$ } from "basic-devtools";
+import '@ungap/with-resolvers';
+import { $$ } from 'basic-devtools';
 
-import { assign, create } from "./utils.js";
-import { getDetails } from "./script-handler.js";
-import {
-    registry as defaultRegistry,
-    prefixes,
-    configs,
-} from "./interpreters.js";
-import { getRuntimeID } from "./loader.js";
-import { io } from "./interpreter/_utils.js";
-import { addAllListeners } from "./listeners.js";
-import { Hook } from "./worker/hooks.js";
+import { assign, create } from './utils.js';
+import { getDetails } from './script-handler.js';
+import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
+import { getRuntimeID } from './loader.js';
+import { io } from './interpreter/_utils.js';
+import { addAllListeners } from './listeners.js';
+import { Hook } from './worker/hooks.js';
 
 export const CUSTOM_SELECTORS = [];
 
@@ -49,7 +45,7 @@ export const handleCustomType = (node) => {
                     onInterpreterReady,
                 } = options;
                 const name = getRuntimeID(runtime, version);
-                const id = env || `${name}${config ? `|${config}` : ""}`;
+                const id = env || `${name}${config ? `|${config}` : ''}`;
                 const { interpreter: engine, XWorker: Worker } = getDetails(
                     runtime,
                     id,
@@ -79,7 +75,7 @@ export const handleCustomType = (node) => {
 
                     // patch sync
                     for (const [name, [before, after]] of [
-                        ["run", [onBeforeRun, onAfterRun]],
+                        ['run', [onBeforeRun, onAfterRun]],
                     ]) {
                         const method = module[name];
                         module[name] = function (interpreter, code) {
@@ -92,7 +88,7 @@ export const handleCustomType = (node) => {
 
                     // patch async
                     for (const [name, [before, after]] of [
-                        ["runAsync", [onBeforeRunAsync, onAfterRunAsync]],
+                        ['runAsync', [onBeforeRunAsync, onAfterRunAsync]],
                     ]) {
                         const method = module[name];
                         module[name] = async function (interpreter, code) {
@@ -107,7 +103,7 @@ export const handleCustomType = (node) => {
                         };
                     }
 
-                    module.registerJSModule(interpreter, "xworker", {
+                    module.registerJSModule(interpreter, 'xworker', {
                         XWorker,
                     });
 
@@ -154,7 +150,7 @@ export const define = (type, options) => {
         throw new Error(`<script type="${type}"> already registered`);
 
     if (!defaultRegistry.has(options?.interpreter))
-        throw new Error(`Unspecified interpreter`);
+        throw new Error('Unspecified interpreter');
 
     // allows reaching out the interpreter helpers on events
     defaultRegistry.set(type, defaultRegistry.get(options?.interpreter));
@@ -176,7 +172,7 @@ export const define = (type, options) => {
     });
 
     addAllListeners(document);
-    $$(selectors.join(",")).forEach(handleCustomType);
+    $$(selectors.join(',')).forEach(handleCustomType);
 };
 
 /**

@@ -1,10 +1,10 @@
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 const workerHooks = [
-    ["beforeRun", "codeBeforeRunWorker"],
-    ["beforeRunAsync", "codeBeforeRunWorkerAsync"],
-    ["afterRun", "codeAfterRunWorker"],
-    ["afterRunAsync", "codeAfterRunWorkerAsync"],
+    ['beforeRun', 'codeBeforeRunWorker'],
+    ['beforeRunAsync', 'codeBeforeRunWorkerAsync'],
+    ['afterRun', 'codeAfterRunWorker'],
+    ['afterRunAsync', 'codeAfterRunWorkerAsync'],
 ];
 
 export class Hook {

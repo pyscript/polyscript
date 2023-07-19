@@ -2,7 +2,7 @@
 //    The :RUNTIMES comment is a delimiter and no code should be written/changed after
 //    See rollup/build_interpreters.cjs to know more
 
-import { base } from "./interpreter/_utils.js";
+import { base } from './interpreter/_utils.js';
 
 /** @type {Map<string, object>} */
 export const registry = new Map();
@@ -19,10 +19,10 @@ export const prefixes = [];
 export const interpreter = new Proxy(new Map(), {
     get(map, id) {
         if (!map.has(id)) {
-            const [type, ...rest] = id.split("@");
+            const [type, ...rest] = id.split('@');
             const interpreter = registry.get(type);
             const url = /^https?:\/\//i.test(rest)
-                ? rest.join("@")
+                ? rest.join('@')
                 : interpreter.module(...rest);
             map.set(id, {
                 url,
@@ -50,9 +50,9 @@ const register = (interpreter) => {
 };
 
 //:RUNTIMES
-import micropython from "./interpreter/micropython.js";
-import pyodide from "./interpreter/pyodide.js";
-import ruby_wasm_wasi from "./interpreter/ruby-wasm-wasi.js";
-import wasmoon from "./interpreter/wasmoon.js";
+import micropython from './interpreter/micropython.js';
+import pyodide from './interpreter/pyodide.js';
+import ruby_wasm_wasi from './interpreter/ruby-wasm-wasi.js';
+import wasmoon from './interpreter/wasmoon.js';
 for (const interpreter of [micropython, pyodide, ruby_wasm_wasi, wasmoon])
     register(interpreter);

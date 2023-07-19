@@ -1,7 +1,7 @@
-import "@ungap/with-resolvers";
+import '@ungap/with-resolvers';
 
-import { getBuffer } from "../fetch-utils.js";
-import { absoluteURL } from "../utils.js";
+import { getBuffer } from '../fetch-utils.js';
+import { absoluteURL } from '../utils.js';
 
 /**
  * Trim code only if it's a single line that prettier or other tools might have modified.
@@ -49,62 +49,62 @@ export const writeFileShim = (FS, path, buffer) => {
 };
 
 const dirname = (path) => {
-    const tree = path.split("/");
+    const tree = path.split('/');
     tree.pop();
-    return tree.join("/");
+    return tree.join('/');
 };
 
 const mkdirTree = (FS, path) => {
     const current = [];
-    for (const branch of path.split("/")) {
-        if (branch === ".") continue;
+    for (const branch of path.split('/')) {
+        if (branch === '.') continue;
         current.push(branch);
-        if (branch) FS.mkdir(current.join("/"));
+        if (branch) FS.mkdir(current.join('/'));
     }
 };
 
 const resolve = (FS, path) => {
     const tree = [];
-    for (const branch of path.split("/")) {
+    for (const branch of path.split('/')) {
         switch (branch) {
-            case "":
+            case '':
                 break;
-            case ".":
+            case '.':
                 break;
-            case "..":
+            case '..':
                 tree.pop();
                 break;
             default:
                 tree.push(branch);
         }
     }
-    return [FS.cwd()].concat(tree).join("/").replace(/^\/+/, "/");
+    return [FS.cwd()].concat(tree).join('/').replace(/^\/+/, '/');
 };
 
-import { all, isArray } from "../utils.js";
+import { all, isArray } from '../utils.js';
 
 const calculateFetchPaths = (config_fetch) => {
     // REQUIRES INTEGRATION TEST
     /* c8 ignore start */
-    for (const { files, to_file, from = "" } of config_fetch) {
+    for (const { files, to_file, from = '' } of config_fetch) {
         if (files !== undefined && to_file !== undefined)
             throw new Error(
-                `Cannot use 'to_file' and 'files' parameters together!`,
+                'Cannot use \'to_file\' and \'files\' parameters together!',
             );
-        if (files === undefined && to_file === undefined && from.endsWith("/"))
+        if (files === undefined && to_file === undefined && from.endsWith('/'))
             throw new Error(
                 `Couldn't determine the filename from the path ${from}, please supply 'to_file' parameter.`,
             );
     }
     /* c8 ignore stop */
     return config_fetch.flatMap(
-        ({ from = "", to_folder = ".", to_file, files }) => {
+        ({ from = '', to_folder = '.', to_file, files }) => {
             if (isArray(files))
                 return files.map((file) => ({
                     url: joinPaths([from, file]),
                     path: joinPaths([to_folder, file]),
                 }));
-            const filename = to_file || from.slice(1 + from.lastIndexOf("/"));
+            const filename = to_file || from.slice(1 + from.lastIndexOf('/'));
             return [{ url: from, path: joinPaths([to_folder, filename]) }];
         },
     );
@@ -112,11 +112,11 @@ const calculateFetchPaths = (config_fetch) => {
 
 const joinPaths = (parts) => {
     const res = parts
-        .map((part) => part.trim().replace(/(^[/]*|[/]*$)/g, ""))
-        .filter((p) => p !== "" && p !== ".")
-        .join("/");
+        .map((part) => part.trim().replace(/(^[/]*|[/]*$)/g, ''))
+        .filter((p) => p !== '' && p !== '.')
+        .join('/');
 
-    return parts[0].startsWith("/") ? `/${res}` : res;
+    return parts[0].startsWith('/') ? `/${res}` : res;
 };
 
 const fetchResolved = (config_fetch, url) =>

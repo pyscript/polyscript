@@ -1,4 +1,4 @@
-import { FetchError, ErrorCode } from "./exceptions";
+import { FetchError, ErrorCode } from './exceptions';
 
 /**
  * This is a fetch wrapper that handles any non 200 responses and throws a
@@ -19,7 +19,7 @@ export async function robustFetch(url, options) {
     } catch (err) {
         const error = err;
         let errMsg;
-        if (url.startsWith("http")) {
+        if (url.startsWith('http')) {
             errMsg =
                 `Fetching from URL ${url} failed with error ` +
                 `'${error.message}'. Are your filename and path correct?`;

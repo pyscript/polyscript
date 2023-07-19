@@ -1,7 +1,7 @@
-import { interpreter } from "./interpreters.js";
-import { absoluteURL, resolve } from "./utils.js";
-import { parse } from "./toml.js";
-import { getJSON, getText } from "./fetch-utils.js";
+import { interpreter } from './interpreters.js';
+import { absoluteURL, resolve } from './utils.js';
+import { parse } from './toml.js';
+import { getJSON, getText } from './fetch-utils.js';
 
 /**
  * @param {string} id the interpreter name @ version identifier
@@ -13,9 +13,9 @@ export const getRuntime = (id, config) => {
     if (config) {
         // REQUIRES INTEGRATION TEST
         /* c8 ignore start */
-        if (config.endsWith(".json")) {
+        if (config.endsWith('.json')) {
             options = fetch(config).then(getJSON);
-        } else if (config.endsWith(".toml")) {
+        } else if (config.endsWith('.toml')) {
             options = fetch(config).then(getText).then(parse);
         } else {
             try {
@@ -24,7 +24,7 @@ export const getRuntime = (id, config) => {
                 options = parse(config);
             }
             // make the config a URL to be able to retrieve relative paths from it
-            config = "./config.txt";
+            config = './config.txt';
         }
         config = absoluteURL(config);
         /* c8 ignore stop */
@@ -37,5 +37,5 @@ export const getRuntime = (id, config) => {
  * @param {string} [version] the optional interpreter version
  * @returns
  */
-export const getRuntimeID = (type, version = "") =>
-    `${type}@${version}`.replace(/@$/, "");
+export const getRuntimeID = (type, version = '') =>
+    `${type}@${version}`.replace(/@$/, '');

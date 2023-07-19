@@ -4,12 +4,12 @@
 //    Please check via `npm run size` that worker code is not much
 //    bigger than it used to be before any changes is applied to this file.
 
-import * as JSON from "@ungap/structured-clone/json";
-import coincident from "coincident/window";
+import * as JSON from '@ungap/structured-clone/json';
+import coincident from 'coincident/window';
 
-import { create } from "../utils.js";
-import { registry } from "../interpreters.js";
-import { getRuntime, getRuntimeID } from "../loader.js";
+import { create } from '../utils.js';
+import { registry } from '../interpreters.js';
+import { getRuntime, getRuntimeID } from '../loader.js';
 
 // bails out out of the box with a native/meaningful error
 // in case the SharedArrayBuffer is not available
@@ -18,9 +18,9 @@ try {
 } catch (_) {
     throw new Error(
         [
-            "Unable to use SharedArrayBuffer due insecure environment.",
-            "Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements",
-        ].join("\n"),
+            'Unable to use SharedArrayBuffer due insecure environment.',
+            'Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements',
+        ].join('\n'),
     );
 }
 
@@ -57,7 +57,7 @@ const xworker = {
     postMessage: postMessage.bind(self),
 };
 
-add("message", ({ data: { options, code, hooks } }) => {
+add('message', ({ data: { options, code, hooks } }) => {
     interpreter = (async () => {
         try {
             const { type, version, config, async: isAsync } = options;
@@ -66,7 +66,7 @@ add("message", ({ data: { options, code, hooks } }) => {
                 config,
             );
             const details = create(registry.get(type));
-            const name = `run${isAsync ? "Async" : ""}`;
+            const name = `run${isAsync ? 'Async' : ''}`;
 
             if (hooks) {
                 // patch code if needed
@@ -91,7 +91,7 @@ add("message", ({ data: { options, code, hooks } }) => {
                 }
             }
             // set the `xworker` global reference once
-            details.registerJSModule(interpreter, "xworker", { xworker });
+            details.registerJSModule(interpreter, 'xworker', { xworker });
             // simplify runEvent calls
             runEvent = details.runEvent.bind(details, interpreter);
             // run either sync or async code in the worker
@@ -101,7 +101,7 @@ add("message", ({ data: { options, code, hooks } }) => {
             postMessage(error);
         }
     })();
-    add("error");
-    add("message");
-    add("messageerror");
+    add('error');
+    add('message');
+    add('messageerror');
 });

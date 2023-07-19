@@ -40,7 +40,7 @@ globalThis.XPathEvaluator =
         }
     };
 
-require("../cjs");
+const polyscript = require("../cjs");
 
 (async () => {
     // shared 3rd party mocks

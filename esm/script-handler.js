@@ -1,10 +1,10 @@
-import { $ } from "basic-devtools";
+import { $ } from 'basic-devtools';
 
-import xworker from "./worker/class.js";
-import { getRuntime, getRuntimeID } from "./loader.js";
-import { registry } from "./interpreters.js";
-import { all, resolve, defineProperty, absoluteURL } from "./utils.js";
-import { getText } from "./fetch-utils.js";
+import xworker from './worker/class.js';
+import { getRuntime, getRuntimeID } from './loader.js';
+import { registry } from './interpreters.js';
+import { all, resolve, defineProperty, absoluteURL } from './utils.js';
+import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
     let parent = script;
@@ -29,7 +29,7 @@ const targetDescriptor = {
         return target;
     },
     set(target) {
-        if (typeof target === "string")
+        if (typeof target === 'string')
             targets.set(this, queryTarget(this, target));
         else {
             targets.set(this, target);
@@ -54,12 +54,12 @@ const execute = async (script, source, XWorker, isAsync) => {
     try {
         // temporarily override inherited document.currentScript in a non writable way
         // but it deletes it right after to preserve native behavior (as it's sync: no trouble)
-        defineProperty(document, "currentScript", {
+        defineProperty(document, 'currentScript', {
             configurable: true,
             get: () => script,
         });
-        module.registerJSModule(interpreter, "xworker", { XWorker });
-        return module[isAsync ? "runAsync" : "run"](interpreter, content);
+        module.registerJSModule(interpreter, 'xworker', { XWorker });
+        return module[isAsync ? 'runAsync' : 'run'](interpreter, content);
     } finally {
         delete document.currentScript;
     }
@@ -68,7 +68,7 @@ const execute = async (script, source, XWorker, isAsync) => {
 
 const getValue = (ref, prefix) => {
     const value = ref?.value;
-    return value ? prefix + value : "";
+    return value ? prefix + value : '';
 };
 
 export const getDetails = (type, id, name, version, config) => {
@@ -96,7 +96,7 @@ export const handle = async (script) => {
         const { target } = script;
         if (target) {
             // if the script is in the head just append target to the body
-            if (script.closest("head")) document.body.append(target);
+            if (script.closest('head')) document.body.append(target);
             // in any other case preserve the script position
             else script.after(target);
         }
@@ -113,15 +113,15 @@ export const handle = async (script) => {
         } = script;
         const versionValue = version?.value;
         const name = getRuntimeID(type, versionValue);
-        const targetValue = getValue(target, "");
-        let configValue = getValue(config, "|");
-        const id = getValue(env, "") || `${name}${configValue}`;
+        const targetValue = getValue(target, '');
+        let configValue = getValue(config, '|');
+        const id = getValue(env, '') || `${name}${configValue}`;
         configValue = configValue.slice(1);
         if (configValue) configValue = absoluteURL(configValue);
         const details = getDetails(type, id, name, versionValue, configValue);
 
         handled.set(
-            defineProperty(script, "target", targetDescriptor),
+            defineProperty(script, 'target', targetDescriptor),
             details,
         );
 

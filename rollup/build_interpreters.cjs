@@ -1,11 +1,11 @@
 // ⚠️ This files modifies at build time esm/interpreters.js so that
 //    it's impossible to forget to export a interpreter from esm/interpreter folder.
 
-const { join, resolve } = require("node:path");
-const { readdirSync, readFileSync, writeFileSync } = require("node:fs");
+const { join, resolve } = require('node:path');
+const { readdirSync, readFileSync, writeFileSync } = require('node:fs');
 
-const RUNTIMES_DIR = resolve(join(__dirname, "..", "esm", "interpreter"));
-const RUNTIMES_JS = resolve(join(__dirname, "..", "esm", "interpreters.js"));
+const RUNTIMES_DIR = resolve(join(__dirname, '..', 'esm', 'interpreter'));
+const RUNTIMES_JS = resolve(join(__dirname, '..', 'esm', 'interpreters.js'));
 
 const createRuntimes = () => {
     const interpreters = [];
@@ -16,21 +16,21 @@ const createRuntimes = () => {
     // generate the output to append at the end of the file
     const output = [];
     for (let i = 0; i < interpreters.length; i++) {
-        const interpreter = interpreters[i].replace(/-/g, "_");
+        const interpreter = interpreters[i].replace(/-/g, '_');
         output.push(
-            `import ${interpreter.replace(/-/g, "_")} from "./interpreter/${
+            `import ${interpreter.replace(/-/g, '_')} from './interpreter/${
                 interpreters[i]
-            }.js";`,
+            }.js';`,
         );
         interpreters[i] = interpreter;
     }
     output.push(
         `
-for (const interpreter of [${interpreters.join(", ")}])
+for (const interpreter of [${interpreters.join(', ')}])
     register(interpreter);
 `.trim(),
     );
-    return output.join("\n");
+    return output.join('\n');
 };
 
 writeFileSync(

@@ -1,5 +1,5 @@
-import '/core.js';
+import { env } from '/core.js';
 
-export const init = name => polyscript.env[name].then(() => {
+export const init = name => env[name].then(() => {
     document.documentElement.classList.add('ready');
 });
