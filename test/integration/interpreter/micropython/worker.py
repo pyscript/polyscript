@@ -1,4 +1,4 @@
-from xworker import xworker
+from polyscript import xworker
 
 document = xworker.window.document
 

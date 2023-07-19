@@ -91,7 +91,7 @@ add('message', ({ data: { options, code, hooks } }) => {
                 }
             }
             // set the `xworker` global reference once
-            details.registerJSModule(interpreter, 'xworker', { xworker });
+            details.registerJSModule(interpreter, 'polyscript', { xworker });
             // simplify runEvent calls
             runEvent = details.runEvent.bind(details, interpreter);
             // run either sync or async code in the worker

@@ -1,6 +1,6 @@
 import re
 import a, b
-from xworker import xworker
+from polyscript import xworker
 
 
 def on_message(event):

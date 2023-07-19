@@ -1,5 +1,5 @@
 import time
-from xworker import xworker
+from polyscript import xworker
 
 time.sleep = xworker.sync.sleep
 

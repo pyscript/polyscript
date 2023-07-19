@@ -10,19 +10,8 @@
     </head>
     <body>
         <script type="micropython">
-            from xworker import XWorker
+            from polyscript import XWorker
             w = XWorker('./matplot.py', **{'type': 'pyodide', 'config': './config.toml'})
-
-            # xworker.window made the following completely unnecessary
-
-            # def show_image(event):
-            #   from js import document
-            #   img = document.createElement("img")
-            #   img.style.transform = "scale(.5)"
-            #   img.src = event.data
-            #   document.querySelector("#image").append(img)
-
-            # w.onmessage = show_image
         </script>
         <div id="image"></div>
     </body>

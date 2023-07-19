@@ -1,6 +1,6 @@
 import js
 import matplotlib
-from xworker import xworker
+from polyscript import xworker
 
 try:
     js.document
@@ -47,12 +47,6 @@ buf = io.BytesIO()
 plt.savefig(buf, format="png")
 buf.seek(0)
 
-# how it was (including main thread counter part)
-# js.xworker.postMessage(
-#     "data:image/png;base64," + base64.b64encode(buf.read()).decode("UTF-8")
-# )
-
-# how it is now via structured coincident/window
 document = xworker.window.document
 img = document.createElement("img")
 img.style.transform = "scale(.5)"

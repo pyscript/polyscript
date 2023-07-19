@@ -11,7 +11,7 @@
 <body>
     <script type="pyodide">
         import asyncio
-        from xworker import XWorker
+        from polyscript import XWorker
 
         XWorker('./sync.py').sync.sleep = asyncio.sleep
     </script>

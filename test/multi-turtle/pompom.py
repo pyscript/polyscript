@@ -29,7 +29,7 @@ for i in range(100):
 turtle.Screen().show_scene()
 result = turtle.svg()
 
-from xworker import xworker
+from polyscript import xworker
 
 document = xworker.window.document
 

@@ -229,11 +229,11 @@ Please read the [Terminology](#terminology) **target** dedicated details to know
   <summary><strong>XWorker</strong></summary>
   <div>
 
-With or without access to the `document`, every (*non experimental*) interpreter will have defined, either at the global level or after an import (i.e.`from xworker import XWorker` in *Python* case), a reference to the `XWorker` "_class_" (it's just a *function*!), which goal is to enable off-loading heavy operations on a worker, without blocking the main / UI thread (the current page) and allowing such worker to even reach the `document` or anything else available on the very same main / UI thread.
+With or without access to the `document`, every (*non experimental*) interpreter will have defined, either at the global level or after an import (i.e.`from polyscript import XWorker` in *Python* case), a reference to the `XWorker` "_class_" (it's just a *function*!), which goal is to enable off-loading heavy operations on a worker, without blocking the main / UI thread (the current page) and allowing such worker to even reach the `document` or anything else available on the very same main / UI thread.
 
 ```html
 <script type="micropython">
-    from xworker import XWorker
+    from polyscript import XWorker
     print(XWorker != None)
 </script>
 ```
@@ -293,7 +293,7 @@ Whenever computing relatively expensive stuff, such as a *matplot* image, or lit
 
 `polyscript` adds a functionality called `XWorker` to all of the interpreters it offers, which works in each language the way `Worker` does in JavaScript.
 
-In each Interpreter, `XWorker` is either global reference or an import (i.e.`from xworker import XWorker` in *Python* case) module's utility, with a counter `xworker` (lower case) global reference, or an import (i.e.`from xworker import xworker` in *Python* case) module's utility, within the worker code.
+In each Interpreter, `XWorker` is either global reference or an import (i.e.`from polyscript import XWorker` in *Python* case) module's utility, with a counter `xworker` (lower case) global reference, or an import (i.e.`from polyscript import xworker` in *Python* case) module's utility, within the worker code.
 
 In short, the `XWorker` utility is to help, without much thinking, to run any desired interpreter out of a *Worker*, enabling extra features on the *worker*'s code side.
 
@@ -330,6 +330,7 @@ The returning *JS* reference to any `XWorker(...)` call is literally a `Worker` 
 | sync      | `sync = XWorker('./file.py').sync` | Allows exposure of callbacks that can be run synchronously from the worker file, even if the defined callback is *asynchronous*. This property is also available in the `xworker` reference. |
 
 ```python
+from polyscript import XWorker
 
 sync = XWorker('./file.py').sync
 
@@ -345,13 +346,15 @@ sync.from_main = from_main
 In the `xworker` counter part:
 
 ```python
+from polyscript import xworker
+
 # will log 1 and "two" in default stdout console
 xworker.sync.from_main(1, "two")
 ```
 
 ### The xworker reference
 
-The content of the file used to initialize any `XWorker` on the main thread can always reach the `xworker` counter part as globally available or as import (i.e.`from xworker import xworker` in *Python* case) module's utility.
+The content of the file used to initialize any `XWorker` on the main thread can always reach the `xworker` counter part as globally available or as import (i.e.`from polyscript import xworker` in *Python* case) module's utility.
 
 Within a *Worker* execution context, the `xworker` exposes the following features:
 
@@ -362,6 +365,8 @@ Within a *Worker* execution context, the `xworker` exposes the following feature
 | isWindowProxy | `xworker.isWindowProxy(ref)`               | **Advanced** - Allows introspection of *JS* references, helping differentiating between local worker references, and main thread global JS references. This is valid both for non primitive objects (array, dictionaries) as well as functions, as functions are also enabled via `xworker.window` in both ways: we can add a listener from the worker or invoke a function in the main. Please note that functions passed to the main thread will always be invoked asynchronously.
 
 ```python
+from polyscript import xworker
+
 print(xworker.window.document.title)
 
 xworker.window.document.body.append("Hello Main Thread")
@@ -377,6 +382,8 @@ This helper does not interfere with the global context but it still ensure a fun
 
 ```python
 # main
+from polyscript import XWorker
+
 def alert_user(message):
     import js
     js.alert(message)
@@ -387,6 +394,8 @@ w.sync.alert_user = alert_user
 
 
 # thread
+from polyscript import xworker
+
 if condition == None:
     xworker.sync.alert_user('something wrong!')
 ```

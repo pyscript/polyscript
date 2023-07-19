@@ -58,7 +58,7 @@ const execute = async (script, source, XWorker, isAsync) => {
             configurable: true,
             get: () => script,
         });
-        module.registerJSModule(interpreter, 'xworker', { XWorker });
+        module.registerJSModule(interpreter, 'polyscript', { XWorker });
         return module[isAsync ? 'runAsync' : 'run'](interpreter, content);
     } finally {
         delete document.currentScript;
