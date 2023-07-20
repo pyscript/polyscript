@@ -6,7 +6,7 @@
 
 ## Documentation
 
-Please read [the documentation page](./docs/README.md) to know all the user-facing details around this module.
+Please read [the documentation page](https://pyscript.github.io/polyscript/) to know all the user-facing details around this module.
 
 ## Development
 

@@ -1,4 +1,8 @@
-# Polyscript Documentation
+# Polyscript
+
+<small><strong><a href="https://github.com/pyscript/pyscript">PyScript</a> single core to rule them all</strong></small>
+
+- - -
 
  * [Terminology](#terminology) - what we mean by "_term_" in this document
  * [Bootstrapping core](#bootstrapping-core) - how to enable Polyscript in your page
@@ -14,7 +18,7 @@ This section goal is to avoid confusion around topics discussed in this document
 
 <details>
   <summary><strong>Interpreter</strong></summary>
-  <div>
+  <div markdown=1>
 
 Also commonly referred as *runtime* or *engine*, we consider an **interpreter** any "_piece of software_" able to parse, understand, and ultimately execute, a *Programming Language* through this project.
 
@@ -56,7 +60,7 @@ Custom values for the `type` attribute can also be created which alias (and pote
 
 <details>
   <summary><strong>Target</strong></summary>
-  <div>
+  <div markdown=1>
 
 When it comes to *strings* or *attributes*, we consider the **target** any valid element's *id* on the page or, in most cases, any valid *CSS* selector.
 
@@ -105,7 +109,7 @@ When it comes to the `property` or `field` attached to a `<script>` element thou
 
 <details>
   <summary><strong>Env</strong></summary>
-  <div>
+  <div markdown=1>
 
 ℹ️ - This is an **advanced feature** that is worth describing but usually it is not needed for most common use cases.
 
@@ -202,7 +206,7 @@ These are all special, *script* related features, offered by *polyscript* out of
 
 <details>
   <summary><strong>document.currentScript</strong></summary>
-  <div>
+  <div markdown=1>
 
 No matter the interpreter of choice, if there is any way to reach the `document` from such interpreter, its `currentScript` will point at the exact/very-same script that is currently executing the code, even if its `async` attribute is used, mimicking what the standard [document.currentScript](https://developer.mozilla.org/en-US/docs/Web/API/Document/currentScript) offers already, and in an unobtrusive way for the rest of the page, as this property only exists for *synchronous* and blocking scripts that are running, hence never interfering with this *core* logic or vice-versa.
 
@@ -227,7 +231,7 @@ Please read the [Terminology](#terminology) **target** dedicated details to know
 
 <details>
   <summary><strong>XWorker</strong></summary>
-  <div>
+  <div markdown=1>
 
 With or without access to the `document`, every (*non experimental*) interpreter will have defined, either at the global level or after an import (i.e.`from polyscript import XWorker` in *Python* case), a reference to the `XWorker` "_class_" (it's just a *function*!), which goal is to enable off-loading heavy operations on a worker, without blocking the main / UI thread (the current page) and allowing such worker to even reach the `document` or anything else available on the very same main / UI thread.
 
