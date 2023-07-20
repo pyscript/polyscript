@@ -85,8 +85,8 @@ integration
 
 The [test/integration.spec.js](./test/integration.spec.js) file simply loops over folders that match interpreters _by name_ and execute in parallel all tests.
 
-#### Manual Test
+### Manual Integration Test
 
-To **test manually** an integration test, simply `npm run server` and reach the _html_ file created for that particular test.
+To **test manually** an integration test, simply `npm run server` and visit http://localhost:8080/ or http://localhost:8080/test/integration.html to find a list of all integration tests available in the related folder.
 
 As example, reaching http://localhost:8080/test/integration/interpreter/micropython/fetch.html would log in the console and show expectations on the page and this can be easily tested via multiple browsers by simply reaching the very same integration test.

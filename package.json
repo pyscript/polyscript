@@ -6,10 +6,11 @@
     "types": "./types/index.d.ts",
     "scripts": {
         "server": "npx static-handler --cors --coep --coop --corp .",
-        "build": "npm run rollup:xworker && npm run rollup:core && npm run rollup:pyscript && eslint esm/ && npm run ts && npm run cjs",
+        "build": "npm run rollup:xworker && npm run rollup:core && npm run rollup:pyscript && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
+        "rollup:integrations": "node rollup/build_integrations.cjs",
         "rollup:pyscript": "rollup --config rollup/pyscript.config.js",
         "rollup:xworker": "rollup --config rollup/xworker.config.js",
         "test": "c8 --100 node --experimental-loader @node-loader/import-maps test/index.js && npm run test:integration",
