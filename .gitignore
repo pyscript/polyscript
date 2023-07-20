@@ -4,6 +4,7 @@ node_modules/
 cjs/*
 !cjs/package.json
 core.js
+!docs/core.js
 pyscript.js
 !esm/custom/pyscript.js
 esm/worker/xworker.js

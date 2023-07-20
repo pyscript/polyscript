@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>python workers</title>
+        <!-- allows GitHub pages to serve files with the right headers -->
+        <script src="../../coi.js"></script>
+        <!-- polyscript bootstrap (importmap example) -->
+        <script type="importmap">{"imports":{"polyscript":"../../core.js"}}</script>
+        <script type="module">
+            import "polyscript";
+        </script>
+    </head>
+    <body>
+        <script type="micropython">
+            from js import Promise, document
+            from polyscript import XWorker
+
+            deferred = Promise.withResolvers()
+
+            # resolve the promise with the input value
+            def handle_result(event):
+              inputs = document.querySelectorAll('input')
+              inputs[0].disabled = True
+              inputs[1].disabled = True
+              deferred.resolve(inputs[0].value)
+
+            # allows the worker to ask something as placeholder
+            # resolves the returning on micropython-click event
+            # non-blocking this thread, keeping the worker in idle
+            # until such promise is not resolved
+            def handle_input(placeholder):
+              inputs = document.querySelectorAll('input')
+              inputs[0].placeholder = placeholder
+              inputs[0].disabled = False
+              inputs[1].disabled = False
+              return deferred.promise
+
+            w = XWorker('./input.py')
+
+            # provide a synchronous input callback
+            # to the polyscript's xworker utility
+            w.sync.input = handle_input
+        </script>
+        <input type="text" placeholder="loading ..." required disabled />
+        <input
+            type="submit"
+            micropython-click="handle_result"
+            disabled
+        />
+    </body>
+</html>

@@ -11,6 +11,7 @@ node_modules/
 pyscript/
 rollup/
 test/
+docs/
 index.html
 node.importmap
 sw.js

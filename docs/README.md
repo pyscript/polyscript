@@ -10,6 +10,7 @@
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
+ * [Examples](#examples) - some *polyscript* based live example
 
 
 ## Terminology
@@ -486,3 +487,8 @@ wrap.io.stderr = (message) => {
   console.error("🌑", wrap.type, message);
 };
 ```
+
+## Examples
+
+  * [multi-pompom](./examples/multi-pompom/) - draw 4 pompom via turtle out of 4 different workers
+  * [non-blocking input](./examples/worker-input/) - ask a question from a worker and log results in a sync-like, yet non-blocking, style
