@@ -1,7 +1,7 @@
-addEventListener("fetch", (event) => {
+addEventListener('fetch', event => {
     event.respondWith(
         (async () => {
-            const cache = await caches.open("python-script");
+            const cache = await caches.open('polyscript');
             const cachedResponse = await cache.match(event.request);
             if (cachedResponse) return cachedResponse;
             const networkResponse = await fetch(event.request);
