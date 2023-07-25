@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Panel Example</title>
+        <meta charset="iso-8859-1" />
+        <link rel="icon" type="image/x-icon" href="./favicon.png" />
+    </head>
+    <body>
+        <section class="pyscript">
+            <div id="simple_app"></div>
+
+            <py-tutor>
+                <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.3.js"></script>
+                <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.3.min.js"></script>
+                <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.3.min.js"></script>
+                <script defer src="https://cdn.jsdelivr.net/npm/@holoviz/panel@0.14.1/dist/panel.min.js"></script>
+                
+                <script type="module" src="../../core.js"></script>
+
+                <script type="pyodide" config="./panel.toml">
+                    import panel as pn
+
+                    slider = pn.widgets.FloatSlider(start=0, end=10, name='Amplitude')
+
+                    def callback(new):
+                        return f'Amplitude is: {new}'
+
+                    pn.Row(slider, pn.bind(callback, slider)).servable(target='simple_app')
+                </script>
+            </py-tutor>
+        </section>
+    </body>
+</html>

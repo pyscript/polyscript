@@ -1,0 +1,252 @@
+<html>
+    <head>
+        <title>Panel on a Worker Example</title>
+        <meta charset="iso-8859-1" />
+        <link rel="icon" type="image/x-icon" href="./favicon.png" />
+        <style class="bk" type="text/css">.bk-root{position:relative;width:auto;height:auto;box-sizing:border-box;font-family:Helvetica, Arial, sans-serif;font-size:13px;}.bk-root .bk,.bk-root .bk:before,.bk-root .bk:after{box-sizing:inherit;margin:0;border:0;padding:0;background-image:none;font-family:inherit;font-size:100%;line-height:1.42857143;}.bk-root pre.bk{font-family:Courier, monospace;}.bk-root .bk-logo{margin:5px;position:relative;display:block;background-repeat:no-repeat;}.bk-root .bk-logo.bk-grey{filter:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#grayscale");filter:gray;-webkit-filter:grayscale(100%);}.bk-root .bk-logo-small{width:20px;height:20px;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAOkSURBVDiNjZRtaJVlGMd/1/08zzln5zjP1LWcU9N0NkN8m2CYjpgQYQXqSs0I84OLIC0hkEKoPtiH3gmKoiJDU7QpLgoLjLIQCpEsNJ1vqUOdO7ppbuec5+V+rj4ctwzd8IIbbi6u+8f1539dt3A78eXC7QizUF7gyV1fD1Yqg4JWz84yffhm0qkFqBogB9rM8tZdtwVsPUhWhGcFJngGeWrPzHm5oaMmkfEg1usvLFyc8jLRqDOMru7AyC8saQr7GG7f5fvDeH7Ej8CM66nIF+8yngt6HWaKh7k49Soy9nXurCi1o3qUbS3zWfrYeQDTB/Qj6kX6Ybhw4B+bOYoLKCC9H3Nu/leUTZ1JdRWkkn2ldcCamzrcf47KKXdAJllSlxAOkRgyHsGC/zRday5Qld9DyoM4/q/rUoy/CXh3jzOu3bHUVZeU+DEn8FInkPBFlu3+nW3Nw0mk6vCDiWg8CeJaxEwuHS3+z5RgY+YBR6V1Z1nxSOfoaPa4LASWxxdNp+VWTk7+4vzaou8v8PN+xo+KY2xsw6une2frhw05CTYOmQvsEhjhWjn0bmXPjpE1+kplmmkP3suftwTubK9Vq22qKmrBhpY4jvd5afdRA3wGjFAgcnTK2s4hY0/GPNIb0nErGMCRxWOOX64Z8RAC4oCXdklmEvcL8o0BfkNK4lUg9HTl+oPlQxdNo3Mg4Nv175e/1LDGzZen30MEjRUtmXSfiTVu1kK8W4txyV6BMKlbgk3lMwYCiusNy9fVfvvwMxv8Ynl6vxoByANLTWplvuj/nF9m2+PDtt1eiHPBr1oIfhCChQMBw6Aw0UulqTKZdfVvfG7VcfIqLG9bcldL/+pdWTLxLUy8Qq38heUIjh4XlzZxzQm19lLFlr8vdQ97rjZVOLf8nclzckbcD4wxXMidpX30sFd37Fv/GtwwhzhxGVAprjbg0gCAEeIgwCZyTV2Z1REEW8O4py0wsjeloKoMr6iCY6dP92H6Vw/oTyICIthibxjm/DfN9lVz8IqtqKYLUXfoKVMVQVVJOElGjrnnUt9T9wbgp8AyYKaGlqingHZU/uG2NTZSVqwHQTWkx9hxjkpWDaCg6Ckj5qebgBVbT3V3NNXMSiWSDdGV3hrtzla7J+duwPOToIg42ChPQOQjspnSlp1V+Gjdged7+8UN5CRAV7a5EdFNwCjEaBR27b3W890TE7g24NAP/mMDXRWrGoFPQI9ls/MWO2dWFAar/xcOIImbbpA3zgAAAABJRU5ErkJggg==);}.bk-root .bk-logo-notebook{display:inline-block;vertical-align:middle;margin-right:5px;}.rendered_html .bk-root .bk-tooltip table,.rendered_html .bk-root .bk-tooltip tr,.rendered_html .bk-root .bk-tooltip th,.rendered_html .bk-root .bk-tooltip td{border:none;padding:1px;}.bk-root{}.bk-root .noUi-target,.bk-root .noUi-target *{-webkit-touch-callout:none;-webkit-tap-highlight-color:rgba(0, 0, 0, 0);-webkit-user-select:none;-ms-touch-action:none;touch-action:none;-ms-user-select:none;-moz-user-select:none;user-select:none;-moz-box-sizing:border-box;box-sizing:border-box;}.bk-root .noUi-target{position:relative;}.bk-root .noUi-base,.bk-root .noUi-connects{width:100%;height:100%;position:relative;z-index:1;}.bk-root .noUi-connects{overflow:hidden;z-index:0;}.bk-root .noUi-connect,.bk-root .noUi-origin{will-change:transform;position:absolute;z-index:1;top:0;right:0;-ms-transform-origin:0 0;-webkit-transform-origin:0 0;-webkit-transform-style:preserve-3d;transform-origin:0 0;transform-style:flat;}.bk-root .noUi-connect{height:100%;width:100%;}.bk-root .noUi-origin{height:10%;width:10%;}.bk-root .noUi-txt-dir-rtl.noUi-horizontal .noUi-origin{left:0;right:auto;}.bk-root .noUi-vertical .noUi-origin{width:0;}.bk-root .noUi-horizontal .noUi-origin{height:0;}.bk-root .noUi-handle{-webkit-backface-visibility:hidden;backface-visibility:hidden;position:absolute;}.bk-root .noUi-touch-area{height:100%;width:100%;}.bk-root .noUi-state-tap .noUi-connect,.bk-root .noUi-state-tap .noUi-origin{-webkit-transition:transform 0.3s;transition:transform 0.3s;}.bk-root .noUi-state-drag *{cursor:inherit !important;}.bk-root .noUi-horizontal{height:18px;}.bk-root .noUi-horizontal .noUi-handle{width:34px;height:28px;right:-17px;top:-6px;}.bk-root .noUi-vertical{width:18px;}.bk-root .noUi-vertical .noUi-handle{width:28px;height:34px;right:-6px;top:-17px;}.bk-root .noUi-txt-dir-rtl.noUi-horizontal .noUi-handle{left:-17px;right:auto;}.bk-root .noUi-target{background:#FAFAFA;border-radius:4px;border:1px solid #D3D3D3;box-shadow:inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB;}.bk-root .noUi-connects{border-radius:3px;}.bk-root .noUi-connect{background:#3FB8AF;}.bk-root .noUi-draggable{cursor:ew-resize;}.bk-root .noUi-vertical .noUi-draggable{cursor:ns-resize;}.bk-root .noUi-handle{border:1px solid #D9D9D9;border-radius:3px;background:#FFF;cursor:default;box-shadow:inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;}.bk-root .noUi-active{box-shadow:inset 0 0 1px #FFF, inset 0 1px 7px #DDD, 0 3px 6px -3px #BBB;}.bk-root .noUi-handle:before,.bk-root .noUi-handle:after{content:"";display:block;position:absolute;height:14px;width:1px;background:#E8E7E6;left:14px;top:6px;}.bk-root .noUi-handle:after{left:17px;}.bk-root .noUi-vertical .noUi-handle:before,.bk-root .noUi-vertical .noUi-handle:after{width:14px;height:1px;left:6px;top:14px;}.bk-root .noUi-vertical .noUi-handle:after{top:17px;}.bk-root [disabled] .noUi-connect{background:#B8B8B8;}.bk-root [disabled].noUi-target,.bk-root [disabled].noUi-handle,.bk-root [disabled] .noUi-handle{cursor:not-allowed;}.bk-root .noUi-pips,.bk-root .noUi-pips *{-moz-box-sizing:border-box;box-sizing:border-box;}.bk-root .noUi-pips{position:absolute;color:#999;}.bk-root .noUi-value{position:absolute;white-space:nowrap;text-align:center;}.bk-root .noUi-value-sub{color:#ccc;font-size:10px;}.bk-root .noUi-marker{position:absolute;background:#CCC;}.bk-root .noUi-marker-sub{background:#AAA;}.bk-root .noUi-marker-large{background:#AAA;}.bk-root .noUi-pips-horizontal{padding:10px 0;height:80px;top:100%;left:0;width:100%;}.bk-root .noUi-value-horizontal{-webkit-transform:translate(-50%, 50%);transform:translate(-50%, 50%);}.bk-root .noUi-rtl .noUi-value-horizontal{-webkit-transform:translate(50%, 50%);transform:translate(50%, 50%);}.bk-root .noUi-marker-horizontal.noUi-marker{margin-left:-1px;width:2px;height:5px;}.bk-root .noUi-marker-horizontal.noUi-marker-sub{height:10px;}.bk-root .noUi-marker-horizontal.noUi-marker-large{height:15px;}.bk-root .noUi-pips-vertical{padding:0 10px;height:100%;top:0;left:100%;}.bk-root .noUi-value-vertical{-webkit-transform:translate(0, -50%);transform:translate(0, -50%);padding-left:25px;}.bk-root .noUi-rtl .noUi-value-vertical{-webkit-transform:translate(0, 50%);transform:translate(0, 50%);}.bk-root .noUi-marker-vertical.noUi-marker{width:5px;height:2px;margin-top:-1px;}.bk-root .noUi-marker-vertical.noUi-marker-sub{width:10px;}.bk-root .noUi-marker-vertical.noUi-marker-large{width:15px;}.bk-root .noUi-tooltip{display:block;position:absolute;border:1px solid #D9D9D9;border-radius:3px;background:#fff;color:#000;padding:5px;text-align:center;white-space:nowrap;}.bk-root .noUi-horizontal .noUi-tooltip{-webkit-transform:translate(-50%, 0);transform:translate(-50%, 0);left:50%;bottom:120%;}.bk-root .noUi-vertical .noUi-tooltip{-webkit-transform:translate(0, -50%);transform:translate(0, -50%);top:50%;right:120%;}.bk-root .noUi-horizontal .noUi-origin > .noUi-tooltip{-webkit-transform:translate(50%, 0);transform:translate(50%, 0);left:auto;bottom:10px;}.bk-root .noUi-vertical .noUi-origin > .noUi-tooltip{-webkit-transform:translate(0, -18px);transform:translate(0, -18px);top:auto;right:28px;}.bk-root .noUi-handle{cursor:grab;cursor:-webkit-grab;}.bk-root .noUi-handle.noUi-active{cursor:grabbing;cursor:-webkit-grabbing;}.bk-root .noUi-handle:after,.bk-root .noUi-handle:before{display:none;}.bk-root .noUi-tooltip{display:none;white-space:nowrap;}.bk-root .noUi-handle:hover .noUi-tooltip{display:block;}.bk-root .noUi-horizontal{width:100%;height:10px;}.bk-root .noUi-vertical{width:10px;height:100%;}.bk-root .noUi-horizontal .noUi-handle{width:14px;height:18px;right:-7px;top:-5px;}.bk-root .noUi-vertical .noUi-handle{width:18px;height:14px;right:-5px;top:-7px;}.bk-root .noUi-target.noUi-horizontal{margin:5px 0px;}.bk-root .noUi-target.noUi-vertical{margin:0px 5px;}.bk-root .bk-slider-title{white-space:nowrap;}.bk-root .bk-slider-value{font-weight:600;}.bk-root .bk-clearfix:before,.bk-root .bk-clearfix:after{content:"";display:table;}.bk-root .bk-clearfix:after{clear:both;}</style>
+
+        <style media="screen">.json-formatter-row {
+            font-family: monospace;
+          }
+          .json-formatter-row,
+          .json-formatter-row a,
+          .json-formatter-row a:hover {
+            color: black;
+            text-decoration: none;
+          }
+          .json-formatter-row .json-formatter-row {
+            margin-left: 1rem;
+          }
+          .json-formatter-row .json-formatter-children.json-formatter-empty {
+            opacity: 0.5;
+            margin-left: 1rem;
+          }
+          .json-formatter-row .json-formatter-children.json-formatter-empty:after {
+            display: none;
+          }
+          .json-formatter-row .json-formatter-children.json-formatter-empty.json-formatter-object:after {
+            content: "No properties";
+          }
+          .json-formatter-row .json-formatter-children.json-formatter-empty.json-formatter-array:after {
+            content: "[]";
+          }
+          .json-formatter-row .json-formatter-string,
+          .json-formatter-row .json-formatter-stringifiable {
+            color: green;
+            white-space: pre;
+            word-wrap: break-word;
+          }
+          .json-formatter-row .json-formatter-number {
+            color: blue;
+          }
+          .json-formatter-row .json-formatter-boolean {
+            color: red;
+          }
+          .json-formatter-row .json-formatter-null {
+            color: #855A00;
+          }
+          .json-formatter-row .json-formatter-undefined {
+            color: #ca0b69;
+          }
+          .json-formatter-row .json-formatter-function {
+            color: #FF20ED;
+          }
+          .json-formatter-row .json-formatter-date {
+            background-color: rgba(0, 0, 0, 0.05);
+          }
+          .json-formatter-row .json-formatter-url {
+            text-decoration: underline;
+            color: blue;
+            cursor: pointer;
+          }
+          .json-formatter-row .json-formatter-bracket {
+            color: blue;
+          }
+          .json-formatter-row .json-formatter-key {
+            color: #00008B;
+            padding-right: 0.2rem;
+          }
+          .json-formatter-row .json-formatter-toggler-link {
+            cursor: pointer;
+          }
+          .json-formatter-row .json-formatter-toggler {
+            line-height: 1.2rem;
+            font-size: 0.7rem;
+            vertical-align: middle;
+            opacity: 0.6;
+            cursor: pointer;
+            padding-right: 0.2rem;
+          }
+          .json-formatter-row .json-formatter-toggler:after {
+            display: inline-block;
+            transition: transform 100ms ease-in;
+            content: "►";
+          }
+          .json-formatter-row > a > .json-formatter-preview-text {
+            opacity: 0;
+            transition: opacity 0.15s ease-in;
+            font-style: italic;
+          }
+          .json-formatter-row:hover > a > .json-formatter-preview-text {
+            opacity: 0.6;
+          }
+          .json-formatter-row.json-formatter-open > .json-formatter-toggler-link .json-formatter-toggler:after {
+            transform: rotate(90deg);
+          }
+          .json-formatter-row.json-formatter-open > .json-formatter-children:after {
+            display: inline-block;
+          }
+          .json-formatter-row.json-formatter-open > a > .json-formatter-preview-text {
+            display: none;
+          }
+          .json-formatter-row.json-formatter-open.json-formatter-empty:after {
+            display: block;
+          }
+          .json-formatter-dark.json-formatter-row {
+            font-family: monospace;
+          }
+          .json-formatter-dark.json-formatter-row,
+          .json-formatter-dark.json-formatter-row a,
+          .json-formatter-dark.json-formatter-row a:hover {
+            color: white;
+            text-decoration: none;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-row {
+            margin-left: 1rem;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-children.json-formatter-empty {
+            opacity: 0.5;
+            margin-left: 1rem;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-children.json-formatter-empty:after {
+            display: none;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-children.json-formatter-empty.json-formatter-object:after {
+            content: "No properties";
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-children.json-formatter-empty.json-formatter-array:after {
+            content: "[]";
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-string,
+          .json-formatter-dark.json-formatter-row .json-formatter-stringifiable {
+            color: #31F031;
+            white-space: pre;
+            word-wrap: break-word;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-number {
+            color: #66C2FF;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-boolean {
+            color: #EC4242;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-null {
+            color: #EEC97D;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-undefined {
+            color: #ef8fbe;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-function {
+            color: #FD48CB;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-date {
+            background-color: rgba(255, 255, 255, 0.05);
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-url {
+            text-decoration: underline;
+            color: #027BFF;
+            cursor: pointer;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-bracket {
+            color: #9494FF;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-key {
+            color: #23A0DB;
+            padding-right: 0.2rem;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-toggler-link {
+            cursor: pointer;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-toggler {
+            line-height: 1.2rem;
+            font-size: 0.7rem;
+            vertical-align: middle;
+            opacity: 0.6;
+            cursor: pointer;
+            padding-right: 0.2rem;
+          }
+          .json-formatter-dark.json-formatter-row .json-formatter-toggler:after {
+            display: inline-block;
+            transition: transform 100ms ease-in;
+            content: "►";
+          }
+          .json-formatter-dark.json-formatter-row > a > .json-formatter-preview-text {
+            opacity: 0;
+            transition: opacity 0.15s ease-in;
+            font-style: italic;
+          }
+          .json-formatter-dark.json-formatter-row:hover > a > .json-formatter-preview-text {
+            opacity: 0.6;
+          }
+          .json-formatter-dark.json-formatter-row.json-formatter-open > .json-formatter-toggler-link .json-formatter-toggler:after {
+            transform: rotate(90deg);
+          }
+          .json-formatter-dark.json-formatter-row.json-formatter-open > .json-formatter-children:after {
+            display: inline-block;
+          }
+          .json-formatter-dark.json-formatter-row.json-formatter-open > a > .json-formatter-preview-text {
+            display: none;
+          }
+          .json-formatter-dark.json-formatter-row.json-formatter-open.json-formatter-empty:after {
+            display: block;
+          }
+          </style>
+
+        <script defer src="../counter.js"></script>
+    </head>
+    <body>
+        <section class="pyscript">
+            <div id="simple_app" class="bk-root"></div>
+
+            
+            <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.3.js"></script>
+            <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.3.min.js"></script>
+            <script defer src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.3.min.js"></script>
+            <script defer src="https://cdn.jsdelivr.net/npm/@holoviz/panel@0.14.1/dist/panel.min.js"></script>
+            
+            <script type="module" src="../../core.js"></script>
+
+            
+            <script type="micropython">
+                from polyscript import XWorker
+                import json
+                import js
+
+                w = XWorker('./panel.py', **{'type': 'pyodide', 'async': True, 'config': './panel.toml'})
+
+                def render_full(docs_json_str, render_items_str, root_ids_str):
+                    """
+                    Get the output of a panel write_doc call and render it into the document DOM.
+                    """
+                    print("Back in the main thead")
+                    docs_json = js.JSON.parse(docs_json_str)
+                    render_items = json.loads(render_items_str)
+                    # TODO: this should be just ~ render_items but because of type convertions
+                    #       between JS and micropython make js.Bokeh.embed.embed_items very angry
+                    render_items_js = js.JSON.parse(render_items_str)
+                    root_ids = js.JSON.parse(root_ids_str)
+                    
+                    # Since Bokeh needs the data-rood-ids, we need to inject them in the parent manually
+                    parent = js.document.getElementById('simple_app')
+                    for root_id in render_items[0]['roots'].values():
+                        root_node = js.document.createElement('div')
+                        root_node.setAttribute('id', root_id)
+                        parent.appendChild(root_node)
+
+                    views = js.Bokeh.embed.embed_items(docs_json, render_items_js)
+                
+                w.sync.render_full = render_full
+            </script>
+
+        </section>
+    </body>
+</html>
