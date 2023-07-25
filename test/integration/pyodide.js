@@ -25,4 +25,6 @@ module.exports = (playwright, baseURL) => {
         await expect(text2).toBe('after');
         await expect((time2 - time1) >= 1000).toBe(true);
     });
+
+    test('Pyodide Worker error', python.error(playwright, baseURL));
 };
