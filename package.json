@@ -21,7 +21,12 @@
         "size": "npm run size:module && npm run size:worker",
         "size:module": "echo module is $(cat core.js | brotli | wc -c) bytes once compressed",
         "size:worker": "echo worker is $(cat esm/worker/xworker.js | brotli | wc -c) bytes once compressed",
-        "ts": "tsc -p ."
+        "ts": "tsc -p .",
+        "update:interpreters": "npm run version:pyodide && npm run version:wasmoon && npm run version:ruby-wasm-wasi && npm run version:micropython && node rollup/update_versions.cjs && npm run build && npm run test",
+        "version:micropython": "npm view @micropython/micropython-webassembly-pyscript version>versions/micropython",
+        "version:pyodide": "npm view pyodide version>versions/pyodide",
+        "version:ruby-wasm-wasi": "git ls-remote --tags --refs --sort='v:refname' https://github.com/ruby/ruby.wasm.git | grep 'tags/[[:digit:]]\\.' | tail -n1 | sed 's/.*\\///'>versions/ruby-wasm-wasi",
+        "version:wasmoon": "npm view wasmoon version>versions/wasmoon"
     },
     "keywords": [
         "polyscript",
@@ -63,6 +68,6 @@
         "coincident": "^0.11.1"
     },
     "worker": {
-        "blob": "sha256-zYpFQ3RqzXG119SG8hVbCHo8fRWZd1pfvkyGIxl6DbI="
+        "blob": "sha256-lhFr+ZoXVrPSNB2PaB3TJJ+3DjawsfE9HtZknBaoa7g="
     }
 }
