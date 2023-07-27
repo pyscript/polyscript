@@ -49,10 +49,6 @@ export default (...args) =>
             sync: {
                 value: coincident(worker, JSON).proxy,
             },
-            onerror: {
-                value: (event) =>
-                    console.error(event.data.message, event.data.stack)
-            }
         });
 
         if (isHook) this.onWorkerReady?.(this.interpreter, worker);
