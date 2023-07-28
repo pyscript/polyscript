@@ -49,14 +49,23 @@ export default (...args) =>
             sync: {
                 value: coincident(worker, JSON).proxy,
             },
+            onerror: {
+                writable: true,
+                configurable: true,
+                value: console.error
+            }
         });
 
         if (isHook) this.onWorkerReady?.(this.interpreter, worker);
 
         worker.addEventListener('message', (event) => {
-            if (event.data instanceof Error) {
+            const { data } = event;
+            if (data instanceof Error) {
                 event.stopImmediatePropagation();
-                worker.onerror(event);
+                worker.onerror(Object.create(event, {
+                    type: { value: 'error' },
+                    error: { value: data }
+                }));
             }
         });
 

@@ -51,9 +51,9 @@ const xworker = {
     // allow introspection for foreign (main thread) refrences
     isWindowProxy,
     // standard worker related events / features
-    onerror() {},
-    onmessage() {},
-    onmessageerror() {},
+    onmessage: console.info,
+    onerror: console.error,
+    onmessageerror: console.warn,
     postMessage: postMessage.bind(self),
 };
 
