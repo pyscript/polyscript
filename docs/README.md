@@ -11,6 +11,7 @@
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
  * [Examples](#examples) - some *polyscript* based live example
+ * [Interpreter Features](#interpreter-features) - current state of supported interpreters
 
 
 ## Terminology
@@ -492,3 +493,19 @@ wrap.io.stderr = (message) => {
 
   * [multi-pompom](./examples/multi-pompom/) - draw 4 pompom via turtle out of 4 different workers
   * [non-blocking input](./examples/worker-input/) - ask a question from a worker and log results in a sync-like, yet non-blocking, style
+
+
+## Interpreter Features
+
+| name           | `run` | `runAsync` | `runEvent` | `registerJSModule` | `writeFile` |
+| :------------- | :---: | :--------: | :--------: | :----------------: | :---------: |
+| pyodide        | •     | •          | •          | •                  | •           |
+| micropython    | •     | •          | •          | •                  | •           |
+| wasmoon        | •     | •          | •          |                    | •           |
+| ruby-wasm-wasi | •     | •          | •          |                    |             |
+
+  * **run** allows code to run synchronously and optionally return value
+  * **runAsync** allows code to run asynchronously and optionally return value
+  * **runEvent** allows events to be invoked and receive the `event` object
+  * **registerJSModule** allows `from polyscript import Xworker` or registration of arbitrary modules for *custom types*. It currently fallback to globally defined references/variables whenever it's not possible to register a module.
+  * **writeFile** it's used to save *fetch* config files into virtual FS (usually the one provided by Emscripten). It is then possible to import those files as module within the evaluated code.
