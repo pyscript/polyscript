@@ -33,6 +33,16 @@ exports.python = {
         await expect(result.trim()).toBe('OK');
     },
 
+    configAsObject: ({ expect }, baseURL) => async ({ page }) => {
+        // Test that a config passed as object works out of the box.
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(`${baseURL}/config-object.html`);
+        await page.waitForSelector('html.worker.ready');
+        await expect(logs.length).toBe(1);
+        await expect(logs[0]).toBe('hello from A');
+    },
+
     error: ({ expect }, baseURL) => async ({ page }) => {
         // Test that when the worker throws an error, the page does not crash and the
         // error is reported to the console.

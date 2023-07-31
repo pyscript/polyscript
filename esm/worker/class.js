@@ -30,13 +30,20 @@ export default (...args) =>
             if (!options.type) options.type = type;
         }
 
-        if (options?.config) options.config = absoluteURL(options.config);
+        // provide a base url to fetch or load config files from a Worker
+        // because there's no location at all in the Worker as it's embedded.
+        // fallback to a generic, ignored, config.txt file to still provide a URL.
+        const config = absoluteURL(
+            typeof options.config === 'string' ?
+                options.config :
+                './config.txt'
+        );
 
         const bootstrap = fetch(url)
             .then(getText)
-            .then((code) => {
+            .then(code => {
                 const hooks = isHook ? this.stringHooks : void 0;
-                postMessage.call(worker, { options, code, hooks });
+                postMessage.call(worker, { options, config, code, hooks });
             });
 
         defineProperties(worker, {
@@ -58,7 +65,7 @@ export default (...args) =>
 
         if (isHook) this.onWorkerReady?.(this.interpreter, worker);
 
-        worker.addEventListener('message', (event) => {
+        worker.addEventListener('message', event => {
             const { data } = event;
             if (data instanceof Error) {
                 event.stopImmediatePropagation();
