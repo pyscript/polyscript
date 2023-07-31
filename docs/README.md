@@ -151,7 +151,7 @@ In order to have anything working at all in our pages, we need to at least boots
 <html>
     <head>
         <!-- this is a way to automatically bootstrap polyscript -->
-        <script type="module" src="https://esm.run/polyscript"></script>
+        <script type="module" src="https://esm.sh/polyscript"></script>
     </head>
     <body>
         <script type="micropython">
@@ -170,7 +170,7 @@ As *core* exposes some utility/API, using the following method would also work:
         define,      // define a custom type="..."
         whenDefined, // wait for a custom type to be defined
         XWorker      // allows JS <-> Interpreter communication
-    } from 'https://esm.run/polyscript';
+    } from 'https://esm.sh/polyscript';
 </script>
 ```
 
