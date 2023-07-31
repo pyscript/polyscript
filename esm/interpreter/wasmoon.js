@@ -38,6 +38,7 @@ export default {
         for (const key of keys) [context, target] = [target, target[key]];
         await target.call(context, event);
     },
+    transform: (_, value) => value,
     writeFile: (
         {
             cmodule: {

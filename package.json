@@ -44,9 +44,9 @@
         "ascjs": "^6.0.2",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.45.0",
+        "eslint": "^8.46.0",
         "linkedom": "^0.15.1",
-        "rollup": "^3.26.3",
+        "rollup": "^3.27.0",
         "static-handler": "^0.4.2",
         "typescript": "^5.1.6"
     },
@@ -68,6 +68,6 @@
         "coincident": "^0.11.3"
     },
     "worker": {
-        "blob": "sha256-OkomrsHFmwRKZu6MhWU06rUEnBAhz5ztBknKKA0RXMw="
+        "blob": "sha256-UBLEr8gV28ECak6pgoYvlrcR6AgPNlmkksOk9RAWfXw="
     }
 }

@@ -54,6 +54,7 @@ export default {
             await method.call(code, interpreter.wrap(event));
         }
     },
+    transform: (_, value) => value,
     writeFile: () => {
         throw new Error(`writeFile is not supported in ${type}`);
     },

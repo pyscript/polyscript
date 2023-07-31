@@ -67,4 +67,17 @@ exports.python = {
         const body = await page.evaluate(() => document.body.innerText);
         await expect(body.trim()).toBe('hello from A, hello from B');
     },
+
+    transform: ({ expect }, baseURL) => async ({ page }) => {
+        // Test that a sync callback can handle Python objects out of the box.
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+
+        await page.goto(`${baseURL}/worker-transform.html`);
+        await page.waitForSelector('html.worker.ready');
+
+        const logText = logs.join(',')
+
+        await expect(logText).toContain('OK');
+    },
 };
