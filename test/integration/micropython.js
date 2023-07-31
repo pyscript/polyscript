@@ -16,4 +16,6 @@ module.exports = (playwright, baseURL) => {
     test('MicroPython to Wasmoon Worker', shared.worker(playwright, `${baseURL}/worker-lua.html`));
 
     test('MicroPython Worker error', python.error(playwright, baseURL));
+
+    test('MicroPython config as object', python.configAsObject(playwright, baseURL));
 };

@@ -63,13 +63,14 @@ const xworker = {
     postMessage: postMessage.bind(self),
 };
 
-add('message', ({ data: { options, code, hooks } }) => {
+add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
             const { type, version, config, async: isAsync } = options;
             const interpreter = await getRuntime(
                 getRuntimeID(type, version),
-                config,
+                baseURL,
+                config
             );
             const details = create(registry.get(type));
             const name = `run${isAsync ? 'Async' : ''}`;
