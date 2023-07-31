@@ -27,4 +27,6 @@ module.exports = (playwright, baseURL) => {
     });
 
     test('Pyodide Worker error', python.error(playwright, baseURL));
+
+    test('Pyodide transform', python.error(playwright, baseURL));
 };

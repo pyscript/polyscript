@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('pyodide');
+    </script>
+</head>
+<body>
+    <script type="pyodide"></script>
+    <script type="module">
+        import { XWorker } from '/core.js';
+
+        const worker = new XWorker('./worker_transform.py', { type: 'pyodide' });
+
+        // this would throw otherwise if the `dict` is a proxy from other PLs
+        worker.sync.test = dict => {
+          console.log(dict.value)
+        };
+    </script>
+</body>
+</html>

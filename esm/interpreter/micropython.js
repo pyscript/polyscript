@@ -20,6 +20,7 @@ export default {
     run,
     runAsync,
     runEvent,
+    transform: (_, value) => value,
     writeFile: ({ FS, _module: { PATH, PATH_FS } }, path, buffer) =>
         writeFile({ FS, PATH, PATH_FS }, path, buffer),
 };

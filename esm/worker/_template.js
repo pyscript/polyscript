@@ -24,7 +24,7 @@ try {
     );
 }
 
-let interpreter, runEvent;
+let interpreter, runEvent, transform;
 const add = (type, fn) => {
     addEventListener(
         type,
@@ -41,7 +41,13 @@ const add = (type, fn) => {
     );
 };
 
-const { proxy: sync, window, isWindowProxy } = coincident(self, JSON);
+const { parse, stringify } = JSON;
+
+const { proxy: sync, window, isWindowProxy } = coincident(self, {
+    parse,
+    stringify,
+    transform: value => transform ? transform(value) : value
+});
 
 const xworker = {
     // allows synchronous utilities between this worker and the main thread
@@ -90,10 +96,16 @@ add('message', ({ data: { options, code, hooks } }) => {
                         method(interpreter, `${before}\n${code}`);
                 }
             }
+
             // set the `xworker` global reference once
             details.registerJSModule(interpreter, 'polyscript', { xworker });
+
             // simplify runEvent calls
             runEvent = details.runEvent.bind(details, interpreter);
+
+            // allows transforming arguments with sync
+            transform = details.transform.bind(details, interpreter);
+
             // run either sync or async code in the worker
             await details[name](interpreter, code);
             return interpreter;

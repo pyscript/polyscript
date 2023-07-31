@@ -2,6 +2,7 @@ import { fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 
 const type = 'pyodide';
+const toJsOptions = { dict_converter: Object.fromEntries };
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -28,6 +29,11 @@ export default {
     run,
     runAsync,
     runEvent,
+    transform: (interpreter, value) => (
+        value instanceof interpreter.ffi.PyProxy ?
+            value.toJs(toJsOptions) :
+            value
+    ),
     writeFile: ({ FS, PATH, _module: { PATH_FS } }, path, buffer) =>
         writeFile({ FS, PATH, PATH_FS }, path, buffer),
 };
