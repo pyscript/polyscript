@@ -3,7 +3,7 @@ import { $ } from 'basic-devtools';
 import xworker from './worker/class.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
-import { all, resolve, defineProperty, absoluteURL } from './utils.js';
+import { all, resolve, defineProperty } from './utils.js';
 import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
@@ -117,7 +117,6 @@ export const handle = async (script) => {
         let configValue = getValue(config, '|');
         const id = getValue(env, '') || `${name}${configValue}`;
         configValue = configValue.slice(1);
-        if (configValue) configValue = absoluteURL(configValue);
         const details = getDetails(type, id, name, versionValue, configValue);
 
         handled.set(
