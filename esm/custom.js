@@ -1,13 +1,14 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
-import { assign, create } from './utils.js';
+import { assign, create, defineProperty } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
 import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
 import { Hook } from './worker/hooks.js';
+import { XWorker } from './index.js';
 
 export const CUSTOM_SELECTORS = [];
 
@@ -44,6 +45,20 @@ export const handleCustomType = (node) => {
                     env,
                     onInterpreterReady,
                 } = options;
+
+                const worker = node.attributes.worker?.value || '';
+                if (worker) {
+                    const xworker = XWorker.call(new Hook(null, options), worker, {
+                        config,
+                        version,
+                        type: runtime,
+                        async: node.hasAttribute('async')
+                    });
+                    defineProperty(node, 'xworker', { value: xworker });
+                    resolve({ type, xworker });
+                    return;
+                }
+
                 const name = getRuntimeID(runtime, version);
                 const id = env || `${name}${config ? `|${config}` : ''}`;
                 const { interpreter: engine, XWorker: Worker } = getDetails(

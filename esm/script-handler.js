@@ -1,6 +1,6 @@
 import { $ } from 'basic-devtools';
 
-import xworker from './worker/class.js';
+import $xworker from './worker/class.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
 import { all, resolve, defineProperty } from './utils.js';
@@ -76,7 +76,7 @@ export const getDetails = (type, id, name, version, config) => {
         const details = {
             interpreter: getRuntime(name, config),
             queue: resolve(),
-            XWorker: xworker(type, version),
+            XWorker: $xworker(type, version),
         };
         interpreters.set(id, details);
         // enable sane defaults when single interpreter *of kind* is used in the page
@@ -107,16 +107,34 @@ export const handle = async (script) => {
         // allow a shared config among scripts, beside interpreter,
         // and/or source code with different config or interpreter
         const {
-            attributes: { async: isAsync, config, env, target, version },
+            attributes: { async: isAsync, config, env, target, version, worker },
             src,
             type,
         } = script;
+
         const versionValue = version?.value;
         const name = getRuntimeID(type, versionValue);
-        const targetValue = getValue(target, '');
         let configValue = getValue(config, '|');
         const id = getValue(env, '') || `${name}${configValue}`;
         configValue = configValue.slice(1);
+
+        /* c8 ignore start */
+        const workerValue = worker?.value;
+        if (workerValue) {
+            const XWorker = $xworker(type, versionValue);
+            const xworker = new XWorker(workerValue, {
+                async: !!isAsync,
+                config: configValue
+            });
+            handled.set(
+                defineProperty(script, 'xworker', { value: xworker }),
+                { xworker }
+            );
+            return;
+        }
+        /* c8 ignore stop */
+
+        const targetValue = getValue(target, '');
         const details = getDetails(type, id, name, versionValue, configValue);
 
         handled.set(

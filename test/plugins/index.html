@@ -17,6 +17,7 @@
             whenDefined("mpy").then(console.log);
             define("mpy", {
                 interpreter: "micropython",
+                config: "../fetch.toml",
                 async onInterpreterReady(micropython, element) {
                     console.log(micropython);
                     // Somehow this doesn't work in MicroPython
@@ -36,6 +37,7 @@
         </script>
     </head>
     <body>
+        <!-- <mpy-script worker="./worker.py"></mpy-script> -->
         <mpy-script mpy-click="test_click">
             def test_click(event):
                 print(event.type)
