@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('pyodide');
+    </script>
+</head>
+<body>
+    <script type="pyodide">
+        from js import document, Date
+        document.currentScript.target.textContent = Date.new().toISOString().split('T')[0]
+    </script>
+</body>
+</html>

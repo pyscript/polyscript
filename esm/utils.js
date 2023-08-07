@@ -1,3 +1,5 @@
+import '@ungap/new';
+
 const { isArray } = Array;
 
 const { assign, create, defineProperties, defineProperty, entries } = Object;
