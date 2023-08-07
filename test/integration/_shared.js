@@ -90,4 +90,12 @@ exports.python = {
 
         await expect(logText).toContain('OK');
     },
+
+    workerAttribute: ({ expect }, url) => async ({ page }) => {
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(url);
+        await page.waitForSelector('html.worker');
+        await expect(logs.join(',')).toBe('worker attribute');
+    },
 };

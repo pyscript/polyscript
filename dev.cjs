@@ -9,7 +9,7 @@ const build = (fileName) => {
         () =>
             new Promise((resolve, reject) => {
                 exec(
-                    "npm run rollup:xworker && npm run rollup:core && npm run rollup:pyscript",
+                    "npm run rollup:xworker && npm run rollup:core",
                     { cwd: __dirname, env: { ...process.env, NO_MIN: true } },
                     (error) => {
                         if (error) reject(error);

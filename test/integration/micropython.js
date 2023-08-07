@@ -18,4 +18,6 @@ module.exports = (playwright, baseURL) => {
     test('MicroPython Worker error', python.error(playwright, baseURL));
 
     test('MicroPython config as object', python.configAsObject(playwright, baseURL));
+
+    test('MicroPython worker attribute', python.workerAttribute(playwright, `${baseURL}/worker-attribute.html`));
 };
