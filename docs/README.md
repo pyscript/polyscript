@@ -200,6 +200,7 @@ We encourage everyone to be careful when using this *core* API as we definitivel
 | target    | `<script type="pyodide" target="outcome">`    | Describe as *id* or *CSS* selector the default *target* to use as `document.currentScript.target` field. Please read the [Terminology](#terminology) **target** dedicated details to know more. |
 | type      | `<script type="micropython">`                 | Define the *interpreter* to use with this script. Please read the [Terminology](#terminology) **interpreter** dedicated details to know more. |
 | version   | `<script type="pyodide" version="0.23.2">`    | Allow the usage of a specific version where, if numeric, must be available through the project *CDN* used by *core* but if specified as fully qualified *URL*, allows usage of any interpreter's version: `<script type="pyodide" version="http://localhost:8080/pyodide.local.mjs">` |
+| worker    | `<script type="pyodide" worker="./file.py">`  | Bootstraps an *interpreter* **only** within a *worker*, allowing `config` and `version` attributes too, also attaching an `xworker` property/field directly to the *script* tag on the main page. Please note the interpreter will not be available on the main thread when this attribute is used. |
 
 
 ### Script Features
