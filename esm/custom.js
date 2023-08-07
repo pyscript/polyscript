@@ -40,8 +40,8 @@ export const handleCustomType = (node) => {
                 known.add(node);
                 const {
                     interpreter: runtime,
-                    version,
                     config,
+                    version,
                     env,
                     onInterpreterReady,
                 } = options;
@@ -49,9 +49,9 @@ export const handleCustomType = (node) => {
                 const worker = node.attributes.worker?.value || '';
                 if (worker) {
                     const xworker = XWorker.call(new Hook(null, options), worker, {
-                        config,
                         version,
                         type: runtime,
+                        config: config || {},
                         async: node.hasAttribute('async')
                     });
                     defineProperty(node, 'xworker', { value: xworker });
