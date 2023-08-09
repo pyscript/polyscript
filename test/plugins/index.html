@@ -24,6 +24,10 @@
                     micropython.io.stdout = (message) => {
                         console.log("🐍", micropython.type, message);
                     };
+                    micropython.io.stderr = (message) => {
+                        console.error("⚠️🐍", message);
+                    };
+
                     micropython.run(element.textContent);
                     element.replaceChildren("See console ->");
                     element.style.display = "block";
@@ -32,6 +36,11 @@
                     button.textContent = "click";
                     button.setAttribute("mpy-click", "test_click");
                     document.body.append(button);
+
+                    const error = document.createElement("button");
+                    error.textContent = "error";
+                    error.setAttribute("mpy-click", "test_error");
+                    document.body.append(error);
                 },
             });
         </script>
@@ -41,6 +50,9 @@
         <mpy-script mpy-click="test_click">
             def test_click(event):
                 print(event.type)
+
+            def test_error(event):
+                shenanigans()
 
             print('Hello Console!')
         </mpy-script>

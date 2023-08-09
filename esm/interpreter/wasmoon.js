@@ -1,4 +1,4 @@
-import { clean, fetchPaths, stdio, writeFileShim } from './_utils.js';
+import { clean, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
 
 import { entries } from '../utils.js';
 
@@ -27,8 +27,22 @@ export default {
     registerJSModule: (interpreter, _, value) => {
         for (const [k, v] of entries(value)) interpreter.global.set(k, v);
     },
-    run: (interpreter, code) => interpreter.doStringSync(clean(code)),
-    runAsync: (interpreter, code) => interpreter.doString(clean(code)),
+    run: (interpreter, code) => {
+        try {
+            return interpreter.doStringSync(clean(code));
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
+    runAsync: (interpreter, code) => {
+        try {
+            return interpreter.doString(clean(code));
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
     runEvent: async (interpreter, code, event) => {
         // allows method(event) as well as namespace.method(event)
         // it does not allow fancy brackets names for now
@@ -36,7 +50,12 @@ export default {
         let target = interpreter.global.get(name);
         let context;
         for (const key of keys) [context, target] = [target, target[key]];
-        await target.call(context, event);
+        try {
+            await target.call(context, event);
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
     },
     transform: (_, value) => value,
     writeFile: (
