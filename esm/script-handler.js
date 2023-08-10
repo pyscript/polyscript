@@ -71,7 +71,7 @@ const getValue = (ref, prefix) => {
     return value ? prefix + value : '';
 };
 
-export const getDetails = (type, id, name, version, config) => {
+export const getDetails = (type, id, name, version, config, runtime = type) => {
     if (!interpreters.has(id)) {
         const details = {
             interpreter: getRuntime(name, config),
@@ -82,6 +82,7 @@ export const getDetails = (type, id, name, version, config) => {
         // enable sane defaults when single interpreter *of kind* is used in the page
         // this allows `xxx-*` attributes to refer to such interpreter without `env` around
         if (!interpreters.has(type)) interpreters.set(type, details);
+        if (!interpreters.has(runtime)) interpreters.set(runtime, details);
     }
     return interpreters.get(id);
 };

@@ -62,11 +62,12 @@ export const handleCustomType = (node) => {
                 const name = getRuntimeID(runtime, version);
                 const id = env || `${name}${config ? `|${config}` : ''}`;
                 const { interpreter: engine, XWorker: Worker } = getDetails(
-                    runtime,
+                    type,
                     id,
                     name,
                     version,
                     config,
+                    runtime
                 );
                 engine.then((interpreter) => {
                     const module = create(defaultRegistry.get(runtime));
