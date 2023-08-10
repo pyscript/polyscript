@@ -81,8 +81,10 @@ export const getDetails = (type, id, name, version, config, runtime = type) => {
         interpreters.set(id, details);
         // enable sane defaults when single interpreter *of kind* is used in the page
         // this allows `xxx-*` attributes to refer to such interpreter without `env` around
+        /* c8 ignore start *//* this is tested very well in PyScript */
         if (!interpreters.has(type)) interpreters.set(type, details);
         if (!interpreters.has(runtime)) interpreters.set(runtime, details);
+        /* c8 ignore stopt */
     }
     return interpreters.get(id);
 };
