@@ -15,9 +15,9 @@ export const run = (interpreter, code) => {
     }
 };
 
-export const runAsync = (interpreter, code) => {
+export const runAsync = async (interpreter, code) => {
     try {
-        return interpreter.runPythonAsync(clean(code));
+        return await interpreter.runPythonAsync(clean(code));
     }
     catch (error) {
         io.get(interpreter).stderr(error);

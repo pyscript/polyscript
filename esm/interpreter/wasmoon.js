@@ -35,9 +35,9 @@ export default {
             io.get(interpreter).stderr(error);
         }
     },
-    runAsync: (interpreter, code) => {
+    runAsync: async (interpreter, code) => {
         try {
-            return interpreter.doString(clean(code));
+            return await interpreter.doString(clean(code));
         }
         catch (error) {
             io.get(interpreter).stderr(error);
