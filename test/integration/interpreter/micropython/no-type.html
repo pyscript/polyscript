@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { define } from '/core.js';
+        define(null, {
+          interpreter: 'micropython',
+          onInterpreterReady(mpy, node) {
+            if (node) throw new Error('unexpected node');
+            mpy.run(`
+              from js import document
+              document.documentElement.classList.add('ready');
+              document.body.textContent = 'OK'
+            `);
+          }
+        });
+    </script>
+</head>
+</html>
