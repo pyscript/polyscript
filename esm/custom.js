@@ -94,9 +94,9 @@ export const handleCustomType = (node) => {
                         ['run', [onBeforeRun, onAfterRun]],
                     ]) {
                         const method = module[name];
-                        module[name] = function (interpreter, code) {
+                        module[name] = function (interpreter, code, ...args) {
                             if (before) before.call(this, resolved, node);
-                            const result = method.call(this, interpreter, code);
+                            const result = method.call(this, interpreter, code, ...args);
                             if (after) after.call(this, resolved, node);
                             return result;
                         };
@@ -107,12 +107,13 @@ export const handleCustomType = (node) => {
                         ['runAsync', [onBeforeRunAsync, onAfterRunAsync]],
                     ]) {
                         const method = module[name];
-                        module[name] = async function (interpreter, code) {
+                        module[name] = async function (interpreter, code, ...args) {
                             if (before) await before.call(this, resolved, node);
                             const result = await method.call(
                                 this,
                                 interpreter,
                                 code,
+                                ...args
                             );
                             if (after) await after.call(this, resolved, node);
                             return result;

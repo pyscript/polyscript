@@ -86,15 +86,15 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 // append code that should be executed *after* first
                 if (after) {
                     const method = details[name].bind(details);
-                    details[name] = (interpreter, code) =>
-                        method(interpreter, `${code}\n${after}`);
+                    details[name] = (interpreter, code, ...args) =>
+                        method(interpreter, `${code}\n${after}`, ...args);
                 }
 
                 // prepend code that should be executed *before* (so that after is post-patched)
                 if (before) {
                     const method = details[name].bind(details);
-                    details[name] = (interpreter, code) =>
-                        method(interpreter, `${before}\n${code}`);
+                    details[name] = (interpreter, code, ...args) =>
+                        method(interpreter, `${before}\n${code}`, ...args);
                 }
             }
 

@@ -35,8 +35,8 @@ export default {
         }
         this.run(interpreter, code.join(';'));
     },
-    run: (interpreter, code) => interpreter.eval(clean(code)),
-    runAsync: (interpreter, code) => interpreter.evalAsync(clean(code)),
+    run: (interpreter, code, ...args) => interpreter.eval(clean(code), ...args),
+    runAsync: (interpreter, code, ...args) => interpreter.evalAsync(clean(code), ...args),
     async runEvent(interpreter, code, event) {
         // patch common xworker.onmessage/onerror cases
         if (/^xworker\.(on\w+)$/.test(code)) {

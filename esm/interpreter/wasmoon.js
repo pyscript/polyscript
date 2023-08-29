@@ -27,17 +27,17 @@ export default {
     registerJSModule: (interpreter, _, value) => {
         for (const [k, v] of entries(value)) interpreter.global.set(k, v);
     },
-    run: (interpreter, code) => {
+    run: (interpreter, code, ...args) => {
         try {
-            return interpreter.doStringSync(clean(code));
+            return interpreter.doStringSync(clean(code), ...args);
         }
         catch (error) {
             io.get(interpreter).stderr(error);
         }
     },
-    runAsync: async (interpreter, code) => {
+    runAsync: async (interpreter, code, ...args) => {
         try {
-            return await interpreter.doString(clean(code));
+            return await interpreter.doString(clean(code), ...args);
         }
         catch (error) {
             io.get(interpreter).stderr(error);

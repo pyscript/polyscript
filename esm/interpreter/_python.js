@@ -6,18 +6,18 @@ export const registerJSModule = (interpreter, name, value) => {
     interpreter.registerJsModule(name, value);
 };
 
-export const run = (interpreter, code) => {
+export const run = (interpreter, code, ...args) => {
     try {
-        return interpreter.runPython(clean(code));
+        return interpreter.runPython(clean(code), ...args);
     }
     catch (error) {
         io.get(interpreter).stderr(error);
     }
 };
 
-export const runAsync = async (interpreter, code) => {
+export const runAsync = async (interpreter, code, ...args) => {
     try {
-        return await interpreter.runPythonAsync(clean(code));
+        return await interpreter.runPythonAsync(clean(code), ...args);
     }
     catch (error) {
         io.get(interpreter).stderr(error);
