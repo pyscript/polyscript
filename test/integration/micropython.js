@@ -3,7 +3,7 @@
 const { shared, python } = require('./_shared.js');
 
 module.exports = (playwright, baseURL) => {
-    const { test } = playwright;
+    const { expect, test } = playwright;
 
     test('MicroPython bootstrap', python.bootstrap(playwright, baseURL));
 
@@ -20,4 +20,11 @@ module.exports = (playwright, baseURL) => {
     test('MicroPython config as object', python.configAsObject(playwright, baseURL));
 
     test('MicroPython worker attribute', python.workerAttribute(playwright, `${baseURL}/worker-attribute.html`));
+
+    test('MicroPython w/out type', async ({ page }) => {
+        await page.goto(`${baseURL}/no-type.html`);
+        await page.waitForSelector('html.ready');
+        const result = await page.evaluate(() => document.body.innerText);
+        await expect(result.trim()).toBe('OK');
+    });
 };

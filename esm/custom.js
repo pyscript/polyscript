@@ -155,30 +155,56 @@ const registry = new Map();
  * @prop {(environment: object, node: Element) => void} [onInterpreterReady] the callback that will be invoked once
  */
 
+let dontBotherCount = 0;
+
 /**
  * Allows custom types and components on the page to receive interpreters to execute any code
  * @param {string} type the unique `<script type="...">` identifier
  * @param {CustomOptions} options the custom type configuration
  */
 export const define = (type, options) => {
-    if (defaultRegistry.has(type) || registry.has(type))
+    // allow no-type to be bootstrapped out of the box
+    let dontBother = type == null;
+
+    if (dontBother)
+        type = `_ps${dontBotherCount++}`;
+    else if (defaultRegistry.has(type) || registry.has(type))
         throw new Error(`<script type="${type}"> already registered`);
 
     if (!defaultRegistry.has(options?.interpreter))
         throw new Error('Unspecified interpreter');
 
     // allows reaching out the interpreter helpers on events
-    defaultRegistry.set(type, defaultRegistry.get(options?.interpreter));
+    defaultRegistry.set(type, defaultRegistry.get(options.interpreter));
+
+    // allows selector -> registry by type
+    const selectors = [`script[type="${type}"]`];
 
     // ensure a Promise can resolve once a custom type has been bootstrapped
     whenDefined(type);
 
-    // allows selector -> registry by type
-    const selectors = [`script[type="${type}"]`, `${type}-script`];
-    for (const selector of selectors) types.set(selector, type);
+    if (!dontBother) {
+        selectors.push(`${type}-script`);
+        prefixes.push(`${type}-`);
+    }
+    else {
+        // add a script then cleanup everything once that's ready
+        const { onInterpreterReady } = options;
+        options.onInterpreterReady = (resolved, node) => {
+            CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
+            defaultRegistry.delete(type);
+            registry.delete(type);
+            waitList.delete(type);
+            node.remove();
+            onInterpreterReady?.(resolved);
+        };
+        document.head.append(
+            assign(document.createElement('script'), { type })
+        );
+    }
 
+    for (const selector of selectors) types.set(selector, type);
     CUSTOM_SELECTORS.push(...selectors);
-    prefixes.push(`${type}-`);
 
     // ensure always same env for this custom type
     registry.set(type, {
@@ -186,7 +212,7 @@ export const define = (type, options) => {
         known: new WeakSet(),
     });
 
-    addAllListeners(document);
+    if (!dontBother) addAllListeners(document);
     $$(selectors.join(',')).forEach(handleCustomType);
 };
 
