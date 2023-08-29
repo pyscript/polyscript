@@ -410,13 +410,13 @@ if condition == None:
 
 ## Custom Scripts
 
-With `polyscript` it is possible to extend any *interpreter*, allowing users or contributors to define their own `type` for the `<script>` they would like to augment with goodness or extra simplicity.
+With `polyscript` it is possible to extend any *interpreter*, allowing users or contributors to define their own (optional) `type` for the `<script>` they would like to augment with goodness or extra simplicity.
 
 The *core* module itself exposes two methods to do so:
 
 | name          | example                   | behavior |
 | :------------ | :------------------------ | :--------|
-| define        | `define('mpy', options)`  | Register once a `<script type="mpy">` and a counter `<mpy-script>` selector that will bootstrap and handle all nodes in the page that match such selectors. The available `options` are described after this table. |
+| define        | `define('mpy', options)`  | Register once a `<script type="mpy">`, if it's a string, and a counter `<mpy-script>` selector that will bootstrap and handle all nodes in the page that match such selectors. If the `type` is either `null` or `undefined`, no type will exist but the interpreter will be bootstrapped anyway, hence available once `options.onInterpreterReady(wrap)` is invoked (without any `element` reference). The available `options` are described after this table. |
 | whenDefined        | `whenDefined('mpy')` | Return a promise that will be resolved once the custom `mpy` script will be available, returning an *interpreter* wrapper once it will be fully ready. |
 
 ```js
