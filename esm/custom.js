@@ -183,24 +183,27 @@ export const define = (type, options) => {
     // ensure a Promise can resolve once a custom type has been bootstrapped
     whenDefined(type);
 
-    if (!dontBother) {
-        selectors.push(`${type}-script`);
-        prefixes.push(`${type}-`);
-    }
-    else {
+    if (dontBother) {
         // add a script then cleanup everything once that's ready
         const { onInterpreterReady } = options;
-        options.onInterpreterReady = (resolved, node) => {
-            CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
-            defaultRegistry.delete(type);
-            registry.delete(type);
-            waitList.delete(type);
-            node.remove();
-            onInterpreterReady?.(resolved);
+        options = {
+            ...options,
+            onInterpreterReady(resolved, node) {
+                CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
+                defaultRegistry.delete(type);
+                registry.delete(type);
+                waitList.delete(type);
+                node.remove();
+                onInterpreterReady?.(resolved);
+            }
         };
         document.head.append(
             assign(document.createElement('script'), { type })
         );
+    }
+    else {
+        selectors.push(`${type}-script`);
+        prefixes.push(`${type}-`);
     }
 
     for (const selector of selectors) types.set(selector, type);
