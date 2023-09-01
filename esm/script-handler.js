@@ -1,6 +1,7 @@
 import { $ } from 'basic-devtools';
 
 import $xworker from './worker/class.js';
+import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
 import { all, resolve, defineProperty } from './utils.js';
@@ -110,7 +111,7 @@ export const handle = async (script) => {
         // allow a shared config among scripts, beside interpreter,
         // and/or source code with different config or interpreter
         const {
-            attributes: { async: isAsync, config, env, target, version, worker },
+            attributes: { async: isAsync, config, env, target, version },
             src,
             type,
         } = script;
@@ -122,10 +123,10 @@ export const handle = async (script) => {
         configValue = configValue.slice(1);
 
         /* c8 ignore start */
-        const workerValue = worker?.value;
-        if (workerValue) {
+        const url = workerURL(script);
+        if (url) {
             const XWorker = $xworker(type, versionValue);
-            const xworker = new XWorker(workerValue, {
+            const xworker = new XWorker(url, {
                 async: !!isAsync,
                 config: configValue
             });

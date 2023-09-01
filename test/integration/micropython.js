@@ -21,6 +21,10 @@ module.exports = (playwright, baseURL) => {
 
     test('MicroPython worker attribute', python.workerAttribute(playwright, `${baseURL}/worker-attribute.html`));
 
+    test('MicroPython worker empty attribute', python.workerAttribute(playwright, `${baseURL}/worker-empty-attribute.html`));
+
+    test('MicroPython worker tag', python.workerTagAttribute(playwright, `${baseURL}/worker-tag.html`));
+
     test('MicroPython w/out type', async ({ page }) => {
         await page.goto(`${baseURL}/no-type.html`);
         await page.waitForSelector('html.ready');

@@ -8,6 +8,7 @@ import { getRuntimeID } from './loader.js';
 import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
 import { Hook } from './worker/hooks.js';
+import workerURL from './worker/url.js';
 import { XWorker } from './index.js';
 
 export const CUSTOM_SELECTORS = [];
@@ -46,7 +47,7 @@ export const handleCustomType = (node) => {
                     onInterpreterReady,
                 } = options;
 
-                const worker = node.attributes.worker?.value || '';
+                const worker = workerURL(node);
                 if (worker) {
                     const xworker = XWorker.call(new Hook(null, options), worker, {
                         version,

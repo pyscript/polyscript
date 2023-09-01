@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="/core.js"></script>
+</head>
+<body>
+    <script type="micropython" worker>
+      from polyscript import xworker
+
+      document = xworker.window.document
+
+      print("worker attribute")
+
+      document.documentElement.classList.add("worker")
+    </script>
+</body>
+</html>
