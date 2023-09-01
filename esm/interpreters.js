@@ -26,7 +26,7 @@ export const interpreter = new Proxy(new Map(), {
                 : interpreter.module(...rest);
             map.set(id, {
                 url,
-                module: import(url),
+                module: import(/* webpackIgnore: true */url),
                 engine: interpreter.engine.bind(interpreter),
             });
         }

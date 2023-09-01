@@ -5,4 +5,4 @@ const TOML_LIB = 'https://cdn.jsdelivr.net/npm/basic-toml@0.3.1/es.js';
  * @param {string} text TOML text to parse
  * @returns {object} the resulting JS object
  */
-export const parse = async (text) => (await import(TOML_LIB)).parse(text);
+export const parse = async (text) => (await import(/* webpackIgnore: true */TOML_LIB)).parse(text);
