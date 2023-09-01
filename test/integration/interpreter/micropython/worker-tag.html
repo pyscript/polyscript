@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { define } from '/core.js';
+        define('mpy', {
+          interpreter: 'micropython'
+        });
+    </script>
+</head>
+<body>
+  <mpy-script worker>
+    from polyscript import xworker
+
+    document = xworker.window.document
+
+    shenanigans = "<div></div>"
+
+    print("worker attribute")
+
+    document.documentElement.classList.add("worker")
+  </mpy-script>
+</body>
+</html>

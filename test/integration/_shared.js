@@ -98,4 +98,14 @@ exports.python = {
         await page.waitForSelector('html.worker');
         await expect(logs.join(',')).toBe('worker attribute');
     },
+
+    workerTagAttribute: ({ expect }, url) => async ({ page }) => {
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(url);
+        await page.waitForSelector('html.worker');
+        await expect(logs.length).toBe(2);
+        await expect(logs.pop()).toBe('worker attribute');
+        await expect(logs.pop().slice(0, 11)).toBe('Deprecated:');
+    },
 };
