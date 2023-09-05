@@ -16,6 +16,15 @@ export default element => {
               value = innerHTML;
           }
 
+          // drop undesired indentation from the code
+          for (const line of value.split(/[\r\n]+/)) {
+            if (line.trim().length) {
+                const dedent = '^' + line.replace(/(\s+).+$/, '$1');
+                value = value.replace(new RegExp(dedent, 'gm'), '');
+                break;
+            }
+          }
+
           const url = URL.createObjectURL(new Blob([value], { type: 'text/plain' }));
           // TODO: should we really clean up this? debugging non-existent resources
           //       at distance might be very problematic if the url is revoked.
