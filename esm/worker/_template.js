@@ -7,7 +7,7 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { create } from '../utils.js';
+import { assign, create } from '../utils.js';
 import { registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 
@@ -66,7 +66,7 @@ const xworker = {
 add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
-            const { type, version, config, async: isAsync } = options;
+            const { id, tag, type, version, config, async: isAsync } = options;
             const interpreter = await getRuntime(
                 getRuntimeID(type, version),
                 baseURL,
@@ -98,8 +98,23 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 }
             }
 
+            let target = id;
+
             // set the `xworker` global reference once
-            details.registerJSModule(interpreter, 'polyscript', { xworker });
+            details.registerJSModule(interpreter, 'polyscript', {
+                xworker,
+                get target() {
+                    if (tag === 'SCRIPT' && target === id) {
+                        const { document } = xworker.window;
+                        const script = document.getElementById(id);
+                        script.after(assign(
+                            document.createElement(`script-${type}`),
+                            { id: (target = `${id}-target`) }
+                        ));
+                    }
+                    return target;
+                }
+            });
 
             // simplify runEvent calls
             runEvent = details.runEvent.bind(details, interpreter);

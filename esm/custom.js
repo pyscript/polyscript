@@ -26,6 +26,8 @@ export const CUSTOM_SELECTORS = [];
 const types = new Map();
 const waitList = new Map();
 
+let uid = 0;
+
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 /**
@@ -51,6 +53,8 @@ export const handleCustomType = (node) => {
                 if (worker) {
                     const xworker = XWorker.call(new Hook(null, options), worker, {
                         version,
+                        id: node.id || (node.id = `polyscript-w${uid++}`),
+                        tag: node.tagName,
                         type: runtime,
                         config: config || {},
                         async: node.hasAttribute('async')

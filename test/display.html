@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { define } from '/core.js';
+        define('mpy', {
+          interpreter: 'micropython'
+        });
+    </script>
+</head>
+<body>
+  <mpy-script worker>
+    from polyscript import xworker, target
+    xworker.window.document.getElementById(target).textContent = "Hello from Worker"
+  </mpy-script>
+</body>
+</html>
