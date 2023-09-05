@@ -8,6 +8,14 @@ const { all, resolve } = new Proxy(Promise, {
 
 const absoluteURL = (path, base = location.href) => new URL(path, base).href;
 
+/* c8 ignore start */
+let id = 0;
+const nodeInfo = (node, type) => ({
+    id: node.id || (node.id = `${type}-w${id++}`),
+    tag: node.tagName
+});
+/* c8 ignore stop */
+
 export {
     isArray,
     assign,
@@ -18,4 +26,5 @@ export {
     all,
     resolve,
     absoluteURL,
+    nodeInfo,
 };

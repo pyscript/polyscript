@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      mpy-script { display: none; }
+      script-mpy { display: block; }
+    </style>
     <script type="module">
         import { define } from '/core.js';
         define('mpy', {
@@ -15,5 +19,13 @@
     from polyscript import xworker, target
     xworker.window.document.getElementById(target).textContent = "Hello from Worker"
   </mpy-script>
+  <script type="mpy" worker>
+    from polyscript import xworker, target
+    xworker.window.document.getElementById(target).textContent = "Hello from Worker"
+  </script>
+  <script type="micropython" worker>
+    from polyscript import xworker, target
+    xworker.window.document.getElementById(target).textContent = "Hello from Worker"
+  </script>
 </body>
 </html>

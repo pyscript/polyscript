@@ -1,7 +1,5 @@
 import { clean, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
 
-import { entries } from '../utils.js';
-
 const type = 'wasmoon';
 
 // MISSING:
@@ -24,8 +22,8 @@ export default {
         return interpreter;
     },
     // Fallback to globally defined module fields
-    registerJSModule: (interpreter, _, value) => {
-        for (const [k, v] of entries(value)) interpreter.global.set(k, v);
+    registerJSModule: (interpreter, name, value) => {
+        interpreter.global.set(name, value);
     },
     run: (interpreter, code, ...args) => {
         try {

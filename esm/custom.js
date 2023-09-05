@@ -1,7 +1,7 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
-import { assign, create, defineProperty } from './utils.js';
+import { assign, create, defineProperty, nodeInfo } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
@@ -25,8 +25,6 @@ export const CUSTOM_SELECTORS = [];
 
 const types = new Map();
 const waitList = new Map();
-
-let uid = 0;
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -52,10 +50,10 @@ export const handleCustomType = (node) => {
                 const worker = workerURL(node);
                 if (worker) {
                     const xworker = XWorker.call(new Hook(null, options), worker, {
+                        ...nodeInfo(node, type),
                         version,
-                        id: node.id || (node.id = `polyscript-w${uid++}`),
-                        tag: node.tagName,
                         type: runtime,
+                        custom: type,
                         config: config || {},
                         async: node.hasAttribute('async')
                     });

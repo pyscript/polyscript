@@ -4,7 +4,7 @@ import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
-import { all, resolve, defineProperty } from './utils.js';
+import { all, resolve, defineProperty, nodeInfo } from './utils.js';
 import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
@@ -127,6 +127,7 @@ export const handle = async (script) => {
         if (url) {
             const XWorker = $xworker(type, versionValue);
             const xworker = new XWorker(url, {
+                ...nodeInfo(script, type),
                 async: !!isAsync,
                 config: configValue
             });

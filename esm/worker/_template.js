@@ -66,7 +66,7 @@ const xworker = {
 add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
-            const { id, tag, type, version, config, async: isAsync } = options;
+            const { id, tag, type, custom, version, config, async: isAsync } = options;
             const interpreter = await getRuntime(
                 getRuntimeID(type, version),
                 baseURL,
@@ -109,7 +109,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                         const element = document.getElementById(id);
                         if (tag === 'SCRIPT') {
                             element.after(assign(
-                                document.createElement(`script-${type}`),
+                                document.createElement(`script-${custom || type}`),
                                 { id: (target = `${id}-target`) }
                             ));
                         }

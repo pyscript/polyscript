@@ -1,5 +1,4 @@
 import { clean, fetchPaths } from './_utils.js';
-import { entries } from '../utils.js';
 
 const type = 'ruby-wasm-wasi';
 const jsType = type.replace(/\W+/g, '_');
@@ -26,14 +25,11 @@ export default {
         return interpreter;
     },
     // Fallback to globally defined module fields (i.e. $xworker)
-    registerJSModule(interpreter, _, value) {
-        const code = ['require "js"'];
-        for (const [k, v] of entries(value)) {
-            const id = `__module_${jsType}_${k}`;
-            globalThis[id] = v;
-            code.push(`$${k}=JS.global[:${id}]`);
-        }
-        this.run(interpreter, code.join(';'));
+    registerJSModule(interpreter, name, value) {
+        const id = `__module_${jsType}_${name}`;
+        globalThis[id] = value;
+        this.run(interpreter, `require "js";$${name}=JS.global[:${id}]`);
+        delete globalThis[id];
     },
     run: (interpreter, code, ...args) => interpreter.eval(clean(code), ...args),
     runAsync: (interpreter, code, ...args) => interpreter.evalAsync(clean(code), ...args),
