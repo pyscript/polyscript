@@ -98,19 +98,25 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 }
             }
 
-            let target = id;
+            let target = '';
 
             // set the `xworker` global reference once
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
                 get target() {
-                    if (tag === 'SCRIPT' && target === id) {
+                    if (!target) {
                         const { document } = xworker.window;
-                        const script = document.getElementById(id);
-                        script.after(assign(
-                            document.createElement(`script-${type}`),
-                            { id: (target = `${id}-target`) }
-                        ));
+                        const element = document.getElementById(id);
+                        if (tag === 'SCRIPT') {
+                            element.after(assign(
+                                document.createElement(`script-${type}`),
+                                { id: (target = `${id}-target`) }
+                            ));
+                        }
+                        else {
+                            element.replaceChildren();
+                            element.style.display = 'block';
+                        }
                     }
                     return target;
                 }
