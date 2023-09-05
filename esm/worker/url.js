@@ -19,8 +19,11 @@ export default element => {
           // drop undesired indentation from the code
           for (const line of value.split(/[\r\n]+/)) {
             if (line.trim().length) {
-                const dedent = '^' + line.replace(/(\s+).+$/, '$1');
-                value = value.replace(new RegExp(dedent, 'gm'), '');
+                // if there's no indentation, avoid changing value
+                if (/^(\s+)/.test(line)) {
+                    const trimStart = `^${RegExp.$1}`;
+                    value = value.replace(new RegExp(trimStart, 'gm'), '');
+                }
                 break;
             }
           }
