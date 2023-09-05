@@ -114,6 +114,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                             ));
                         }
                         else {
+                            target = id;
                             element.replaceChildren();
                             element.style.display = 'block';
                         }
