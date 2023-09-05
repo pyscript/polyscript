@@ -14,7 +14,7 @@
             print(event.data)
         end
 
-        w = XWorker('./worker.lua')
+        w = polyscript.XWorker('./worker.lua')
         w.postMessage('main')
         w.onmessage = handle_message
     </script>

@@ -1,3 +1,5 @@
+xworker = polyscript.xworker
+
 function on_message(event)
     print(event.data)
     xworker.postMessage('thread')
