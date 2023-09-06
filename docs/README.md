@@ -502,8 +502,8 @@ wrap.io.stderr = (message) => {
 | :------------- | :---: | :--------: | :--------: | :----------------: | :---------: | :---------: |
 | pyodide        | •     | •          | •          | •                  | •           | •           |
 | micropython    | •     | •          | •          | •                  | •           |             |
-| wasmoon        | •     | •          | •          | -                  | •           |             |
-| ruby-wasm-wasi | •     | •          | •          | -                  |             |             |
+| wasmoon        | •     | •          | •          | !                  | •           |             |
+| ruby-wasm-wasi | •     | •          | •          | !                  |             |             |
 
   * **run** allows code to run synchronously and optionally return value
   * **runAsync** allows code to run asynchronously and optionally return value
