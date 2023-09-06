@@ -1,5 +1,7 @@
 # Polyscript
 
+[![build](https://github.com/pyscript/polyscript/actions/workflows/node.js.yml/badge.svg)](https://github.com/pyscript/polyscript/actions/workflows/node.js.yml)
+
 <sup>**[PyScript](https://github.com/pyscript/pyscript) single core to rule them all**</sup>
 
 ---
