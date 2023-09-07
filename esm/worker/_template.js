@@ -105,7 +105,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 xworker,
                 get target() {
                     if (!target) {
-                        const { document } = xworker.window;
+                        const { document } = window;
                         const element = document.getElementById(id);
                         if (tag === 'SCRIPT') {
                             element.after(assign(
