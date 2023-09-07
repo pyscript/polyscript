@@ -1,4 +1,5 @@
-import { clean, io } from './_utils.js';
+import { dedent } from '../utils.js';
+import { io } from './_utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -8,7 +9,7 @@ export const registerJSModule = (interpreter, name, value) => {
 
 export const run = (interpreter, code, ...args) => {
     try {
-        return interpreter.runPython(clean(code), ...args);
+        return interpreter.runPython(dedent(code), ...args);
     }
     catch (error) {
         io.get(interpreter).stderr(error);
@@ -17,7 +18,7 @@ export const run = (interpreter, code, ...args) => {
 
 export const runAsync = async (interpreter, code, ...args) => {
     try {
-        return await interpreter.runPythonAsync(clean(code), ...args);
+        return await interpreter.runPythonAsync(dedent(code), ...args);
     }
     catch (error) {
         io.get(interpreter).stderr(error);

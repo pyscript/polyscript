@@ -1,3 +1,5 @@
+import dedent from 'codedent';
+
 const { isArray } = Array;
 
 const { assign, create, defineProperties, defineProperty, entries } = Object;
@@ -17,6 +19,7 @@ const nodeInfo = (node, type) => ({
 /* c8 ignore stop */
 
 export {
+    dedent,
     isArray,
     assign,
     create,

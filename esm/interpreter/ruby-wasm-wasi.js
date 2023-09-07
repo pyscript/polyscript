@@ -1,4 +1,5 @@
-import { clean, fetchPaths } from './_utils.js';
+import { dedent } from '../utils.js';
+import { fetchPaths } from './_utils.js';
 
 const type = 'ruby-wasm-wasi';
 const jsType = type.replace(/\W+/g, '_');
@@ -31,8 +32,8 @@ export default {
         this.run(interpreter, `require "js";$${name}=JS.global[:${id}]`);
         delete globalThis[id];
     },
-    run: (interpreter, code, ...args) => interpreter.eval(clean(code), ...args),
-    runAsync: (interpreter, code, ...args) => interpreter.evalAsync(clean(code), ...args),
+    run: (interpreter, code, ...args) => interpreter.eval(dedent(code), ...args),
+    runAsync: (interpreter, code, ...args) => interpreter.evalAsync(dedent(code), ...args),
     async runEvent(interpreter, code, event) {
         // patch common xworker.onmessage/onerror cases
         if (/^xworker\.(on\w+)$/.test(code)) {

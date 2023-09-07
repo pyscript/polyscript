@@ -1,4 +1,5 @@
-import { clean, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
+import { dedent } from '../utils.js';
+import { fetchPaths, io, stdio, writeFileShim } from './_utils.js';
 
 const type = 'wasmoon';
 
@@ -27,7 +28,7 @@ export default {
     },
     run: (interpreter, code, ...args) => {
         try {
-            return interpreter.doStringSync(clean(code), ...args);
+            return interpreter.doStringSync(dedent(code), ...args);
         }
         catch (error) {
             io.get(interpreter).stderr(error);
@@ -35,7 +36,7 @@ export default {
     },
     runAsync: async (interpreter, code, ...args) => {
         try {
-            return await interpreter.doString(clean(code), ...args);
+            return await interpreter.doString(dedent(code), ...args);
         }
         catch (error) {
             io.get(interpreter).stderr(error);

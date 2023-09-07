@@ -1,3 +1,4 @@
+const dedent = require("codedent");
 const assert = require("./assert.js");
 require("./_utils.js");
 
@@ -71,28 +72,28 @@ const polyscript = require("../cjs");
         async function versionedRuntime() {
             document.head.innerHTML = `<script type="pyodide" version="0.23.4">${content}</script>`;
             await tick();
-            assert(pyodide.content, content);
+            assert(pyodide.content, dedent(content));
             assert(pyodide.target.tagName, "PYODIDE-SCRIPT");
         },
 
         async function basicExpectations() {
             document.head.innerHTML = `<script type="pyodide">${content}</script>`;
             await tick();
-            assert(pyodide.content, content);
+            assert(pyodide.content, dedent(content));
             assert(pyodide.target.tagName, "PYODIDE-SCRIPT");
         },
 
         async function foreignRuntime() {
             document.head.innerHTML = `<script type="pyodide" version="http://pyodide">${content}</script>`;
             await tick();
-            assert(pyodide.content, content);
+            assert(pyodide.content, dedent(content));
             assert(pyodide.target.tagName, "PYODIDE-SCRIPT");
         },
 
         async function basicMicroPython() {
             document.head.innerHTML = `<script type="micropython">${content}</script>`;
             await tick();
-            assert(micropython.content, content);
+            assert(micropython.content, dedent(content));
             assert(micropython.target.tagName, "MICROPYTHON-SCRIPT");
             const script = document.head.firstElementChild;
             document.body.appendChild(script);
