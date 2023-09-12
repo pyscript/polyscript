@@ -10,6 +10,7 @@
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
+ * [Ready Event](#ready-event) - how to listen to the `type:ready` event
  * [Examples](#examples) - some *polyscript* based live example
  * [Interpreter Features](#interpreter-features) - current state of supported interpreters
 
@@ -489,6 +490,35 @@ wrap.io.stderr = (message) => {
   console.error("🌑", wrap.type, message);
 };
 ```
+
+## Ready Event
+
+Whenever a *non-custom* script is going to run some code, or whenever *any worker* is going to run its own code, a `type:ready` event is dispatched through the element that is currently executing the code.
+
+The [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) dispatched in either cases contains a `target` which refers to the element that is running code and a `detail.worker` boolean value that is `true` if such event came from a worker instead of the main thread.
+
+The `worker` detail is essential to know if an `xworker` property is attached so that it's also easy to pollute its `sync` proxy utility.
+
+### Custom Types on Main
+
+The reason this event is not automatically dispatched on custom type elements or scripts is that these will have their own `onInterpreterReady` hook to eventually do more before desiring, or needing, to notify the "*readiness*" of such custom element and, in case of wanting the event to happen, this is the tiny boilerplate needed to simulate otherwise non-custom type events:
+
+```js
+// note: type === 'py' or the defined type
+element.dispatchEvent(
+  new CustomEvent(`${type}:ready`, {
+    bubbles: true,
+    detail: { worker: false },
+  })
+);
+```
+
+In the worker case, because the orchestration is inevitably coupled with this module, the custom type will be dispatched out of the blue to help extensions on op of this module to work best.
+
+### Explicit Worker: No Event
+
+Please note that if a worker is created explicitly, there won't be any element, script, or generic tag/node associated to it, so that no event will be triggered as there is no target for it. However, it's always possible to attach `sync` utilities to such explicit worker, so this should never be a real-world concern or blocker.
+
 
 ## Examples
 

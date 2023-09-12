@@ -16,10 +16,20 @@ const nodeInfo = (node, type) => ({
     id: node.id || (node.id = `${type}-w${id++}`),
     tag: node.tagName
 });
+
+const dispatch = (target, type, worker, CustomEvent) => {
+    if (target) target.dispatchEvent(
+        new CustomEvent(`${type}:ready`, {
+            bubbles: true,
+            detail: { worker },
+        })
+    );
+};
 /* c8 ignore stop */
 
 export {
     dedent,
+    dispatch,
     isArray,
     assign,
     create,

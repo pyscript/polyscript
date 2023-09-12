@@ -4,7 +4,7 @@ import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
-import { all, resolve, defineProperty, nodeInfo } from './utils.js';
+import { all, dispatch, resolve, defineProperty, nodeInfo } from './utils.js';
 import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
@@ -44,10 +44,11 @@ const handled = new WeakMap();
 export const interpreters = new Map();
 
 const execute = async (script, source, XWorker, isAsync) => {
-    const module = registry.get(script.type);
+    const { type } = script;
+    const module = registry.get(type);
     /* c8 ignore start */
     if (module.experimental)
-        console.warn(`The ${script.type} interpreter is experimental`);
+        console.warn(`The ${type} interpreter is experimental`);
     const [interpreter, content] = await all([
         handled.get(script).interpreter,
         source,
@@ -60,6 +61,7 @@ const execute = async (script, source, XWorker, isAsync) => {
             get: () => script,
         });
         module.registerJSModule(interpreter, 'polyscript', { XWorker });
+        dispatch(script, type, false, CustomEvent);
         return module[isAsync ? 'runAsync' : 'run'](interpreter, content);
     } finally {
         delete document.currentScript;

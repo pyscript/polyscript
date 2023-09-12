@@ -7,7 +7,7 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { assign, create } from '../utils.js';
+import { assign, create, dispatch } from '../utils.js';
 import { registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 
@@ -98,6 +98,9 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 }
             }
 
+            const { CustomEvent, document } = window;
+            const element = document.getElementById(id);
+
             let target = '';
 
             // set the `xworker` global reference once
@@ -105,8 +108,6 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 xworker,
                 get target() {
                     if (!target) {
-                        const { document } = window;
-                        const element = document.getElementById(id);
                         if (tag === 'SCRIPT') {
                             element.after(assign(
                                 document.createElement(`script-${custom || type}`),
@@ -128,6 +129,8 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
 
             // allows transforming arguments with sync
             transform = details.transform.bind(details, interpreter);
+
+            dispatch(element, custom || type, true, CustomEvent);
 
             // run either sync or async code in the worker
             await details[name](interpreter, code);
