@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      const listener = ({ target, detail }) => {
+        console.log(detail.worker, target);
+        if (detail.worker) {
+          target.xworker.sync.test = () => {
+            console.log(target.type, 1, 2, 3);
+          };
+        }
+      };
+      addEventListener("micropython:ready", listener);
+      addEventListener("mpy:ready", listener);
+    </script>
+    <script type="module">
+      import { define } from "/core.js";
+      define("mpy", {
+        interpreter: 'micropython',
+        onInterpreterReady({ run, type }, element) {
+          element.dispatchEvent(
+            new CustomEvent(`${type}:ready`, {
+              bubbles: true,
+              detail: { worker: false },
+            })
+          );
+          run(element.textContent);
+        }
+      });
+    </script>
+</head>
+<body>
+  <script type="micropython">
+    print("main")
+  </script>
+  <script type="micropython" worker>
+    from polyscript import xworker
+    print("worker")
+    xworker.sync.test()
+  </script>
+  <script type="mpy">
+    print("mpy-main")
+  </script>
+  <script type="mpy" worker>
+    from polyscript import xworker
+    print("mpy-worker")
+    xworker.sync.test()
+  </script>
+</body>
+</html>

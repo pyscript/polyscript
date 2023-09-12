@@ -27,10 +27,11 @@ const patchFetch = (callback) => {
 };
 
 const { parseHTML } = require("linkedom");
-const { document, window } = parseHTML("...");
+const { document, window, CustomEvent } = parseHTML("...");
 
 globalThis.document = document;
 globalThis.Element = window.Element;
+globalThis.CustomEvent = CustomEvent;
 globalThis.MutationObserver = window.MutationObserver;
 globalThis.XPathResult = {};
 globalThis.XPathEvaluator =
