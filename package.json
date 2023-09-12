@@ -1,12 +1,12 @@
 {
     "name": "polyscript",
-    "version": "0.3.1",
+    "version": "0.3.3",
     "description": "PyScript single core to rule them all",
     "main": "./cjs/index.js",
-    "types": "./types/index.d.ts",
+    "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --cors --coep --coop --corp .",
-        "build": "npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.js docs/",
+        "build": "npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
@@ -43,14 +43,17 @@
         "ascjs": "^6.0.2",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.48.0",
+        "eslint": "^8.49.0",
         "linkedom": "^0.15.3",
-        "rollup": "^3.28.1",
+        "rollup": "^3.29.1",
         "static-handler": "^0.4.2",
         "typescript": "^5.2.2"
     },
-    "module": "./esm/index.js",
     "type": "module",
+    "module": "./core.js",
+    "unpkg": "./core.js",
+    "jsdelivr": "./jsdelivr.js",
+    "browser": "./core.js",
     "exports": {
         ".": {
             "types": "./types/polyscript/esm/index.d.ts",
@@ -59,7 +62,6 @@
         },
         "./package.json": "./package.json"
     },
-    "unpkg": "core.js",
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
         "@ungap/with-resolvers": "^0.1.0",
