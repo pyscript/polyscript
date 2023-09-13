@@ -99,7 +99,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             }
 
             const { CustomEvent, document } = window;
-            const element = document.getElementById(id);
+            const element = id && document.getElementById(id) || null;
 
             let target = '';
 
@@ -107,7 +107,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
                 get target() {
-                    if (!target) {
+                    if (!target && element) {
                         if (tag === 'SCRIPT') {
                             element.after(assign(
                                 document.createElement(`script-${custom || type}`),
@@ -130,7 +130,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             // allows transforming arguments with sync
             transform = details.transform.bind(details, interpreter);
 
-            dispatch(element, custom || type, true, CustomEvent);
+            if (element) dispatch(element, custom || type, true, CustomEvent);
 
             // run either sync or async code in the worker
             await details[name](interpreter, code);

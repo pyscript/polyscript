@@ -17,8 +17,15 @@ const nodeInfo = (node, type) => ({
     tag: node.tagName
 });
 
+/**
+ * Notify the main thread about element "readiness".
+ * @param {HTMLScriptElement | HTMLElement} target the script or custom-type element
+ * @param {string} type the custom/type as event prefix
+ * @param {boolean} worker `true` if dispatched form a worker, `false` if in main
+ * @param {globalThis.CustomEvent} CustomEvent the right global to use
+ */
 const dispatch = (target, type, worker, CustomEvent) => {
-    if (target) target.dispatchEvent(
+    target.dispatchEvent(
         new CustomEvent(`${type}:ready`, {
             bubbles: true,
             detail: { worker },
