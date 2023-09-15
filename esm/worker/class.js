@@ -34,7 +34,7 @@ export default (...args) =>
         // because there's no location at all in the Worker as it's embedded.
         // fallback to a generic, ignored, config.txt file to still provide a URL.
         const { config: c } = options;
-        const config = absoluteURL(c && typeof c === 'string' ? c : './config.txt');
+        const config = absoluteURL(typeof c === 'string' ? c : './config.txt');
 
         const bootstrap = fetch(url)
             .then(getText)
