@@ -8,7 +8,8 @@ const { all, resolve } = new Proxy(Promise, {
     get: ($, name) => $[name].bind($),
 });
 
-const absoluteURL = (path, base = location.href) => new URL(path, base).href;
+const absoluteURL = (path, base = location.href) =>
+    new URL(path, base.replace(/^blob:/, '')).href;
 
 /* c8 ignore start */
 let id = 0;
