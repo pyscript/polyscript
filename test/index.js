@@ -71,7 +71,7 @@ const polyscript = require("../cjs");
     // all tests
     for (const test of [
         async function versionedRuntime() {
-            document.head.innerHTML = `<script type="pyodide" version="0.23.4">${content}</script>`;
+            document.head.innerHTML = `<script type="pyodide" version="0.24.0">${content}</script>`;
             await tick();
             assert(pyodide.content, dedent(content));
             assert(pyodide.target.tagName, "PYODIDE-SCRIPT");

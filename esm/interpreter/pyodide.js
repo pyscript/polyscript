@@ -8,17 +8,16 @@ const toJsOptions = { dict_converter: Object.fromEntries };
 /* c8 ignore start */
 export default {
     type,
-    module: (version = '0.23.4') =>
+    module: (version = '0.24.0') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url) {
         const { stderr, stdout, get } = stdio();
         const indexURL = url.slice(0, url.lastIndexOf('/'));
-        const interpreter = await get(
-            loadPyodide({ stderr, stdout, indexURL }),
-        );
+        const options = { stderr, stdout, indexURL };
+        if (config.packages) options.packages = ['micropip'];
+        const interpreter = await get(loadPyodide(options));
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.packages) {
-            await interpreter.loadPackage('micropip');
             const micropip = await interpreter.pyimport('micropip');
             await micropip.install(config.packages);
             micropip.destroy();

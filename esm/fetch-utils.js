@@ -1,3 +1,5 @@
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
 /** @param {Response} response */
 export const getBuffer = (response) => response.arrayBuffer();
 
@@ -6,3 +8,4 @@ export const getJSON = (response) => response.json();
 
 /** @param {Response} response */
 export const getText = (response) => response.text();
+/* c8 ignore stop */
