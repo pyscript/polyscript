@@ -3,6 +3,18 @@ import { absoluteURL, resolve } from './utils.js';
 import { parse } from './toml.js';
 import { getJSON, getText } from './fetch-utils.js';
 
+export const getConfigURLAndType = config => {
+    // REQUIRES INTEGRATION TEST
+    /* c8 ignore start */
+    let type = '';
+    if (/\.(json|toml|txt)$/.test(config))
+        type = RegExp.$1;
+    else
+        config = './config.txt';
+    return [absoluteURL(config), type];
+    /* c8 ignore stop */
+};
+
 /**
  * Parse a generic config if it came from an attribute either as URL
  * or as a serialized string. In XWorker case, accepts a pre-defined
@@ -17,21 +29,19 @@ export const getRuntime = (id, config, options = {}) => {
     if (config) {
         // REQUIRES INTEGRATION TEST
         /* c8 ignore start */
-        if (config.endsWith('.json')) {
-            options = fetch(config).then(getJSON);
-            config = absoluteURL(config);
-        } else if (config.endsWith('.toml')) {
-            options = fetch(config).then(getText).then(parse);
-            config = absoluteURL(config);
-        } else if (!config.endsWith('.txt')) {
+        const [absolute, type] = getConfigURLAndType(config);
+        if (type === 'json') {
+            options = fetch(absolute).then(getJSON);
+        } else if (type === 'toml') {
+            options = fetch(absolute).then(getText).then(parse);
+        } else if (!type) {
             try {
                 options = JSON.parse(config);
             } catch (_) {
                 options = parse(config);
             }
-            // make the config a URL to be able to retrieve relative paths from it
-            config = absoluteURL('./config.txt');
         }
+        config = absolute;
         /* c8 ignore stop */
     }
     return resolve(options).then(options => interpreter[id](options, config));
