@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      mpy-script { display: none; }
+      script-mpy { display: block; }
+    </style>
+    <script type="module">
+        import { define } from '/core.js';
+        const config = {
+          fetch: [
+            { files: ["./a.py", "./b.py"] }
+          ]
+        };
+        define('mpy', {
+          config,
+          interpreter: 'micropython',
+          onInterpreterReady(wrap, element) {
+            console.assert(
+              JSON.stringify(wrap.config) === JSON.stringify(config),
+              'not the same config'
+            );
+            wrap.run(element.textContent);
+          }
+        });
+    </script>
+</head>
+<body>
+  <script type="mpy">
+    print("main")
+    import a
+    from b import x
+    print(x)
+  </script>
+  <script type="mpy" worker>
+    print("worker")
+    import a
+    from b import x
+    print(x)
+  </script>
+  <script type="mpy" worker config="./config.json">
+    try:
+        import a
+    except:
+        print("all good")
+  </script>
+</body>
+</html>
