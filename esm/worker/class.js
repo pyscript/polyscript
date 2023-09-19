@@ -1,7 +1,8 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 import xworker from './xworker.js';
-import { assign, defineProperties, absoluteURL } from '../utils.js';
+import { getConfigURLAndType } from '../loader.js';
+import { assign, defineProperties } from '../utils.js';
 import { getText } from '../fetch-utils.js';
 import { Hook } from './hooks.js';
 
@@ -33,8 +34,7 @@ export default (...args) =>
         // provide a base url to fetch or load config files from a Worker
         // because there's no location at all in the Worker as it's embedded.
         // fallback to a generic, ignored, config.txt file to still provide a URL.
-        const { config: c } = options;
-        const config = absoluteURL(typeof c === 'string' ? c : './config.txt');
+        const [ config ] = getConfigURLAndType(options.config);
 
         const bootstrap = fetch(url)
             .then(getText)
