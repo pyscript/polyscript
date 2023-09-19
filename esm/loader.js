@@ -6,8 +6,8 @@ import { getJSON, getText } from './fetch-utils.js';
 export const getConfigURLAndType = config => {
     // REQUIRES INTEGRATION TEST
     /* c8 ignore start */
-    let type = '';
-    if (/\.(json|toml|txt)$/.test(config))
+    let type = typeof config;
+    if (type === 'string' && /\.(json|toml|txt)$/.test(config))
         type = RegExp.$1;
     else
         config = './config.txt';
@@ -34,12 +34,14 @@ export const getRuntime = (id, config, options = {}) => {
             options = fetch(absolute).then(getJSON);
         } else if (type === 'toml') {
             options = fetch(absolute).then(getText).then(parse);
-        } else if (!type) {
+        } else if (type === 'string') {
             try {
                 options = JSON.parse(config);
             } catch (_) {
                 options = parse(config);
             }
+        } else if (type === 'object' && config) {
+            options = config;
         }
         config = absolute;
         /* c8 ignore stop */
