@@ -1,5 +1,11 @@
 import { dedent } from '../utils.js';
 
+const hasCommentsOnly = text => !text
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*(?:\/\/|#).*/gm, '')
+    .trim()
+;
+
 /* c8 ignore start */ // tested via integration
 export default element => {
   const { src, worker } = element.attributes;
@@ -7,7 +13,7 @@ export default element => {
       let { value } = worker;
       // throw on worker values as ambiguous
       // @see https://github.com/pyscript/polyscript/issues/43
-      if (value) throw new SyntaxError(`Invalid worker attribute: ${value}`);
+      if (value) throw new SyntaxError('Invalid worker attribute');
       value = src?.value;
       if (!value) {
           // throw on empty src attributes
@@ -32,5 +38,8 @@ export default element => {
       }
       return value;
   }
+  // validate ambiguous cases with src and not empty/commented content
+  if (src && !hasCommentsOnly(element.textContent))
+    throw new SyntaxError('Invalid content');
 };
 /* c8 ignore stop */

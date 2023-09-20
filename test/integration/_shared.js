@@ -114,6 +114,6 @@ exports.python = {
         page.on('console', msg => logs.push(msg.text()));
         await page.goto(url);
         await page.waitForSelector('html.error');
-        await expect(logs.pop()).toBe('Invalid worker attribute: nope.py');
+        await expect(logs.pop()).toBe('Invalid worker attribute');
     },
 };
