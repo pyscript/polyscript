@@ -108,4 +108,12 @@ exports.python = {
         await expect(logs.pop()).toBe('worker attribute');
         await expect(logs.pop().slice(0, 11)).toBe('Deprecated:');
     },
+
+    workerTagBadAttribute: ({ expect }, url) => async ({ page }) => {
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(url);
+        await page.waitForSelector('html.error');
+        await expect(logs.pop()).toBe('Invalid worker attribute: nope.py');
+    },
 };

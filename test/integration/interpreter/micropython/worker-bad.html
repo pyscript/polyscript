@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { define } from '/core.js';
+        define('mpy', {
+          interpreter: 'micropython',
+          onerror({ message }) {
+            console.error(message);
+            document.documentElement.classList.add('error');
+          }
+        });
+    </script>
+</head>
+<body>
+  <mpy-script worker="nope.py"></mpy-script>
+</body>
+</html>
