@@ -25,6 +25,8 @@ module.exports = (playwright, baseURL) => {
 
     test('MicroPython worker tag', python.workerTagAttribute(playwright, `${baseURL}/worker-tag.html`));
 
+    test('MicroPython worker bad', python.workerTagBadAttribute(playwright, `${baseURL}/worker-bad.html`));
+
     test('MicroPython w/out type', async ({ page }) => {
         await page.goto(`${baseURL}/no-type.html`);
         await page.waitForSelector('html.ready');

@@ -2,10 +2,16 @@ import { dedent } from '../utils.js';
 
 /* c8 ignore start */ // tested via integration
 export default element => {
-  const { worker } = element.attributes;
+  const { src, worker } = element.attributes;
   if (worker) {
       let { value } = worker;
+      // throw on worker values as ambiguous
+      // @see https://github.com/pyscript/polyscript/issues/43
+      if (value) throw new SyntaxError(`Invalid worker attribute: ${value}`);
+      value = src?.value;
       if (!value) {
+          // throw on empty src attributes
+          if (src) throw new SyntaxError('Invalid src attribute');
           if (!element.childElementCount)
               value = element.textContent;
           else {

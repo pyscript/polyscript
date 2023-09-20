@@ -45,21 +45,29 @@ export const handleCustomType = (node) => {
                     version,
                     env,
                     onInterpreterReady,
+                    onerror,
                 } = options;
 
-                const worker = workerURL(node);
-                if (worker) {
-                    const xworker = XWorker.call(new Hook(null, options), worker, {
-                        ...nodeInfo(node, type),
-                        version,
-                        type: runtime,
-                        custom: type,
-                        config: node.getAttribute('config') || config || {},
-                        async: node.hasAttribute('async')
-                    });
-                    defineProperty(node, 'xworker', { value: xworker });
-                    resolve({ type, xworker });
-                    return;
+                let error;
+                try {
+                    const worker = workerURL(node);
+                    if (worker) {
+                        const xworker = XWorker.call(new Hook(null, options), worker, {
+                            ...nodeInfo(node, type),
+                            version,
+                            type: runtime,
+                            custom: type,
+                            config: node.getAttribute('config') || config || {},
+                            async: node.hasAttribute('async')
+                        });
+                        defineProperty(node, 'xworker', { value: xworker });
+                        resolve({ type, xworker });
+                        return;
+                    }
+                }
+                // let the custom type handle errors via its `io`
+                catch (workerError) {
+                    error = workerError;
                 }
 
                 const name = getRuntimeID(runtime, version);
@@ -137,6 +145,8 @@ export const handleCustomType = (node) => {
                     };
 
                     resolve(resolved);
+
+                    if (error) onerror?.(error, node);
 
                     onInterpreterReady?.(resolved, node);
                 });
