@@ -1,3 +1,5 @@
+import { INVALID_CONTENT, INVALID_SRC_ATTR, INVALID_WORKER_ATTR } from '../errors.js';
+
 import { dedent } from '../utils.js';
 
 const hasCommentsOnly = text => !text
@@ -13,11 +15,11 @@ export default element => {
       let { value } = worker;
       // throw on worker values as ambiguous
       // @see https://github.com/pyscript/polyscript/issues/43
-      if (value) throw new SyntaxError('Invalid worker attribute');
+      if (value) throw new SyntaxError(INVALID_WORKER_ATTR);
       value = src?.value;
       if (!value) {
           // throw on empty src attributes
-          if (src) throw new SyntaxError('Invalid src attribute');
+          if (src) throw new SyntaxError(INVALID_SRC_ATTR);
           if (!element.childElementCount)
               value = element.textContent;
           else {
@@ -40,6 +42,6 @@ export default element => {
   }
   // validate ambiguous cases with src and not empty/commented content
   if (src && !hasCommentsOnly(element.textContent))
-    throw new SyntaxError('Invalid content');
+    throw new SyntaxError(INVALID_CONTENT);
 };
 /* c8 ignore stop */

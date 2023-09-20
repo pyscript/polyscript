@@ -9,6 +9,7 @@ import { listener, addAllListeners } from './listeners.js';
 
 export { define, whenDefined } from './custom.js';
 export { env } from './listeners.js';
+export * from './errors.js';
 export const XWorker = xworker();
 
 const INTERPRETER_SELECTORS = selectors.join(',');
