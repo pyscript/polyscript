@@ -12,9 +12,8 @@ export { env } from './listeners.js';
 export * from './errors.js';
 export const XWorker = xworker();
 
-const INTERPRETER_SELECTORS = selectors.join(',');
-
 const mo = new MutationObserver((records) => {
+    const selector = selectors.join(',');
     for (const { type, target, attributeName, addedNodes } of records) {
         // attributes are tested via integration / e2e
         /* c8 ignore start */
@@ -40,14 +39,13 @@ const mo = new MutationObserver((records) => {
         for (const node of addedNodes) {
             if (node.nodeType === 1) {
                 addAllListeners(node);
-                if (node.matches(INTERPRETER_SELECTORS)) handle(node);
+                if (node.matches(selector)) handle(node);
                 else {
-                    $$(INTERPRETER_SELECTORS, node).forEach(handle);
-                    if (!CUSTOM_SELECTORS.length) continue;
+                    $$(selector, node).forEach(handle);
+                    if (!CUSTOM_SELECTORS.size) continue;
                     handleCustomType(node);
-                    $$(CUSTOM_SELECTORS.join(','), node).forEach(
-                        handleCustomType,
-                    );
+                    const custom = [...CUSTOM_SELECTORS].join(',');
+                    $$(custom, node).forEach(handleCustomType);
                 }
             }
         }
@@ -68,4 +66,8 @@ assign(Element.prototype, {
 });
 
 addAllListeners(observe(document));
-$$(INTERPRETER_SELECTORS, document).forEach(handle);
+
+// give custom types a chance to register ASAP
+queueMicrotask(() => {
+    $$(selectors.join(','), document).forEach(handle);
+});

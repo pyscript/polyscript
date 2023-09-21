@@ -5,7 +5,10 @@ import { all, create } from './utils.js';
 import { registry, prefixes } from './interpreters.js';
 
 export const env = new Proxy(create(null), {
-    get: (_, name) => awaitInterpreter(name),
+    // give custom types a chance to register ASAP
+    get: (_, name) => new Promise(queueMicrotask).then(
+        () => awaitInterpreter(name)
+    ),
 });
 
 /* c8 ignore start */ // attributes are tested via integration / e2e

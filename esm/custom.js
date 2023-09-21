@@ -3,7 +3,7 @@ import { $$ } from 'basic-devtools';
 
 import { assign, create, defineProperty, nodeInfo } from './utils.js';
 import { getDetails } from './script-handler.js';
-import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
+import { registry as defaultRegistry, selectors, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
 import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
@@ -11,7 +11,7 @@ import { Hook } from './worker/hooks.js';
 import workerURL from './worker/url.js';
 import { XWorker } from './index.js';
 
-export const CUSTOM_SELECTORS = [];
+export const CUSTOM_SELECTORS = new Set;
 
 /**
  * @typedef {Object} Runtime custom configuration
@@ -181,17 +181,18 @@ export const define = (type, options) => {
 
     if (dontBother)
         type = `_ps${dontBotherCount++}`;
-    else if (defaultRegistry.has(type) || registry.has(type))
+    else if (registry.has(type))
         throw new Error(`<script type="${type}"> already registered`);
 
     if (!defaultRegistry.has(options?.interpreter))
         throw new Error('Unspecified interpreter');
 
     // allows reaching out the interpreter helpers on events
-    defaultRegistry.set(type, defaultRegistry.get(options.interpreter));
+    if (!defaultRegistry.has(type))
+        defaultRegistry.set(type, defaultRegistry.get(options.interpreter));
 
     // allows selector -> registry by type
-    const selectors = [`script[type="${type}"]`];
+    const custom = [`script[type="${type}"]`];
 
     // ensure a Promise can resolve once a custom type has been bootstrapped
     whenDefined(type);
@@ -202,7 +203,7 @@ export const define = (type, options) => {
         options = {
             ...options,
             onInterpreterReady(resolved, node) {
-                CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
+                CUSTOM_SELECTORS.delete(type);
                 defaultRegistry.delete(type);
                 registry.delete(type);
                 waitList.delete(type);
@@ -215,12 +216,17 @@ export const define = (type, options) => {
         );
     }
     else {
-        selectors.push(`${type}-script`);
-        prefixes.push(`${type}-`);
+        custom.push(`${type}-script`);
+        if (!prefixes.includes(`${type}-`))
+            prefixes.push(`${type}-`);
     }
 
-    for (const selector of selectors) types.set(selector, type);
-    CUSTOM_SELECTORS.push(...selectors);
+    for (const selector of custom) {
+        types.set(selector, type);
+        CUSTOM_SELECTORS.add(selector);
+        const i = selectors.indexOf(selector);
+        if (-1 < i) selectors.splice(i, 1);
+    }
 
     // ensure always same env for this custom type
     registry.set(type, {
@@ -229,7 +235,7 @@ export const define = (type, options) => {
     });
 
     if (!dontBother) addAllListeners(document);
-    $$(selectors.join(',')).forEach(handleCustomType);
+    $$(custom.join(',')).forEach(handleCustomType);
 };
 
 /**
