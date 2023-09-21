@@ -5,7 +5,9 @@ import { all, create } from './utils.js';
 import { registry, prefixes } from './interpreters.js';
 
 export const env = new Proxy(create(null), {
-    get: (_, name) => awaitInterpreter(name),
+    get: (_, name) => new Promise(queueMicrotask).then(
+        () => awaitInterpreter(name)
+    ),
 });
 
 /* c8 ignore start */ // attributes are tested via integration / e2e
@@ -27,6 +29,7 @@ const awaitInterpreter = async (key) => {
 
 export const listener = async (event) => {
     const { type, currentTarget } = event;
+    if (!prefixes.length) return;
     for (let { name, value, ownerElement: el } of $x(
         `./@*[${prefixes.map((p) => `name()="${p}${type}"`).join(' or ')}]`,
         currentTarget,
@@ -45,6 +48,7 @@ export const listener = async (event) => {
  * @param {Document | Element} root
  */
 export const addAllListeners = (root) => {
+    if (!prefixes.length) return;
     for (let { name, ownerElement: el } of $x(
         `.//@*[${prefixes
             .map((p) => `starts-with(name(),"${p}")`)
@@ -59,8 +63,7 @@ export const addAllListeners = (root) => {
             if ('disabled' in el && !el.disabled) {
                 el.disabled = true;
                 // set these to enable once the interpreter is known (registered + loaded)
-                queueMicrotask(async () => {
-                    await awaitInterpreter(name.slice(0, i));
+                env[name.slice(0, i)].then(() => {
                     el.disabled = false;
                 });
             }
