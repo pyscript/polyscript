@@ -43,6 +43,16 @@ exports.python = {
         await expect(logs[0]).toBe('hello from A');
     },
 
+    disabledUntilReady: ({ expect }, baseURL) => async ({ page }) => {
+        await page.goto(`${baseURL}/button.html`);
+        await page.waitForSelector('button[disabled]');
+        await page.waitForSelector('button:not([disabled])');
+        const button = await page.getByRole('button');
+        await button.click();
+        const result = await page.evaluate(() => document.querySelector('button').textContent);
+        await expect(result).toContain('clicked');
+    },
+
     error: ({ expect }, baseURL) => async ({ page }) => {
         // Test that when the worker throws an error, the page does not crash and the
         // error is reported to the console.
