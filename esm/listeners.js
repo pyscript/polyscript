@@ -51,8 +51,20 @@ export const addAllListeners = (root) => {
             .join(' or ')}]`,
         root,
     )) {
-        name = name.slice(name.lastIndexOf('-') + 1);
-        if (name !== 'env') el.addEventListener(name, listener);
+        const i = name.lastIndexOf('-');
+        const type = name.slice(i + 1);
+        if (type !== 'env') {
+            el.addEventListener(type, listener);
+            // automatically disable form controls that are not disabled already
+            if ('disabled' in el && !el.disabled) {
+                el.disabled = true;
+                // set these to enable once the interpreter is known (registered + loaded)
+                queueMicrotask(async () => {
+                    await awaitInterpreter(name.slice(0, i));
+                    el.disabled = false;
+                });
+            }
+        }
     }
 };
 /* c8 ignore stop */

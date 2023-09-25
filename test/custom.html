@@ -23,6 +23,10 @@
               'not the same config'
             );
             wrap.run(element.textContent);
+            const button = document.createElement('button');
+            button.setAttribute('mpy-click', 'all_good');
+            button.textContent = 'runtime';
+            document.body.append(button);
           }
         });
     </script>
@@ -33,6 +37,9 @@
     import a
     from b import x
     print(x)
+
+    def all_good(event):
+        print('OK', event.type)
   </script>
   <script type="mpy" worker>
     print("worker")
@@ -46,5 +53,6 @@
     except:
         print("all good")
   </script>
+  <button mpy-click="all_good">click</button>
 </body>
 </html>
