@@ -40,19 +40,23 @@ const mo = new MutationObserver((records) => {
             if (node.nodeType === 1) {
                 addAllListeners(node);
                 if (selector && node.matches(selector)) handle(node);
-                else {
-                    if (selector) $$(selector, node).forEach(handle);
-                    if (!CUSTOM_SELECTORS.length) continue;
-                    handleCustomType(node);
-                    $$(CUSTOM_SELECTORS.join(','), node).forEach(
-                        handleCustomType,
-                    );
-                }
+                else bootstrap(selector, node, true);
             }
         }
         /* c8 ignore stop */
     }
 });
+
+/* c8 ignore start */
+const bootstrap = (selector, node, shouldHandle) => {
+    if (selector) $$(selector, node).forEach(handle);
+    selector = CUSTOM_SELECTORS.join(',');
+    if (selector) {
+        if (shouldHandle) handleCustomType(node);
+        $$(selector, node).forEach(handleCustomType);
+    }
+};
+/* c8 ignore stop */
 
 const observe = (root) => {
     mo.observe(root, { childList: true, subtree: true, attributes: true });
@@ -69,6 +73,5 @@ assign(Element.prototype, {
 // give 3rd party a chance to apply changes before this happens
 queueMicrotask(() => {
     addAllListeners(observe(document));
-    const selector = selectors.join(',');
-    if (selector) $$(selector, document).forEach(handle);
+    bootstrap(selectors.join(','), document, false);
 });

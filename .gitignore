@@ -3,8 +3,7 @@ coverage/
 node_modules/
 cjs/*
 !cjs/package.json
-core.js
-core.js.map
+core.*
 !docs/core.js
 !docs/core.js.map
 pyscript.js
