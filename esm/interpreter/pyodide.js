@@ -8,7 +8,7 @@ const toJsOptions = { dict_converter: Object.fromEntries };
 /* c8 ignore start */
 export default {
     type,
-    module: (version = '0.23.4') =>
+    module: (version = '0.24.1') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url) {
         const { stderr, stdout, get } = stdio();
