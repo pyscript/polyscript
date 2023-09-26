@@ -43,6 +43,55 @@ exports.python = {
         await expect(logs[0]).toBe('hello from A');
     },
 
+    customHooks: ({ expect }, baseURL) => async ({ page }) => {
+        // Test that a config passed as object works out of the box.
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(`${baseURL}/custom-hooks.html`);
+        await page.waitForSelector('html.done');
+        await expect(logs.join(',')).toBe([
+            'onInterpreterReady',
+            'onBeforeRun',
+            'script',
+            'onAfterRun',
+
+            'onInterpreterReady',
+            'onBeforeRunAsync',
+            'script-async',
+            'onAfterRunAsync',
+
+            'onWorkerReady',
+            'codeBeforeRunWorker',
+            'script-worker',
+            'codeAfterRunWorker',
+
+            'onWorkerReady',
+            'codeBeforeRunWorkerAsync',
+            'script-async-worker',
+            'codeAfterRunWorkerAsync',
+
+            'onInterpreterReady',
+            'onBeforeRun',
+            'mpy',
+            'onAfterRun',
+
+            'onInterpreterReady',
+            'onBeforeRunAsync',
+            'mpy-async',
+            'onAfterRunAsync',
+
+            'onWorkerReady',
+            'codeBeforeRunWorker',
+            'mpy-worker',
+            'codeAfterRunWorker',
+
+            'onWorkerReady',
+            'codeBeforeRunWorkerAsync',
+            'mpy-async-worker',
+            'codeAfterRunWorkerAsync',
+        ].join(','));
+    },
+
     disabledUntilReady: ({ expect }, baseURL) => async ({ page }) => {
         await page.goto(`${baseURL}/button.html`);
         await page.waitForSelector('button[disabled]');

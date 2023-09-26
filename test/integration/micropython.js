@@ -7,6 +7,8 @@ module.exports = (playwright, baseURL) => {
 
     test('MicroPython bootstrap', python.bootstrap(playwright, baseURL));
 
+    test('MicroPython custom hooks', python.customHooks(playwright, baseURL));
+
     test('MicroPython fetch', python.fetch(playwright, `${baseURL}/fetch.html`));
 
     test('MicroPython to MicroPython Worker', shared.worker(playwright, `${baseURL}/worker.html`));

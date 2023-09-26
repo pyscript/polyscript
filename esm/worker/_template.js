@@ -80,8 +80,8 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 const { beforeRun, beforeRunAsync, afterRun, afterRunAsync } =
                     hooks;
 
-                const after = afterRun || afterRunAsync;
-                const before = beforeRun || beforeRunAsync;
+                const after = isAsync ? afterRunAsync : afterRun;
+                const before = isAsync ? beforeRunAsync : beforeRun;
 
                 // append code that should be executed *after* first
                 if (after) {

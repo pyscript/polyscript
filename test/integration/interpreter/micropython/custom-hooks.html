@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>mpy-script{display:none}</style>
+    <script type="module">
+        import { define } from '/core.js';
+
+        define('mpy', {
+          interpreter: 'micropython',
+          onInterpreterReady: ({ run, runAsync }, element) => {
+            console.log('onInterpreterReady');
+            dispatchEvent(new Event('mpy:ready'));
+            const exec = element.hasAttribute('async') ? runAsync : run;
+            exec(element.textContent.trim());
+          },
+          onWorkerReady: () => console.log('onWorkerReady'),
+          onBeforeRun: () => console.log('onBeforeRun'),
+          onBeforeRunAsync: () => console.log('onBeforeRunAsync'),
+          onAfterRun: () => console.log('onAfterRun'),
+          onAfterRunAsync: () => console.log('onAfterRunAsync'),
+          codeBeforeRunWorker: () => 'print("codeBeforeRunWorker")',
+          codeBeforeRunWorkerAsync: () => 'print("codeBeforeRunWorkerAsync")',
+          codeAfterRunWorker: () => 'print("codeAfterRunWorker")',
+          codeAfterRunWorkerAsync: () => 'print("codeAfterRunWorkerAsync")',
+        });
+
+        const cases = [
+          { type: 'script' },
+          { type: 'script', async: true},
+          { type: 'script', worker: true },
+          { type: 'script', async: true, worker: true },
+          { type: 'mpy' },
+          { type: 'mpy', async: true},
+          { type: 'mpy', worker: true },
+          { type: 'mpy', async: true, worker: true },
+        ];
+
+        (function inject() {
+          if (cases.length) {
+            addEventListener(
+              'mpy:ready',
+              () => {
+                // give enough time to run the `print` statement
+                // then invoke the inject function again
+                setTimeout(inject, 100);
+              },
+              { once: true }
+            );
+            const current = cases.shift();
+            let type = current.type;
+            const isScript = type === 'script';
+            const tag = document.createElement(isScript ? 'script' : type + '-script');
+            if (isScript) tag.type = 'mpy';
+            if (current.async) {
+              type += '-async';
+              tag.setAttribute('async', '');
+            }
+            if (current.worker) {
+              type += '-worker';
+              tag.setAttribute('worker', '');
+            }
+            tag.textContent = `print("${type}")`
+            document.body.append(tag);
+          }
+          else {
+            document.documentElement.classList.add('done');
+          }
+        })();
+    </script>
+</head>
+<body></body>
+</html>
