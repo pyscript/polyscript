@@ -14,12 +14,12 @@ export class Hook {
         this.interpreter = interpreter;
         this.onWorkerReady = options.onWorkerReady;
         for (const [key, value] of workerHooks)
-            this[key] = options[value]?.();
+            this[key] = options[value];
     }
     get stringHooks() {
         const hooks = {};
         for (const [key] of workerHooks) {
-            if (this[key]) hooks[key] = dedent(this[key]);
+            if (this[key]) hooks[key] = dedent(this[key]());
         }
         return hooks;
     }
