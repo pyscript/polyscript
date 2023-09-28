@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      mpy-script { display: none; }
+      script-mpy { display: block; }
+    </style>
+    <script type="module">
+        import { define } from '/core.js';
+        define('mpy', {
+          interpreter: 'micropython',
+          // version: '1.20.0-295',
+          // version: 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@1.20.0-295/micropython.mjs',
+          onInterpreterReady({ run }, element) {
+            run(`
+              import sys
+              print(sys.version)
+            `);
+          }
+        });
+    </script>
+</head>
+<body>
+  <script type="mpy"></script>
+</body>
+</html>
