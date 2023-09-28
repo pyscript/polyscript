@@ -67,7 +67,8 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^0.13.3"
+        "coincident": "^0.13.3",
+        "html-escaper": "^3.0.3"
     },
     "worker": {
         "blob": "sha256-wpW1JDUswE7n7bkoJJYLv66C9OuoZbVItbc+oW3ttD8="

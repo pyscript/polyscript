@@ -1,4 +1,5 @@
 import dedent from 'codedent';
+import { unescape } from 'html-escaper';
 
 const { isArray } = Array;
 
@@ -36,7 +37,7 @@ const dispatch = (target, type, worker = false, CE = CustomEvent) => {
 /* c8 ignore stop */
 
 export {
-    dedent,
+    dedent, unescape,
     dispatch,
     isArray,
     assign,

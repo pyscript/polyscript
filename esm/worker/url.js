@@ -1,6 +1,6 @@
 import { INVALID_CONTENT, INVALID_SRC_ATTR, INVALID_WORKER_ATTR } from '../errors.js';
 
-import { dedent } from '../utils.js';
+import { dedent, unescape } from '../utils.js';
 
 const hasCommentsOnly = text => !text
     .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -25,11 +25,11 @@ export default element => {
           else {
               const { innerHTML, localName, type } = element;
               const name = type || localName.replace(/-script$/, '');
+              value = unescape(innerHTML);
               console.warn(
                   `Deprecated: use <script type="${name}"> for an always safe content parsing:\n`,
-                  innerHTML,
+                  value,
               );
-              value = innerHTML;
           }
 
           const url = URL.createObjectURL(new Blob([dedent(value)], { type: 'text/plain' }));
