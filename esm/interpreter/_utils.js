@@ -116,6 +116,7 @@ const fetchResolved = (config_fetch, url) =>
 
 export const base = new WeakMap();
 
+/* c8 ignore start */
 export const fetchPaths = (module, interpreter, config_fetch) =>
     all(
         calculateFetchPaths(config_fetch).map(({ url, path }) =>
