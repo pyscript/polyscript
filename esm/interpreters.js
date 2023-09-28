@@ -34,8 +34,10 @@ export const interpreter = new Proxy(new Map(), {
         return (config, baseURL) =>
             module.then((module) => {
                 configs.set(id, config);
-                const fetch = config?.fetch;
-                if (fetch) base.set(fetch, baseURL);
+                for (const entry of ['files', 'fetch']) {
+                    const value = config?.[entry];
+                    if (value) base.set(value, baseURL);
+                }
                 return engine(module, config, url);
             });
     },

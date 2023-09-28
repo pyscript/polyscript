@@ -1,5 +1,5 @@
 import { dedent } from '../utils.js';
-import { fetchPaths, io, stdio, writeFileShim } from './_utils.js';
+import { fetchFiles, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
 
 const type = 'wasmoon';
 
@@ -19,6 +19,7 @@ export default {
             interpreter.global.setField(index, 'print', stdout);
             interpreter.global.setField(index, 'printErr', stderr);
         });
+        if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         return interpreter;
     },

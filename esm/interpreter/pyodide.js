@@ -1,4 +1,4 @@
-import { fetchPaths, stdio, writeFile } from './_utils.js';
+import { fetchFiles, fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 
 const type = 'pyodide';
@@ -16,6 +16,7 @@ export default {
         const interpreter = await get(
             loadPyodide({ stderr, stdout, indexURL }),
         );
+        if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.packages) {
             await interpreter.loadPackage('micropip');

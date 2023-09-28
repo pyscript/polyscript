@@ -1,5 +1,5 @@
 import { dedent } from '../utils.js';
-import { fetchPaths } from './_utils.js';
+import { fetchFiles, fetchPaths } from './_utils.js';
 
 const type = 'ruby-wasm-wasi';
 const jsType = type.replace(/\W+/g, '_');
@@ -22,6 +22,7 @@ export default {
         );
         const module = await WebAssembly.compile(await response.arrayBuffer());
         const { vm: interpreter } = await DefaultRubyVM(module);
+        if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         return interpreter;
     },

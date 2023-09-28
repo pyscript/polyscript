@@ -1,4 +1,4 @@
-import { fetchPaths, stdio, writeFile } from './_utils.js';
+import { fetchFiles, fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 
 const type = 'micropython';
@@ -13,6 +13,7 @@ export default {
         const { stderr, stdout, get } = stdio();
         url = url.replace(/\.m?js$/, '.wasm');
         const interpreter = await get(loadMicroPython({ stderr, stdout, url }));
+        if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         return interpreter;
     },

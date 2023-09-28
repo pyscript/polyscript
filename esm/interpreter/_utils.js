@@ -124,4 +124,47 @@ export const fetchPaths = (module, interpreter, config_fetch) =>
                 .then((buffer) => module.writeFile(interpreter, path, buffer)),
         ),
     );
+
+    const fillName = (source, dest) => dest.endsWith('/') ?
+                        `${dest}${source.split('/').pop()}` : dest;
+
+const parseTemplate = (src, map) => src.replace(
+  /\{.+?\}/g,
+  k => {
+    if (!map.has(k))
+      throw new SyntaxError(`Invalid template: ${k}`);
+    return map.get(k);
+  }
+);
+
+const calculateFilesPaths = files => {
+  const map = new Map;
+  const targets = new Set;
+  const sourceDest = [];
+  for (const [source, dest] of Object.entries(files)) {
+    if (/^\{.+\}$/.test(source)) {
+      if (map.has(source))
+        throw new SyntaxError(`Duplicated template: ${source}`);
+      map.set(source, parseTemplate(dest, map));
+    }
+    else {
+      const url = parseTemplate(source, map);
+      const path = fillName(url, parseTemplate(dest, map));
+      if (targets.has(path))
+        throw new SyntaxError(`Duplicated destination: ${path}`);
+      targets.add(path);
+      sourceDest.push({ url, path });
+    }
+  }
+  return sourceDest;
+};
+
+export const fetchFiles = (module, interpreter, config_files) =>
+    all(
+        calculateFilesPaths(config_files).map(({ url, path }) =>
+            fetchResolved(config_files, url)
+                .then(getBuffer)
+                .then((buffer) => module.writeFile(interpreter, path, buffer)),
+        ),
+    );
 /* c8 ignore stop */
