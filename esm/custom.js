@@ -9,7 +9,7 @@ import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
 import { Hook } from './worker/hooks.js';
 import workerURL from './worker/url.js';
-import { XWorker } from './index.js';
+import XWorker from './xworker.js';
 
 export const CUSTOM_SELECTORS = [];
 

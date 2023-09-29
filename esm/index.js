@@ -1,6 +1,6 @@
 import { $$ } from 'basic-devtools';
 
-import xworker from './worker/class.js';
+import XWorker from './xworker.js';
 import { handle } from './script-handler.js';
 import { assign } from './utils.js';
 import { selectors, prefixes } from './interpreters.js';
@@ -10,7 +10,7 @@ import { listener, addAllListeners } from './listeners.js';
 export { define, whenDefined } from './custom.js';
 export { env } from './listeners.js';
 export * from './errors.js';
-export const XWorker = xworker();
+export { XWorker };
 
 const mo = new MutationObserver((records) => {
     const selector = selectors.join(',');
