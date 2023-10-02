@@ -23,12 +23,13 @@ const nodeInfo = (node, type) => ({
  * Notify the main thread about element "readiness".
  * @param {HTMLScriptElement | HTMLElement} target the script or custom-type element
  * @param {string} type the custom/type as event prefix
+ * @param {string} what the kind of event to dispatch, i.e. `ready` or `done`
  * @param {boolean} [worker = false] `true` if dispatched form a worker, `false` by default if in main
  * @param {globalThis.CustomEvent} [CustomEvent = globalThis.CustomEvent] the `CustomEvent` to use
  */
-const dispatch = (target, type, worker = false, CE = CustomEvent) => {
+const dispatch = (target, type, what, worker = false, CE = CustomEvent) => {
     target.dispatchEvent(
-        new CE(`${type}:ready`, {
+        new CE(`${type}:${what}`, {
             bubbles: true,
             detail: { worker },
         })

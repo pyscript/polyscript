@@ -11,6 +11,7 @@
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
  * [Ready Event](#ready-event) - how to listen to the `type:ready` event
+ * [Done Event](#done-event) - how to listen to the `type:done` event
  * [Examples](#examples) - some *polyscript* based live example
  * [Interpreter Features](#interpreter-features) - current state of supported interpreters
 
@@ -499,6 +500,10 @@ Whenever a *non-custom* script is going to run some code, or whenever *any worke
 The [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) dispatched in either cases contains a `target` which refers to the element that is running code and a `detail.worker` boolean value that is `true` if such event came from a worker instead of the main thread.
 
 The `worker` detail is essential to know if an `xworker` property is attached so that it's also easy to pollute its `sync` proxy utility.
+
+## Done Event
+
+Whenever a *non-custom* script is going to run some code, or whenever *any worker* is going to run its own code, a `type:done` event is dispatched through the element *after* its code has fully executed.
 
 ### Custom Types on Main
 
