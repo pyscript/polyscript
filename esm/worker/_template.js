@@ -100,6 +100,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
 
             const { CustomEvent, document } = window;
             const element = id && document.getElementById(id) || null;
+            const notify = kind => dispatch(element, custom || type, kind, true, CustomEvent);
 
             let target = '';
 
@@ -130,10 +131,14 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             // allows transforming arguments with sync
             transform = details.transform.bind(details, interpreter);
 
-            if (element) dispatch(element, custom || type, true, CustomEvent);
+            // notify worker ready to execute
+            if (element) notify('ready');
 
             // run either sync or async code in the worker
             await details[name](interpreter, code);
+
+            // notify worker done executing
+            if (element) notify('done');
             return interpreter;
         } catch (error) {
             postMessage(error);

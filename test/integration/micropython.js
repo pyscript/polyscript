@@ -35,4 +35,6 @@ module.exports = (playwright, baseURL) => {
         const result = await page.evaluate(() => document.body.innerText);
         await expect(result.trim()).toBe('OK');
     });
+
+    test('MicroPython ready-done events', python.waitForReadyDone(playwright, `${baseURL}/ready-done.html`));
 };

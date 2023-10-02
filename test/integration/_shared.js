@@ -102,6 +102,16 @@ exports.python = {
         await expect(result).toContain('clicked');
     },
 
+    waitForReadyDone: ({ expect }, url) => async ({ page }) => {
+        await page.goto(url);
+        await page.waitForSelector('html.done');
+        const [ready, done] = await page.evaluate(() => [ready, done]);
+        await expect(ready.length).toBe(4);
+        await expect(done.length).toBe(4);
+        await expect(ready.join(',')).toBe('micropython:ready,micropython:ready,micropython:ready,micropython:ready');
+        await expect(done.join(',')).toBe('micropython:done,micropython:done,micropython:done,micropython:done');
+    },
+
     error: ({ expect }, baseURL) => async ({ page }) => {
         // Test that when the worker throws an error, the page does not crash and the
         // error is reported to the console.

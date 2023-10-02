@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('micropython');
+
+        globalThis.ready = [];
+        addEventListener('micropython:ready', ({ type }) => {
+          ready.push(type);
+        });
+
+        globalThis.done = [];
+        addEventListener('micropython:done', ({ type }) => {
+          if (done.push(type) === document.querySelectorAll('script[type="micropython"]').length)
+            document.documentElement.classList.add('done');
+        });
+    </script>
+</head>
+<body>
+  <script type="micropython">print(1)</script>
+  <script type="micropython" async>print(2)</script>
+  <script type="micropython" worker>print(3)</script>
+  <script type="micropython" worker async>print(4)</script>
+</body>
+</html>
