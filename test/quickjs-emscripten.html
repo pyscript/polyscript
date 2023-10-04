@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickJS</title>
+  <script type="module">
+    import { define } from '../core.js';
+    define(null, {
+        interpreter: 'quickjs-emscripten',
+        onInterpreterReady({ run }) {
+          console.log(run('{a: 123}'));
+        }
+    });
+  </script>
+</head>
+<body>
+  <script type="quickjs-emscripten">
+      console.log({hello: "World"});
+  </script>
+</body>
+</html>
