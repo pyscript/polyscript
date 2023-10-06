@@ -4,7 +4,7 @@ import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
 import { assign, create, defineProperties } from '../utils.js';
 import { getText } from '../fetch-utils.js';
-import { Hook } from './hooks.js';
+import Hook from './hook.js';
 
 /**
  * @typedef {Object} WorkerOptions custom configuration
@@ -39,7 +39,7 @@ export default (...args) =>
         const bootstrap = fetch(url)
             .then(getText)
             .then(code => {
-                const hooks = isHook ? this.stringHooks : void 0;
+                const hooks = isHook ? this.toJSON() : void 0;
                 postMessage.call(worker, { options, config, code, hooks });
             });
 
@@ -60,8 +60,6 @@ export default (...args) =>
             }
         });
 
-        if (isHook) this.onWorkerReady?.(this.interpreter, worker);
-
         worker.addEventListener('message', event => {
             const { data } = event;
             if (data instanceof Error) {
@@ -72,6 +70,8 @@ export default (...args) =>
                 }));
             }
         });
+
+        if (isHook) this.onWorker?.(this.interpreter, worker);
 
         return worker;
     };
