@@ -5,7 +5,7 @@
     "main": "./cjs/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
-        "server": "npx static-handler --cors --coep --coop --corp .",
+        "server": "npx static-handler --coi .",
         "build": "npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
@@ -15,7 +15,7 @@
         "test": "c8 --100 node --experimental-loader @node-loader/import-maps test/index.js && npm run test:integration",
         "test:html": "npm run test && c8 report -r html",
         "test:integration//": "Don't bother with spinning servers. Trap the tests EXIT_CODE. Kill the running server, if any. Return the EXIT_CODE to eventually throw an error.",
-        "test:integration": "static-handler --cors --coep --coop --corp . 2>/dev/null & SH_PID=$!; EXIT_CODE=0; playwright test --fully-parallel test/ || EXIT_CODE=$?; kill $SH_PID 2>/dev/null; exit $EXIT_CODE",
+        "test:integration": "static-handler --coi . 2>/dev/null & SH_PID=$!; EXIT_CODE=0; playwright test --fully-parallel test/ || EXIT_CODE=$?; kill $SH_PID 2>/dev/null; exit $EXIT_CODE",
         "coverage": "mkdir -p ./coverage; c8 report --reporter=text-lcov > ./coverage/lcov.info",
         "size": "npm run size:module && npm run size:worker",
         "size:module": "echo module is $(cat core.js | brotli | wc -c) bytes once compressed",
@@ -46,7 +46,7 @@
         "eslint": "^8.51.0",
         "linkedom": "^0.15.4",
         "rollup": "^4.0.2",
-        "static-handler": "^0.4.2",
+        "static-handler": "^0.4.3",
         "typescript": "^5.2.2"
     },
     "type": "module",
@@ -67,10 +67,10 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^0.13.4",
+        "coincident": "^0.13.5",
         "html-escaper": "^3.0.3"
     },
     "worker": {
-        "blob": "sha256-qnFFiMJiwuGU654dOzENsA97Z2uhaNw+GOMHX3ya1o4="
+        "blob": "sha256-704aE8aK4Uw8zQP/aNqDV7vYYSPe+xl2V6W8mI5d3W0="
     }
 }
