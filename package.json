@@ -60,6 +60,11 @@
             "import": "./esm/index.js",
             "default": "./cjs/index.js"
         },
+        "./exports": {
+            "types": "./types/polyscript/esm/exports.d.ts",
+            "import": "./esm/exports.js",
+            "default": "./cjs/exports.js"
+        },
         "./package.json": "./package.json"
     },
     "dependencies": {
