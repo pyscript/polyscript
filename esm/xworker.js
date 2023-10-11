@@ -1,3 +1,6 @@
 import xworker from './worker/class.js';
+import { Hook } from './worker/hooks.js';
 
-export default xworker();
+const XWorker = xworker();
+
+export { Hook, XWorker };

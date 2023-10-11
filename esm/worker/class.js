@@ -2,7 +2,7 @@ import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
-import { assign, defineProperties } from '../utils.js';
+import { assign, create, defineProperties } from '../utils.js';
 import { getText } from '../fetch-utils.js';
 import { Hook } from './hooks.js';
 
@@ -66,7 +66,7 @@ export default (...args) =>
             const { data } = event;
             if (data instanceof Error) {
                 event.stopImmediatePropagation();
-                worker.onerror(Object.create(event, {
+                worker.onerror(create(event, {
                     type: { value: 'error' },
                     error: { value: data }
                 }));

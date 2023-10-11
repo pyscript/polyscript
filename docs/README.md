@@ -385,6 +385,11 @@ xworker.window.setTimeout(print, 100, "timers too")
 
 ℹ️ - Please note that even if non blocking, if too many operations are orchestrated from a *worker*, instead of the *main* thread, the overall performance might still be slower due the communication channel and all the primitives involved in the synchronization process. Feel free to use the `window` feature as a great enabler for unthinkable or quick solutions but keep in mind it is still an indirection.
 
+### Just the XWorker
+
+If you only need the `XWorker` class from *JS*, or the internal `Hook` class to define custom worker (only) hooks remotely, you can `import { XWorker, Hook } from 'polyscript/xworker'` and see how far you can go with it.
+
+
 #### The `sync` utility
 
 This helper does not interfere with the global context but it still ensure a function can be exposed form *main* and be used from *thread* and/or vice-versa.

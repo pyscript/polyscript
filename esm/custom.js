@@ -7,9 +7,8 @@ import { registry as defaultRegistry, prefixes, configs } from './interpreters.j
 import { getRuntimeID } from './loader.js';
 import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
-import { Hook } from './worker/hooks.js';
+import { Hook, XWorker } from './xworker.js';
 import workerURL from './worker/url.js';
-import XWorker from './xworker.js';
 
 export const CUSTOM_SELECTORS = [];
 

@@ -65,6 +65,11 @@
             "import": "./esm/exports.js",
             "default": "./cjs/exports.js"
         },
+        "./xworker": {
+            "types": "./types/polyscript/esm/xworker.d.ts",
+            "import": "./esm/xworker.js",
+            "default": "./cjs/xworker.js"
+        },
         "./package.json": "./package.json"
     },
     "dependencies": {

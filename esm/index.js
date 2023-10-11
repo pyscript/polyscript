@@ -9,8 +9,7 @@ import { listener, addAllListeners } from './listeners.js';
 
 import { define as $define, whenDefined as $whenDefined } from './custom.js';
 import { env as $env } from './listeners.js';
-import { Hook as $Hook } from './worker/hooks.js';
-import $XWorker from './xworker.js';
+import { Hook as $Hook, XWorker as $XWorker } from './xworker.js';
 
 // avoid multiple initialization of the same library
 const [

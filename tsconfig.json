@@ -8,5 +8,9 @@
         "emitDeclarationOnly": true,
         "declarationDir": "types"
     },
-    "include": ["esm/index.js", "esm/exports.js"]
+    "include": [
+        "esm/index.js",
+        "esm/exports.js",
+        "esm/xworker.js"
+    ]
 }
