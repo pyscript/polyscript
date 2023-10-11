@@ -73,7 +73,8 @@
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
         "coincident": "^0.13.5",
-        "html-escaper": "^3.0.3"
+        "html-escaper": "^3.0.3",
+        "sticky-module": "^0.1.0"
     },
     "worker": {
         "blob": "sha256-704aE8aK4Uw8zQP/aNqDV7vYYSPe+xl2V6W8mI5d3W0="

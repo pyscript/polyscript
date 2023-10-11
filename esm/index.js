@@ -1,7 +1,8 @@
+import stickyModule from 'sticky-module';
 import { $$ } from 'basic-devtools';
 
 import { handle } from './script-handler.js';
-import { assign, defineProperty } from './utils.js';
+import { assign } from './utils.js';
 import { selectors, prefixes } from './interpreters.js';
 import { CUSTOM_SELECTORS, handleCustomType } from './custom.js';
 import { listener, addAllListeners } from './listeners.js';
@@ -11,29 +12,26 @@ import { env as $env } from './listeners.js';
 import { Hook as $Hook } from './worker/hooks.js';
 import $XWorker from './xworker.js';
 
-const polyscript = Symbol.for('polyscript');
-const alreadyLive = polyscript in globalThis;
-
 // avoid multiple initialization of the same library
-/* c8 ignore start */
-const { define, whenDefined, env, Hook, XWorker } = (
-    alreadyLive ?
-        globalThis[polyscript] :
-        defineProperty(
-            globalThis,
-            polyscript,
-            {
-                value: {
-                    define: $define,
-                    whenDefined: $whenDefined,
-                    env: $env,
-                    Hook: $Hook,
-                    XWorker: $XWorker
-                }
-            }
-        )[polyscript]
+const [
+    {
+        define,
+        whenDefined,
+        env,
+        Hook,
+        XWorker
+    },
+    alreadyLive
+] = stickyModule(
+    'polyscript',
+    {
+        define: $define,
+        whenDefined: $whenDefined,
+        env: $env,
+        Hook: $Hook,
+        XWorker: $XWorker
+    }
 );
-/* c8 ignore stop */
 
 export { define, whenDefined, env, Hook, XWorker };
 export * from './errors.js';
