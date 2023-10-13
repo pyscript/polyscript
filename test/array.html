@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Polyscript</title>
+        <script type="module" src="../core.js"></script>
+    </head>
+    <body>
+        <script>
+            function aFunc(myArray) {
+                console.log(myArray[0], myArray[1])
+            }
+        </script>
+        <script type="module">
+            import { XWorker } from "../core.js";
+
+            new XWorker("./array.py", { type: "pyodide"});
+        </script>
+    </body>
+</html>
