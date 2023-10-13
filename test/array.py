@@ -1,7 +1,11 @@
-import polyscript
-import pyodide
+from polyscript import xworker
 
-f = polyscript.xworker.window.aFunc
+f = xworker.window.aFunc
 
 print(f([1,2]))
 
+
+def listener(event):
+    print(event.type)
+
+xworker.window.document.addEventListener("click", listener)
