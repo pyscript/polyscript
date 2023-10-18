@@ -1,6 +1,7 @@
 import { fetchFiles, fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 
+const { stringify } = JSON;
 const type = 'micropython';
 
 // REQUIRES INTEGRATION TEST
@@ -15,6 +16,14 @@ export default {
         const interpreter = await get(loadMicroPython({ stderr, stdout, url }));
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
+        if (config.packages) {
+            run(interpreter, `
+                import mip
+                for pkg in ${stringify(config.packages)}:
+                    mip.install(pkg)
+                del mip
+            `);
+        }
         return interpreter;
     },
     registerJSModule,
