@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyscript queue</title>
+  <script type="module">
+    import { define } from "../../core.js";
+    define("mpy", {
+      interpreter: "micropython",
+      async onInterpreterReady({ run }, element) {
+        let code = element.textContent;
+        if (element.src)
+          code = await fetch(element.src).then(b => b.text());
+        run(code);
+      }
+    });
+  </script>
+</head>
+<body>
+  <script type="mpy" src="one.py"></script>
+  <script type="mpy">print('inline one')</script>
+  <script type="mpy" src="two.py"></script>
+  <script type="mpy">print('inline two')</script>
+  <script type="mpy" src="three.py"></script>
+  <script type="mpy">print('inline three')</script>
+</body>
+</html>

@@ -34,8 +34,9 @@ export const handleCustomType = (node) => {
     for (const selector of CUSTOM_SELECTORS) {
         if (node.matches(selector)) {
             const type = types.get(selector);
+            const details = registry.get(type);
             const { resolve } = waitList.get(type);
-            const { options, known } = registry.get(type);
+            const { options, known } = details;
             if (!known.has(node)) {
                 known.add(node);
                 const {
@@ -143,11 +144,11 @@ export const handleCustomType = (node) => {
                         runEvent: module.runEvent.bind(module, interpreter),
                     };
 
-                    resolve(resolved);
-
-                    if (error) onerror?.(error, node);
-
-                    onInterpreterReady?.(resolved, node);
+                    details.queue = details.queue.then(() => {
+                        resolve(resolved);
+                        if (error) onerror?.(error, node);
+                        return onInterpreterReady?.(resolved, node);
+                    });
                 });
             }
         }
@@ -225,6 +226,7 @@ export const define = (type, options) => {
     registry.set(type, {
         options: assign({ env: type }, options),
         known: new WeakSet(),
+        queue: Promise.resolve(),
     });
 
     if (!dontBother) addAllListeners(document);
