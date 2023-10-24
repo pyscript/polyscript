@@ -7,16 +7,14 @@ const build = (fileName) => {
     else console.log("building without optimizations");
     queue = queue.then(
         () =>
-            new Promise((resolve, reject) => {
+            new Promise(resolve => {
                 exec(
                     "npm run rollup:xworker && npm run rollup:core",
                     { cwd: __dirname, env: { ...process.env, NO_MIN: true } },
                     (error) => {
-                        if (error) reject(error);
-                        else
-                            resolve(
-                                console.log(fileName || "", "build completed"),
-                            );
+                        if (error) console.error(error);
+                        else console.log(fileName || "", "build completed");
+                        resolve();
                     },
                 );
             }),
