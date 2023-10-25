@@ -40,11 +40,11 @@
         "@playwright/test": "^1.39.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "ascjs": "^6.0.2",
+        "ascjs": "^6.0.3",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.51.0",
-        "linkedom": "^0.15.6",
+        "eslint": "^8.52.0",
+        "linkedom": "^0.16.1",
         "rollup": "^4.1.4",
         "static-handler": "^0.4.3",
         "typescript": "^5.2.2"
@@ -77,11 +77,11 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^0.13.10",
+        "coincident": "^0.14.2",
         "html-escaper": "^3.0.3",
         "sticky-module": "^0.1.0"
     },
     "worker": {
-        "blob": "sha256-GfuvJ2e3Z3+W+RloQdT4cF32hNouOevvEWUWIWtWxZo="
+        "blob": "sha256-0L4zqFOhFGCP35lbD7rYCrkMg5LPyRFI9ZDDurwnBpo="
     }
 }
