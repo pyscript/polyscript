@@ -7,9 +7,10 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { assign, create, dispatch } from '../utils.js';
+import { assign, create, createFunction, createOverload, createResolved, dispatch } from '../utils.js';
 import { registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
+import { polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
 
 // bails out out of the box with a native/meaningful error
 // in case the SharedArrayBuffer is not available
@@ -67,35 +68,69 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
             const { id, tag, type, custom, version, config, async: isAsync } = options;
+
             const interpreter = await getRuntime(
                 getRuntimeID(type, version),
                 baseURL,
                 config
             );
+
             const details = create(registry.get(type));
-            const name = `run${isAsync ? 'Async' : ''}`;
+
+            const resolved = createResolved(
+                details,
+                type,
+                config,
+                interpreter
+            );
+
+            let name = 'run';
+            if (isAsync) name += 'Async';
 
             if (hooks) {
-                // patch code if needed
-                const { beforeRun, beforeRunAsync, afterRun, afterRunAsync } =
-                    hooks;
+                const overload = createOverload(details, name);
 
-                const after = isAsync ? afterRunAsync : afterRun;
-                const before = isAsync ? beforeRunAsync : beforeRun;
+                let before = '';
+                let after = '';
+
+                for (const key of codeHooks) {
+                    const value = hooks[key];
+                    if (value) {
+                        const asyncCode = key.endsWith('Async');
+                        // either async hook and this worker is async
+                        // or sync hook and this worker is sync
+                        // other shared options possible cases are ignored
+                        if ((asyncCode && isAsync) || (!asyncCode && !isAsync)) {
+                            if (key.startsWith('codeBefore'))
+                                before = value;
+                            else
+                                after = value;
+                        }
+                    }
+                }
 
                 // append code that should be executed *after* first
-                if (after) {
-                    const method = details[name].bind(details);
-                    details[name] = (interpreter, code, ...args) =>
-                        method(interpreter, `${code}\n${after}`, ...args);
-                }
+                if (after) overload(after, false);
 
                 // prepend code that should be executed *before* (so that after is post-patched)
-                if (before) {
-                    const method = details[name].bind(details);
-                    details[name] = (interpreter, code, ...args) =>
-                        method(interpreter, `${before}\n${code}`, ...args);
+                if (before) overload(before, true);
+
+                let beforeCB, afterCB;
+                // exclude onWorker and onReady
+                for (const key of jsHooks.slice(2)) {
+                    const value = hooks[key];
+                    if (value) {
+                        const asyncCode = key.endsWith('Async');
+                        if ((asyncCode && isAsync) || (!asyncCode && !isAsync)) {
+                            const cb = createFunction(value);
+                            if (key.startsWith('onBefore'))
+                                beforeCB = cb;
+                            else
+                                afterCB = cb;
+                        }
+                    }
                 }
+                polluteJS(details, resolved, xworker, isAsync, beforeCB, afterCB);
             }
 
             const { CustomEvent, document } = window;
@@ -133,6 +168,10 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
 
             // notify worker ready to execute
             if (element) notify('ready');
+
+            // evaluate the optional `onReady` callback
+            if (hooks?.onReady)
+                createFunction(hooks?.onReady).call(details, resolved, xworker);
 
             // run either sync or async code in the worker
             await details[name](interpreter, code);

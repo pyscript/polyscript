@@ -1,5 +1,6 @@
 import dedent from 'codedent';
 import { unescape } from 'html-escaper';
+import { io } from './interpreter/_utils.js';
 
 const { isArray } = Array;
 
@@ -34,6 +35,24 @@ const dispatch = (target, type, what, worker = false, CE = CustomEvent) => {
             detail: { worker },
         })
     );
+};
+
+export const createFunction = value => Function(`'use strict';return (${value})`)();
+
+export const createResolved = (module, type, config, interpreter) => ({
+    type,
+    config,
+    interpreter,
+    io: io.get(interpreter),
+    run: (code, ...args) => module.run(interpreter, code, ...args),
+    runAsync: (code, ...args) => module.runAsync(interpreter, code, ...args),
+    runEvent: (...args) => module.runEvent(interpreter, ...args),
+});
+
+export const createOverload = (module, name) => ($, pre) => {
+    const method = module[name].bind(module);
+    module[name] = (interpreter, code, ...args) =>
+        method(interpreter, `${pre ? $ : code}\n${pre ? code : $}`, ...args);
 };
 /* c8 ignore stop */
 

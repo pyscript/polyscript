@@ -7,13 +7,17 @@
         import { define } from '/core.js';
         define(null, {
           interpreter: 'micropython',
-          onInterpreterReady(mpy, node) {
-            if (node) throw new Error('unexpected node');
-            mpy.run(`
-              from js import document
-              document.documentElement.classList.add('ready');
-              document.body.textContent = 'OK'
-            `);
+          hooks: {
+            main: {
+              onReady(mpy, node) {
+                if (node) throw new Error('unexpected node');
+                mpy.run(`
+                  from js import document
+                  document.documentElement.classList.add('ready');
+                  document.body.textContent = 'OK'
+                `);
+              }
+            }
           }
         });
     </script>

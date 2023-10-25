@@ -1,13 +1,13 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
-import { assign, create, defineProperty, nodeInfo } from './utils.js';
+import { assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
-import { io } from './interpreter/_utils.js';
 import { addAllListeners } from './listeners.js';
 import { Hook, XWorker } from './xworker.js';
+import { polluteJS, js as jsHooks, code as codeHooks } from './hooks.js';
 import workerURL from './worker/url.js';
 
 export const CUSTOM_SELECTORS = [];
@@ -44,15 +44,15 @@ export const handleCustomType = (node) => {
                     config,
                     version,
                     env,
-                    onInterpreterReady,
                     onerror,
+                    hooks,
                 } = options;
 
                 let error;
                 try {
                     const worker = workerURL(node);
                     if (worker) {
-                        const xworker = XWorker.call(new Hook(null, options), worker, {
+                        const xworker = XWorker.call(new Hook(null, hooks), worker, {
                             ...nodeInfo(node, type),
                             version,
                             type: runtime,
@@ -83,71 +83,66 @@ export const handleCustomType = (node) => {
                 engine.then((interpreter) => {
                     const module = create(defaultRegistry.get(runtime));
 
-                    const {
-                        onBeforeRun,
-                        onBeforeRunAsync,
-                        onAfterRun,
-                        onAfterRunAsync,
-                    } = options;
-
-                    const hooks = new Hook(interpreter, options);
+                    const hook = new Hook(interpreter, hooks);
 
                     const XWorker = function XWorker(...args) {
-                        return Worker.apply(hooks, args);
+                        return Worker.apply(hook, args);
                     };
 
-                    // These two loops mimic a `new Map(arrayContent)` without needing
-                    // the new Map overhead so that [name, [before, after]] can be easily destructured
-                    // and new sync or async patches become easy to add (when the logic is the same).
-
-                    // patch sync
-                    for (const [name, [before, after]] of [
-                        ['run', [onBeforeRun, onAfterRun]],
-                    ]) {
-                        const method = module[name];
-                        module[name] = function (interpreter, code, ...args) {
-                            if (before) before.call(this, resolved, node);
-                            const result = method.call(this, interpreter, code, ...args);
-                            if (after) after.call(this, resolved, node);
-                            return result;
-                        };
-                    }
-
-                    // patch async
-                    for (const [name, [before, after]] of [
-                        ['runAsync', [onBeforeRunAsync, onAfterRunAsync]],
-                    ]) {
-                        const method = module[name];
-                        module[name] = async function (interpreter, code, ...args) {
-                            if (before) await before.call(this, resolved, node);
-                            const result = await method.call(
-                                this,
-                                interpreter,
-                                code,
-                                ...args
-                            );
-                            if (after) await after.call(this, resolved, node);
-                            return result;
-                        };
-                    }
+                    const resolved = {
+                        ...createResolved(
+                            module,
+                            type,
+                            structuredClone(configs.get(name)),
+                            interpreter,
+                        ),
+                        XWorker,
+                    };
 
                     module.registerJSModule(interpreter, 'polyscript', { XWorker });
 
-                    const resolved = {
-                        type,
-                        interpreter,
-                        XWorker,
-                        io: io.get(interpreter),
-                        config: structuredClone(configs.get(name)),
-                        run: module.run.bind(module, interpreter),
-                        runAsync: module.runAsync.bind(module, interpreter),
-                        runEvent: module.runEvent.bind(module, interpreter),
-                    };
+                    // patch methods accordingly to hooks (and only if needed)
+                    for (const suffix of ['Run', 'RunAsync']) {
+                        const overload = createOverload(module, `r${suffix.slice(1)}`);
+
+                        let before = '';
+                        let after = '';
+
+                        for (const key of codeHooks) {
+                            const value = hooks?.main?.[key];
+                            if (value && key.endsWith(suffix)) {
+                                if (key.startsWith('codeBefore'))
+                                    before = dedent(value());
+                                else
+                                    after = dedent(value());
+                            }
+                        }
+
+                        // append code that should be executed *after* first
+                        if (after) overload(after, false);
+
+                        // prepend code that should be executed *before* (so that after is post-patched)
+                        if (before) overload(before, true);
+
+                        let beforeCB, afterCB;
+                        // ignore onReady and onWorker
+                        for (let i = 2; i < jsHooks.length; i++) {
+                            const key = jsHooks[i];
+                            const value = hooks?.main?.[key];
+                            if (value && key.endsWith(suffix)) {
+                                if (key.startsWith('onBefore'))
+                                    beforeCB = value;
+                                else
+                                    afterCB = value;
+                            }
+                        }
+                        polluteJS(module, resolved, node, suffix.endsWith('Async'), beforeCB, afterCB);
+                    }
 
                     details.queue = details.queue.then(() => {
                         resolve(resolved);
                         if (error) onerror?.(error, node);
-                        return onInterpreterReady?.(resolved, node);
+                        return hooks?.main?.onReady?.(resolved, node);
                     });
                 });
             }
@@ -165,7 +160,6 @@ const registry = new Map();
  * @prop {'pyodide' | 'micropython' | 'wasmoon' | 'ruby-wasm-wasi'} interpreter the interpreter to use
  * @prop {string} [version] the optional interpreter version to use
  * @prop {string} [config] the optional config to use within such interpreter
- * @prop {(environment: object, node: Element) => void} [onInterpreterReady] the callback that will be invoked once
  */
 
 let dontBotherCount = 0;
@@ -198,17 +192,24 @@ export const define = (type, options) => {
 
     if (dontBother) {
         // add a script then cleanup everything once that's ready
-        const { onInterpreterReady } = options;
+        const { hooks } = options;
+        const onReady = hooks?.main?.onReady;
         options = {
             ...options,
-            onInterpreterReady(resolved, node) {
-                CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
-                defaultRegistry.delete(type);
-                registry.delete(type);
-                waitList.delete(type);
-                node.remove();
-                onInterpreterReady?.(resolved);
-            }
+            hooks: {
+                ...hooks,
+                main: {
+                    ...hooks?.main,
+                    onReady(resolved, node) {
+                        CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
+                        defaultRegistry.delete(type);
+                        registry.delete(type);
+                        waitList.delete(type);
+                        node.remove();
+                        onReady?.(resolved);
+                    }
+                }
+            },
         };
         document.head.append(
             assign(document.createElement('script'), { type })

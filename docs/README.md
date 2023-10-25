@@ -10,6 +10,7 @@
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
+ * [Hooks](#hooks) - how *custom types* can hook around the life cycle of each script/tag
  * [Ready Event](#ready-event) - how to listen to the `type:ready` event
  * [Done Event](#done-event) - how to listen to the `type:done` event
  * [Examples](#examples) - some *polyscript* based live example
@@ -431,6 +432,18 @@ import { define, whenDefined } from 'polyscript';
 
 define('mpy', {
     interpreter: 'micropython',
+    hooks: {
+      main: {
+        onReady(wrap, element) {
+          console.log('here we go main!');
+        }
+      },
+      worker: {
+        onReady(wrap, xworker) {
+          console.log('here we go worker!');
+        }
+      }
+    }
     // the rest of the custom type options
 });
 
@@ -448,20 +461,101 @@ The list of options' fields is described as such and all of these are *optional*
 
 | name                      | example                                       | behavior |
 | :------------------------ | :-------------------------------------------- | :--------|
-| version                   | `{verstion: '0.23.2'}`                        | Allow the usage of a specific version of an interpreter, same way `version` attribute works with `<script>` elements. |
-| config                    | `{config: 'type.toml'}` `{config: {}}` | Ensure such config is already parsed and available, if not already passed as object, for every custom `type` that execute code. |
-| onerror                   | `(error, element) => { throw error; }`        | Allows custom types to intercept early errors possibly happened while bootstrapping elements. |
+| interpreter               | `{interpreter: 'pyodide'}`                    | Specifies the interpreter to use, such as *pyodide*, *micropython*, *wasmoon* or others. |
+| config                    | `{config: 'type.toml'}` `{config: {}}`        | Ensure such config is already parsed and available, if not already passed as object, for every custom `type` that execute code. |
+| version                   | `{version: '0.23.2'}`                         | Allow the usage of a specific version of an interpreter, same way `version` attribute works with `<script>` elements. |
 | env                       | `{env: 'my-project'}`                         | Guarantee same environment for every custom `type`, avoiding conflicts with any other possible default or custom environment. |
-| onInterpreterReady        | `{onInterpreterReady(wrap, element) {}}`      | This is the main entry point to define anything extra to the context of the always same interpreter. This callback is *awaited* and executed, after the desired *interpreter* is fully available and bootstrapped *once* though other optional fields, per each element that matches the defined `type`. The `wrap` reference contains many fields and utilities helpful to run most common operations, and it is passed along most other options too, when defined. |
-| onBeforeRun               | `{onBeforeRun(wrap, element) {}}`             | This is a **hook** into the logic that runs right before any *interpreter* `run(...)` is performed. It receives the same `wrap` already sent when *onInterpreterReady* executes, and it passes along the current `element` that is going to execute such code. |
-| onAfterRun                | `{onAfterRun(wrap, element) {}}`              | This is a **hook** into the logic that runs right after any *interpreter* `run(...)` is performed. It receives the same `wrap` already sent when *onInterpreterReady* executes, and it passes along the current `element` that already executed the code. |
-| onBeforeRunAsync          | `{onBeforeRunAsync(wrap, element) {}}`        | This is a **hook** into the logic that runs right before any *interpreter* `runAsync(...)` is performed. It receives the same `wrap` already sent when *onInterpreterReady* executes, and it passes along the current `element` that is going to execute such code asynchronously. |
-| onAfterRunAsync           | `{onAfterRunAsync(wrap, element) {}}`         | This is a **hook** into the logic that runs right after any *interpreter* `runAsync(...)` is performed. It receives the same `wrap` already sent when *onInterpreterReady* executes, and it passes along the current `element` that already executed the code asynchronously. |
-| onWorkerReady             | `{onWorkerReady(interpreter, xworker) {}}`    | This is a **hook** into the logic that runs right before a new `XWorker` instance has been created in the **main** thread. It makes it possible to pre-define exposed `sync` methods to the `xworker` counter-part, enabling cross thread features out of the custom type without needing any extra effort. |
-| codeBeforeRunWorker       | `{codeBeforeRunWorker(){}}`                   | This is a **hook** into the logic that runs right before any *interpreter* `run(...)` is performed *within a worker*. Because all worker code is executed as `code`, this callback is expected to **return a string** that can be prepended for any worker synchronous operation. |
-| codeAfterRunWorker        | `{codeAfterRunWorker(){}}`                    | This is a **hook** into the logic that runs right after any *interpreter* `run(...)` is performed *within a worker*. Because all worker code is executed as `code`, this callback is expected to **return a string** that can be appended for any worker synchronous operation. |
-| codeBeforeRunWorkerAsync  | `{codeBeforeRunWorkerAsync(){}}`              | This is a **hook** into the logic that runs right before any *interpreter* `runAsync(...)` is performed *within a worker*. Because all worker code is executed as `code`, this callback is expected to **return a string** that can be prepended for any worker asynchronous operation. |
-| codeAfterRunWorkerAsync   | `{codeAfterRunWorkerAsync(){}}`               | This is a **hook** into the logic that runs right after any *interpreter* `runAsync(...)` is performed *within a worker*. Because all worker code is executed as `code`, this callback is expected to **return a string** that can be appended for any worker asynchronous operation. |
+| onerror                   | `(error, element) => { throw error; }`        | Allows custom types to intercept early errors possibly happened while bootstrapping elements. |
+| hooks                     | `{hooks: {main: {}, worker: {}}}`             | Allows custom types to hook logic around every main thread or worker tag via defined hooks. |
+
+## Hooks
+
+Every special script or tag inevitably passes through some main or worker thread related tasks.
+
+In both worlds, the exact sequence of steps around code execution is the following:
+
+  * **ready** - the DOM recognized the special script or tag and the associated interpreter is ready to work. A *JS* callback might be useful to instrument the interpreter before anything else happens.
+  * **before run** - there could be some *JS* code setup specific for the script on the main thread, or the worker. This is similar to a generic *setup* callback in tests.
+  * **code before run** - there could be some *PL* code to prepend to the one being executed. In this case the code is a string because it will be part of the evaluation.
+  * **actual code** - the code in the script or tag or the `src` file specified in the script. This is not a hook, just the exact time the code gets executed in general.
+  * **code after run** - there could be some *PL* code to append to the one being executed. Same as *before*, the code is a string targeting the foreign *PL*.
+  * **after run** - there could be some *JS* to execute right after the whole code has been evaluated. This is similar to a generic *teardown* callback in tests.
+
+As most interpreters can run their code either *synchronously* or *asynchronously*, the very same sequence is guaranteed to run in order in both cases, and the difference is only around the naming convention.
+
+### Main Hooks
+
+When it comes to *main* hooks all callbacks will receive a *wrapper* of the interpreter with its utilities, see the further section to know more, plus the element on the page that is going to execute its related code, being this a custom script/type or a custom tag.
+
+This is the list of all possible, yet **optional** hooks, a custom type can define for **main**:
+
+| name                      | type                     | example                                       | behavior |
+| :------------------------ | :----------------------- | :-------------------------------------------- | :--------|
+| onReady                   | (Wrap, Element) => void  | `onReady(wrap, element) {}`                   | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
+| onBeforeRun               | (Wrap, Element) => void  | `onBeforeRun(wrap, element) {}`               | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
+| onBeforeRunAsync          | (Wrap, Element) => void  | `onBeforeRunAsync(wrap, element) {}`          | Same as `onBeforeRun` except it's the one used whenever the script is `async`. |
+| codeBeforeRun             | () => string             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
+| codeBeforeRunAsync        | () => string             | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the script is `async`. |
+| codeAfterRun              | () => string             | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
+| codeAfterRunAsync         | () => string             | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the script is `async`. |
+| onAfterRun                | (Wrap, Element) => void  | `onAfterRun(wrap, element) {}`                | If defined, it is invoked after the foreign code has been executed already. |
+| onAfterRunAsync           | (Wrap, Element) => void  | `onAfterRunAsync(wrap, element) {}`           | Same as `onAfterRun` except it's the one used whenever the script is `async`. |
+| onWorker                  | (Wrap?, XWorker) => void | `onWorker(wrap = null, xworker) {}`           | If defined, whenever a script or tag with a `worker` attribute is processed it gets triggered on the main thread, to allow to expose possible `xworker` features before the code gets executed within the worker thread. The `wrap` reference is most of the time `null` unless an explicit `XWorker` call has been initialized manually and/or there is an interpreter on the main thread (*very advanced use case*). Please **note** this is the only hook that doesn't exist in the *worker* counter list of hooks. |
+
+### Worker Hooks
+
+When it comes to *worker* hooks, **all non code related callbacks must be serializable**, meaning that callbacks cannot use any outer scope reference, as these are forwarded as strings, hence evaluated after in the worker, to survive the main <-> worker `postMessage` dance.
+
+Here an example of what works and what doesn't:
+
+```js
+// this works 👍
+define('pl', {
+  interpreter: 'programming-lang',
+  hooks: {
+    worker: {
+      onReady() {
+        // NOT suggested, just as example!
+        if (!('i' in globalThis))
+          globalThis.i = 0;
+        console.log(++i);
+      }
+    }
+  }
+});
+
+// this DOES NOT WORK ⚠️
+let i = 0;
+define('pl', {
+  interpreter: 'programming-lang',
+  hooks: {
+    worker: {
+      onReady() {
+        // that outer-scope `i` is nowhere understood
+        // whenever this code executes in the worker
+        // as this function gets stringified and re-evaluated
+        console.log(++i);
+      }
+    }
+  }
+});
+```
+
+At the same time, as the worker doesn't have any `element` strictly related, as workers can be created also procedurally, the second argument won't be an element but the related *xworker* that is driving the logic.
+
+As summary, this is the list of all possible, yet **optional** hooks, a custom type can define for **worker**:
+
+| name                      | type                     | example                                       | behavior |
+| :------------------------ | :----------------------- | :-------------------------------------------- | :--------|
+| onReady                   | (Wrap, XWorker) => void  | `onReady(wrap, xworker) {}`                   | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
+| onBeforeRun               | (Wrap, XWorker) => void  | `onBeforeRun(wrap, xworker) {}`               | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
+| onBeforeRunAsync          | (Wrap, XWorker) => void  | `onBeforeRunAsync(wrap, xworker) {}`          | Same as `onBeforeRun` except it's the one used whenever the worker script is `async`. |
+| codeBeforeRun             | () => string             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
+| codeBeforeRunAsync        | () => string             | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the worker script is `async`. |
+| codeAfterRun              | () => string             | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
+| codeAfterRunAsync         | () => string             | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the worker script is `async`. |
+| onAfterRun                | (Wrap, XWorker) => void  | `onAfterRun(wrap, xworker) {}`                | If defined, it is invoked after the foreign code has been executed already. |
+| onAfterRunAsync           | (Wrap, XWorker) => void  | `onAfterRunAsync(wrap, xworker) {}`           | Same as `onAfterRun` except it's the one used whenever the worker script is `async`. |
 
 ### Custom Scripts Wrappers
 

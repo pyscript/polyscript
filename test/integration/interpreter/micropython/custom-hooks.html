@@ -9,21 +9,38 @@
 
         define('mpy', {
           interpreter: 'micropython',
-          onInterpreterReady: ({ run, runAsync }, element) => {
-            console.log('onInterpreterReady');
-            dispatchEvent(new Event('mpy:ready'));
-            const exec = element.hasAttribute('async') ? runAsync : run;
-            exec(element.textContent.trim());
+          hooks: {
+            main: {
+              onReady: ({ run, runAsync }, element) => {
+                console.log('onMainReady');
+                dispatchEvent(new Event('mpy:ready'));
+                const exec = element.hasAttribute('async') ? runAsync : run;
+                exec(element.textContent.trim());
+              },
+              onWorker: () => console.log('onWorkerMain'),
+              onBeforeRun: () => console.log('onBeforeRun'),
+              onBeforeRunAsync: () => console.log('onBeforeRunAsync'),
+              onAfterRun: () => console.log('onAfterRun'),
+              onAfterRunAsync: () => console.log('onAfterRunAsync'),
+              codeBeforeRun: () => 'print("codeBeforeRunMain")',
+              codeBeforeRunAsync: () => 'print("codeBeforeRunAsyncMain")',
+              codeAfterRun: () => 'print("codeAfterRunMain")',
+              codeAfterRunAsync: () => 'print("codeAfterRunAsyncMain")',
+            },
+            worker: {
+              onReady: ({ run, runAsync }, xworker) => {
+                console.log('onWorkerReady');
+              },
+              onBeforeRun: () => console.log('onBeforeRunWorker'),
+              onBeforeRunAsync: () => console.log('onBeforeRunAsyncWorker'),
+              onAfterRun: () => console.log('onAfterRunWorker'),
+              onAfterRunAsync: () => console.log('onAfterRunAsyncWorker'),
+              codeBeforeRun: () => 'print("codeBeforeRun")',
+              codeBeforeRunAsync: () => 'print("codeBeforeRunAsync")',
+              codeAfterRun: () => 'print("codeAfterRun")',
+              codeAfterRunAsync: () => 'print("codeAfterRunAsync")',
+            }
           },
-          onWorkerReady: () => console.log('onWorkerReady'),
-          onBeforeRun: () => console.log('onBeforeRun'),
-          onBeforeRunAsync: () => console.log('onBeforeRunAsync'),
-          onAfterRun: () => console.log('onAfterRun'),
-          onAfterRunAsync: () => console.log('onAfterRunAsync'),
-          codeBeforeRunWorker: () => 'print("codeBeforeRunWorker")',
-          codeBeforeRunWorkerAsync: () => 'print("codeBeforeRunWorkerAsync")',
-          codeAfterRunWorker: () => 'print("codeAfterRunWorker")',
-          codeAfterRunWorkerAsync: () => 'print("codeAfterRunWorkerAsync")',
         });
 
         const cases = [
