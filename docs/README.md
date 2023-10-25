@@ -489,18 +489,18 @@ When it comes to *main* hooks all callbacks will receive a *wrapper* of the inte
 
 This is the list of all possible, yet **optional** hooks, a custom type can define for **main**:
 
-| name                      | type                     | example                                       | behavior |
-| :------------------------ | :----------------------- | :-------------------------------------------- | :--------|
-| onReady                   | (Wrap, Element) => void  | `onReady(wrap, element) {}`                   | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
-| onBeforeRun               | (Wrap, Element) => void  | `onBeforeRun(wrap, element) {}`               | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
-| onBeforeRunAsync          | (Wrap, Element) => void  | `onBeforeRunAsync(wrap, element) {}`          | Same as `onBeforeRun` except it's the one used whenever the script is `async`. |
-| codeBeforeRun             | () => string             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
-| codeBeforeRunAsync        | () => string             | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the script is `async`. |
-| codeAfterRun              | () => string             | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
-| codeAfterRunAsync         | () => string             | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the script is `async`. |
-| onAfterRun                | (Wrap, Element) => void  | `onAfterRun(wrap, element) {}`                | If defined, it is invoked after the foreign code has been executed already. |
-| onAfterRunAsync           | (Wrap, Element) => void  | `onAfterRunAsync(wrap, element) {}`           | Same as `onAfterRun` except it's the one used whenever the script is `async`. |
-| onWorker                  | (Wrap?, XWorker) => void | `onWorker(wrap = null, xworker) {}`           | If defined, whenever a script or tag with a `worker` attribute is processed it gets triggered on the main thread, to allow to expose possible `xworker` features before the code gets executed within the worker thread. The `wrap` reference is most of the time `null` unless an explicit `XWorker` call has been initialized manually and/or there is an interpreter on the main thread (*very advanced use case*). Please **note** this is the only hook that doesn't exist in the *worker* counter list of hooks. |
+| name                      | example                                       | behavior  |
+| :------------------------ | :-------------------------------------------- | :-------- |
+| onReady                   | `onReady(wrap:Wrap, el:Element) {}`           | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
+| onBeforeRun               | `onBeforeRun(wrap:Wrap, el:Element) {}`       | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
+| onBeforeRunAsync          | `onBeforeRunAsync(wrap:Wrap, el:Element) {}`  | Same as `onBeforeRun` except it's the one used whenever the script is `async`. |
+| codeBeforeRun             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
+| codeBeforeRunAsync        | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the script is `async`. |
+| codeAfterRun              | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
+| codeAfterRunAsync         | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the script is `async`. |
+| onAfterRun                | `onAfterRun(wrap:Wrap, el:Element) {}`        | If defined, it is invoked after the foreign code has been executed already. |
+| onAfterRunAsync           | `onAfterRunAsync(wrap:Wrap, el:Element) {}`   | Same as `onAfterRun` except it's the one used whenever the script is `async`. |
+| onWorker                  | `onWorker(wrap = null, xworker) {}`           | If defined, whenever a script or tag with a `worker` attribute is processed it gets triggered on the main thread, to allow to expose possible `xworker` features before the code gets executed within the worker thread. The `wrap` reference is most of the time `null` unless an explicit `XWorker` call has been initialized manually and/or there is an interpreter on the main thread (*very advanced use case*). Please **note** this is the only hook that doesn't exist in the *worker* counter list of hooks. |
 
 ### Worker Hooks
 
@@ -545,17 +545,17 @@ At the same time, as the worker doesn't have any `element` strictly related, as 
 
 As summary, this is the list of all possible, yet **optional** hooks, a custom type can define for **worker**:
 
-| name                      | type                     | example                                       | behavior |
-| :------------------------ | :----------------------- | :-------------------------------------------- | :--------|
-| onReady                   | (Wrap, XWorker) => void  | `onReady(wrap, xworker) {}`                   | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
-| onBeforeRun               | (Wrap, XWorker) => void  | `onBeforeRun(wrap, xworker) {}`               | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
-| onBeforeRunAsync          | (Wrap, XWorker) => void  | `onBeforeRunAsync(wrap, xworker) {}`          | Same as `onBeforeRun` except it's the one used whenever the worker script is `async`. |
-| codeBeforeRun             | () => string             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
-| codeBeforeRunAsync        | () => string             | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the worker script is `async`. |
-| codeAfterRun              | () => string             | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
-| codeAfterRunAsync         | () => string             | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the worker script is `async`. |
-| onAfterRun                | (Wrap, XWorker) => void  | `onAfterRun(wrap, xworker) {}`                | If defined, it is invoked after the foreign code has been executed already. |
-| onAfterRunAsync           | (Wrap, XWorker) => void  | `onAfterRunAsync(wrap, xworker) {}`           | Same as `onAfterRun` except it's the one used whenever the worker script is `async`. |
+| name                      | example                                       | behavior |
+| :------------------------ | :-------------------------------------------- | :--------|
+| onReady                   | `onReady(wrap:Wrap, xw:XWorker) {}`           | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
+| onBeforeRun               | `onBeforeRun(wrap:Wrap, xw:XWorker) {}`       | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
+| onBeforeRunAsync          | `onBeforeRunAsync(wrap:Wrap, xw:XWorker) {}`  | Same as `onBeforeRun` except it's the one used whenever the worker script is `async`. |
+| codeBeforeRun             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
+| codeBeforeRunAsync        | `codeBeforeRunAsync: () => 'print("before")'` | Same as `codeBeforeRun` except it's the one used whenever the worker script is `async`. |
+| codeAfterRun              | `codeAfterRun: () => 'print("after")'`        | If defined, append some code to evaluate right after the rest of the code already executed. |
+| codeAfterRunAsync         | `codeAfterRunAsync: () => 'print("after")'`   | Same as `codeAfterRun` except it's the one used whenever the worker script is `async`. |
+| onAfterRun                | `onAfterRun(wrap:Wrap, xw:XWorker) {}`        | If defined, it is invoked after the foreign code has been executed already. |
+| onAfterRunAsync           | `onAfterRunAsync(wrap:Wrap, xw:XWorker) {}`   | Same as `onAfterRun` except it's the one used whenever the worker script is `async`. |
 
 ### Custom Scripts Wrappers
 
