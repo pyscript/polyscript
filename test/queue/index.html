@@ -8,11 +8,15 @@
     import { define } from "../../core.js";
     define("mpy", {
       interpreter: "micropython",
-      async onInterpreterReady({ run }, element) {
-        let code = element.textContent;
-        if (element.src)
-          code = await fetch(element.src).then(b => b.text());
-        run(code);
+      hooks: {
+        main: {
+          async onReady({ run }, element) {
+            let code = element.textContent;
+            if (element.src)
+              code = await fetch(element.src).then(b => b.text());
+            run(code);
+          }
+        }
       }
     });
   </script>

@@ -18,30 +18,34 @@
             define("mpy", {
                 interpreter: "micropython",
                 config: "../fetch.toml",
-                async onInterpreterReady(micropython, element) {
-                    console.log(micropython);
-                    // Somehow this doesn't work in MicroPython
-                    micropython.io.stdout = (message) => {
-                        console.log("🐍", micropython.type, message);
-                    };
-                    micropython.io.stderr = (message) => {
-                        console.error("⚠️🐍", message);
-                    };
+                hooks: {
+                    main: {
+                        async onReady(micropython, element) {
+                            console.log(micropython);
+                            // Somehow this doesn't work in MicroPython
+                            micropython.io.stdout = (message) => {
+                                console.log("🐍", micropython.type, message);
+                            };
+                            micropython.io.stderr = (message) => {
+                                console.error("⚠️🐍", message);
+                            };
 
-                    micropython.run(element.textContent);
-                    element.replaceChildren("See console ->");
-                    element.style.display = "block";
+                            micropython.run(element.textContent);
+                            element.replaceChildren("See console ->");
+                            element.style.display = "block";
 
-                    const button = document.createElement("button");
-                    button.textContent = "click";
-                    button.setAttribute("mpy-click", "test_click");
-                    document.body.append(button);
+                            const button = document.createElement("button");
+                            button.textContent = "click";
+                            button.setAttribute("mpy-click", "test_click");
+                            document.body.append(button);
 
-                    const error = document.createElement("button");
-                    error.textContent = "error";
-                    error.setAttribute("mpy-click", "test_error");
-                    document.body.append(error);
-                },
+                            const error = document.createElement("button");
+                            error.textContent = "error";
+                            error.setAttribute("mpy-click", "test_error");
+                            document.body.append(error);
+                        }
+                    }
+                }
             });
         </script>
     </head>

@@ -13,11 +13,15 @@
           interpreter: 'micropython',
           // version: '1.20.0-295',
           // version: 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@1.20.0-295/micropython.mjs',
-          onInterpreterReady({ run }, element) {
-            run(`
-              import sys
-              print(sys.version)
-            `);
+          hooks: {
+            main: {
+              onReady({ run }, element) {
+                run(`
+                  import sys
+                  print(sys.version)
+                `);
+              }
+            }
           }
         });
     </script>

@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "PyScript single core to rule them all",
     "main": "./cjs/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
@@ -82,6 +82,6 @@
         "sticky-module": "^0.1.0"
     },
     "worker": {
-        "blob": "sha256-3pfDrj/4UHybU775GW5a4arEUdVfJHFA2r2Pv2iTUtQ="
+        "blob": "sha256-uWTd3aV3jUmuOoSrJ/sdYkSk88ZR10C8vpStJFuPauU="
     }
 }

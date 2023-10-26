@@ -19,14 +19,18 @@
       import { define } from "/core.js";
       define("mpy", {
         interpreter: 'micropython',
-        onInterpreterReady({ run, type }, element) {
-          element.dispatchEvent(
-            new CustomEvent(`${type}:ready`, {
-              bubbles: true,
-              detail: { worker: false },
-            })
-          );
-          run(element.textContent);
+        hooks: {
+          main: {
+            onReady({ run, type }, element) {
+              element.dispatchEvent(
+                new CustomEvent(`${type}:ready`, {
+                  bubbles: true,
+                  detail: { worker: false },
+                })
+              );
+              run(element.textContent);
+            }
+          }
         }
       });
     </script>
