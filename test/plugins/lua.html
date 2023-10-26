@@ -16,15 +16,19 @@
             import { define } from "polyscript";
             define("lua", {
                 interpreter: "wasmoon",
-                async onInterpreterReady(wasmoon, element) {
-                    // Somehow this doesn't work in Wasmoon
-                    wasmoon.io.stdout = (message) => {
-                        console.log("🌑", wasmoon.type, message);
-                    };
-                    wasmoon.run(element.textContent);
-                    element.replaceChildren("See console ->");
-                    element.style.display = "block";
-                },
+                hooks: {
+                    main: {
+                        async onReady(wasmoon, element) {
+                            // Somehow this doesn't work in Wasmoon
+                            wasmoon.io.stdout = (message) => {
+                                console.log("🌑", wasmoon.type, message);
+                            };
+                            wasmoon.run(element.textContent);
+                            element.replaceChildren("See console ->");
+                            element.style.display = "block";
+                        },
+                    }
+                }
             });
         </script>
     </head>
