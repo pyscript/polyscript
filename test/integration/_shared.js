@@ -205,4 +205,15 @@ exports.python = {
         await page.waitForSelector('html.error');
         await expect(logs.pop()).toBe('Invalid worker attribute');
     },
+
+    localInterpreter: ({ expect }, baseURL) => async ({ page }) => {
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(`${baseURL}/interpreter-local.html`);
+        await page.waitForSelector('html.ready');
+        await expect(logs.length).toBe(1);
+        await expect(logs[0]).toBe('OK');
+        const body = await page.evaluate(() => document.body.innerText);
+        await expect(body.trim()).toBe('3.4.0; MicroPython v1.20.0-297-g5fbb84a77 on 2023-07-13');
+    },
 };
