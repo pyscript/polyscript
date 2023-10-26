@@ -424,7 +424,7 @@ The *core* module itself exposes two methods to do so:
 
 | name          | example                   | behavior |
 | :------------ | :------------------------ | :--------|
-| define        | `define('mpy', options)`  | Register once a `<script type="mpy">`, if it's a string, and a counter `<mpy-script>` selector that will bootstrap and handle all nodes in the page that match such selectors. If the `type` is either `null` or `undefined`, no type will exist but the interpreter will be bootstrapped anyway, hence available once `options.onInterpreterReady(wrap)` is invoked (without any `element` reference). The available `options` are described after this table. |
+| define        | `define('mpy', options)`  | Register once a `<script type="mpy">`, if it's a string, and a counter `<mpy-script>` selector that will bootstrap and handle all nodes in the page that match such selectors. If the `type` is either `null` or `undefined`, no type will exist but the interpreter will be bootstrapped anyway, hence available once `options.hooks.main.onReady(wrap)` is invoked (without any `element` reference). The available `options` are described after this table. |
 | whenDefined        | `whenDefined('mpy')` | Return a promise that will be resolved once the custom `mpy` script will be available, returning an *interpreter* wrapper once it will be fully ready. |
 
 ```js
@@ -606,7 +606,7 @@ Whenever a *non-custom* script is going to run some code, or whenever *any worke
 
 ### Custom Types on Main
 
-The reason this event is not automatically dispatched on custom type elements or scripts is that these will have their own `onInterpreterReady` hook to eventually do more before desiring, or needing, to notify the "*readiness*" of such custom element and, in case of wanting the event to happen, this is the tiny boilerplate needed to simulate otherwise non-custom type events:
+The reason this event is not automatically dispatched on custom type elements or scripts is that these will have their own `options.hooks.main.onReady` hook to eventually do more before desiring, or needing, to notify the "*readiness*" of such custom element and, in case of wanting the event to happen, this is the tiny boilerplate needed to simulate otherwise non-custom type events:
 
 ```js
 // note: type === 'py' or the defined type

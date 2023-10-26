@@ -17,16 +17,20 @@
         define('mpy', {
           config,
           interpreter: 'micropython',
-          onInterpreterReady(wrap, element) {
-            console.assert(
-              JSON.stringify(wrap.config) === JSON.stringify(config),
-              'not the same config'
-            );
-            wrap.run(element.textContent);
-            const button = document.createElement('button');
-            button.setAttribute('mpy-click', 'all_good');
-            button.textContent = 'runtime';
-            document.body.append(button);
+          hooks: {
+            main: {
+              onReady(wrap, element) {
+                console.assert(
+                  JSON.stringify(wrap.config) === JSON.stringify(config),
+                  'not the same config'
+                );
+                wrap.run(element.textContent);
+                const button = document.createElement('button');
+                button.setAttribute('mpy-click', 'all_good');
+                button.textContent = 'runtime';
+                document.body.append(button);
+              }
+            }
           }
         });
     </script>
