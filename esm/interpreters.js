@@ -21,7 +21,7 @@ export const interpreter = new Proxy(new Map(), {
         if (!map.has(id)) {
             const [type, ...rest] = id.split('@');
             const interpreter = registry.get(type);
-            const url = /^https?:\/\//i.test(rest)
+            const url = /^(?:\.?\.?\/|https?:\/\/)/i.test(rest) 
                 ? rest.join('@')
                 : interpreter.module(...rest);
             map.set(id, {
