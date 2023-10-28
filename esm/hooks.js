@@ -18,6 +18,16 @@ export const js = [
 ];
 
 /* c8 ignore start */
+const original = new WeakMap;
+function patch(resolved, interpreter) {
+    const { run, runAsync } = original.get(this);
+    return {
+        ...resolved,
+        run: run.bind(this, interpreter),
+        runAsync: runAsync.bind(this, interpreter)
+    };
+}
+
 /**
  * Created the wrapper to pass along hooked callbacks.
  * @param {object} module the details module
@@ -29,24 +39,29 @@ export const js = [
  */
 export const polluteJS = (module, resolved, ref, isAsync, before, after) => {
     if (before || after) {
+        if (!original.has(module)) {
+            const { run, runAsync } = module;
+            original.set(module, { run, runAsync });
+        }
+        const patched = patch.bind(module, resolved);
         const name = isAsync ? 'runAsync' : 'run';
         const method = module[name];
         module[name] = isAsync ?
             async function (interpreter, code, ...args) {
-                if (before) await before.call(this, resolved, ref);
+                if (before) await before.call(this, patched(interpreter), ref);
                 const result = await method.call(
                     this,
                     interpreter,
                     code,
                     ...args
                 );
-                if (after) await after.call(this, resolved, ref);
+                if (after) await after.call(this, patched(interpreter), ref);
                 return result;
             } :
             function (interpreter, code, ...args) {
-                if (before) before.call(this, resolved, ref);
+                if (before) before.call(this, patched(interpreter), ref);
                 const result = method.call(this, interpreter, code, ...args);
-                if (after) after.call(this, resolved, ref);
+                if (after) after.call(this, patched(interpreter), ref);
                 return result;
             }
         ;
