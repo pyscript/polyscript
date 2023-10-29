@@ -1,3 +1,5 @@
+import { registry } from './interpreters.js';
+
 const beforeRun = 'BeforeRun';
 const afterRun = 'AfterRun';
 
@@ -18,9 +20,13 @@ export const js = [
 ];
 
 /* c8 ignore start */
-const original = new WeakMap;
-function patch(resolved, interpreter) {
-    const { run, runAsync } = original.get(this);
+// create a copy of the resolved wrapper with the original
+// run and runAsync so that, if used within onBeforeRun/Async
+// or onAfterRun/Async polluted entries won't matter and just
+// the native utilities will be available without seppuku.
+// The same applies if called within `onReady` worker hook.
+export function patch(resolved, interpreter) {
+    const { run, runAsync } = registry.get(this.type);
     return {
         ...resolved,
         run: run.bind(this, interpreter),
@@ -39,10 +45,6 @@ function patch(resolved, interpreter) {
  */
 export const polluteJS = (module, resolved, ref, isAsync, before, after) => {
     if (before || after) {
-        if (!original.has(module)) {
-            const { run, runAsync } = module;
-            original.set(module, { run, runAsync });
-        }
         const patched = patch.bind(module, resolved);
         const name = isAsync ? 'runAsync' : 'run';
         const method = module[name];

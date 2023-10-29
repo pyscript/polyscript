@@ -10,7 +10,7 @@ import coincident from 'coincident/window';
 import { assign, create, createFunction, createOverload, createResolved, dispatch } from '../utils.js';
 import { registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
-import { polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
+import { patch, polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
 
 // bails out out of the box with a native/meaningful error
 // in case the SharedArrayBuffer is not available
@@ -170,8 +170,13 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             if (element) notify('ready');
 
             // evaluate the optional `onReady` callback
-            if (hooks?.onReady)
-                createFunction(hooks?.onReady).call(details, resolved, xworker);
+            if (hooks?.onReady) {
+                createFunction(hooks?.onReady).call(
+                    details,
+                    patch.call(details, resolved, interpreter),
+                    xworker,
+                );
+            }
 
             // run either sync or async code in the worker
             await details[name](interpreter, code);

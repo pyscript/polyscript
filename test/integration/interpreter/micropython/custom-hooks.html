@@ -18,10 +18,10 @@
                 exec(element.textContent.trim());
               },
               onWorker: () => console.log('onWorkerMain'),
-              onBeforeRun: () => console.log('onBeforeRun'),
-              onBeforeRunAsync: () => console.log('onBeforeRunAsync'),
-              onAfterRun: () => console.log('onAfterRun'),
-              onAfterRunAsync: () => console.log('onAfterRunAsync'),
+              onBeforeRun: ({ run }) => run('print("onBeforeRun")'),
+              onBeforeRunAsync: ({ runAsync }) => runAsync('print("onBeforeRunAsync")'),
+              onAfterRun: ({ run }) => run('print("onAfterRun")'),
+              onAfterRunAsync: ({ runAsync }) => runAsync('print("onAfterRunAsync")'),
               codeBeforeRun: () => 'print("codeBeforeRunMain")',
               codeBeforeRunAsync: () => 'print("codeBeforeRunAsyncMain")',
               codeAfterRun: () => 'print("codeAfterRunMain")',
@@ -29,12 +29,12 @@
             },
             worker: {
               onReady: ({ run, runAsync }, xworker) => {
-                console.log('onWorkerReady');
+                run('print("onWorkerReady")');
               },
-              onBeforeRun: () => console.log('onBeforeRunWorker'),
-              onBeforeRunAsync: () => console.log('onBeforeRunAsyncWorker'),
-              onAfterRun: () => console.log('onAfterRunWorker'),
-              onAfterRunAsync: () => console.log('onAfterRunAsyncWorker'),
+              onBeforeRun: ({ run }) => run('print("onBeforeRunWorker")'),
+              onBeforeRunAsync: ({ runAsync }) => runAsync('print("onBeforeRunAsyncWorker")'),
+              onAfterRun: ({ run }) => run('print("onAfterRunWorker")'),
+              onAfterRunAsync: ({ runAsync }) => runAsync('print("onAfterRunAsyncWorker")'),
               codeBeforeRun: () => 'print("codeBeforeRun")',
               codeBeforeRunAsync: () => 'print("codeBeforeRunAsync")',
               codeAfterRun: () => 'print("codeAfterRun")',
