@@ -491,7 +491,7 @@ This is the list of all possible, yet **optional** hooks, a custom type can defi
 
 | name                      | example                                       | behavior  |
 | :------------------------ | :-------------------------------------------- | :-------- |
-| onReady                   | `onReady(wrap:Wrap, el:Element) {}`           | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
+| onReady                   | `onReady(wrap:Wrap, el:Element) {}`           | If defined, it is invoked before any other hook to signal that the element is going to execute the code. For custom scripts, this hook is in charge of eventually running the content of the script, anyway it prefers to do so. |
 | onBeforeRun               | `onBeforeRun(wrap:Wrap, el:Element) {}`       | If defined, it is invoked before any other hook to signal that the element is going to execute the code. |
 | onBeforeRunAsync          | `onBeforeRunAsync(wrap:Wrap, el:Element) {}`  | Same as `onBeforeRun` except it's the one used whenever the script is `async`. |
 | codeBeforeRun             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
@@ -547,7 +547,7 @@ As summary, this is the list of all possible, yet **optional** hooks, a custom t
 
 | name                      | example                                       | behavior |
 | :------------------------ | :-------------------------------------------- | :--------|
-| onReady                   | `onReady(wrap:Wrap, xw:XWorker) {}`           | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
+| onReady                   | `onReady(wrap:Wrap, xw:XWorker) {}`           | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. Differently from **main**, the code here is already known so all other operations will be performed automatically. |
 | onBeforeRun               | `onBeforeRun(wrap:Wrap, xw:XWorker) {}`       | If defined, it is invoked before any other hook to signal that the xworker is going to execute the code. |
 | onBeforeRunAsync          | `onBeforeRunAsync(wrap:Wrap, xw:XWorker) {}`  | Same as `onBeforeRun` except it's the one used whenever the worker script is `async`. |
 | codeBeforeRun             | `codeBeforeRun: () => 'print("before")'`      | If defined, prepend some code to evaluate right before the rest of the code gets executed. |
