@@ -45,7 +45,7 @@
         "chokidar": "^3.5.3",
         "eslint": "^8.52.0",
         "linkedom": "^0.16.1",
-        "rollup": "^4.1.4",
+        "rollup": "^4.2.0",
         "static-handler": "^0.4.3",
         "typescript": "^5.2.2"
     },
@@ -77,11 +77,11 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^0.14.2",
+        "coincident": "^0.14.3",
         "html-escaper": "^3.0.3",
         "sticky-module": "^0.1.0"
     },
     "worker": {
-        "blob": "sha256-8V/+RVnJSepaqUJJ51lugcxMCD8UHXjhOBKY96PJD5A="
+        "blob": "sha256-OnfsVvIpGHFiuLugSsS/HyrEA+27oGA8Ww7Tm2SaTEk="
     }
 }
