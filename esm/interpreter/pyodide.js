@@ -21,7 +21,7 @@ export default {
         if (config.packages) {
             await interpreter.loadPackage('micropip');
             const micropip = await interpreter.pyimport('micropip');
-            await micropip.install(config.packages);
+            await micropip.install(config.packages, { keep_going: true });
             micropip.destroy();
         }
         return interpreter;
