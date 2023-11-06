@@ -43,9 +43,9 @@
         "ascjs": "^6.0.3",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.52.0",
+        "eslint": "^8.53.0",
         "linkedom": "^0.16.1",
-        "rollup": "^4.2.0",
+        "rollup": "^4.3.0",
         "static-handler": "^0.4.3",
         "typescript": "^5.2.2"
     },
@@ -79,7 +79,7 @@
         "codedent": "^0.1.2",
         "coincident": "^0.14.3",
         "html-escaper": "^3.0.3",
-        "sticky-module": "^0.1.0"
+        "sticky-module": "^0.1.1"
     },
     "worker": {
         "blob": "sha256-bfVKlAWKLAtZuJh0kopzR/AMxLzFKi8oky00CVJaIAo="

@@ -1,4 +1,4 @@
-import stickyModule from 'sticky-module';
+import $stickyModule from 'sticky-module';
 import { $$ } from 'basic-devtools';
 
 import { handle } from './script-handler.js';
@@ -10,6 +10,10 @@ import { listener, addAllListeners } from './listeners.js';
 import { define as $define, whenDefined as $whenDefined } from './custom.js';
 import { env as $env } from './listeners.js';
 import { Hook as $Hook, XWorker as $XWorker } from './xworker.js';
+
+// enforce the type from sticky-module otherwise TS doesn't understand
+/** @type {import("../node_modules/sticky-module/types/index").default} */
+const stickyModule = $stickyModule;
 
 // avoid multiple initialization of the same library
 const [
@@ -34,6 +38,7 @@ const [
 
 export { define, whenDefined, env, Hook, XWorker };
 export * from './errors.js';
+
 
 if (!alreadyLive) {
     const mo = new MutationObserver((records) => {
