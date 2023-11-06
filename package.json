@@ -56,17 +56,17 @@
     "browser": "./core.js",
     "exports": {
         ".": {
-            "types": "./types/polyscript/esm/index.d.ts",
+            "types": "./types/index.d.ts",
             "import": "./esm/index.js",
             "default": "./cjs/index.js"
         },
         "./exports": {
-            "types": "./types/polyscript/esm/exports.d.ts",
+            "types": "./types/exports.d.ts",
             "import": "./esm/exports.js",
             "default": "./cjs/exports.js"
         },
         "./xworker": {
-            "types": "./types/polyscript/esm/xworker.d.ts",
+            "types": "./types/xworker.d.ts",
             "import": "./esm/xworker.js",
             "default": "./cjs/xworker.js"
         },
