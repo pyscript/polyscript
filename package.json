@@ -77,11 +77,11 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^0.14.3",
+        "coincident": "^0.14.4",
         "html-escaper": "^3.0.3",
         "sticky-module": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-bfVKlAWKLAtZuJh0kopzR/AMxLzFKi8oky00CVJaIAo="
+        "blob": "sha256-OY7qGt9VGqokk0d6w6iHQDzJmVLBiPJyL4FGHh6xy/0="
     }
 }
