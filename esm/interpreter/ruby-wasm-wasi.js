@@ -14,7 +14,7 @@ const jsType = type.replace(/\W+/g, '_');
 export default {
     type,
     experimental: true,
-    module: (version = '2.1.0') =>
+    module: (version = '2.2.0') =>
         `https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@${version}/dist/browser.esm.js`,
     async engine({ DefaultRubyVM }, config, url) {
         const response = await fetch(
