@@ -1,7 +1,8 @@
 import '@ungap/with-resolvers';
+import { UNDEFINED } from 'proxy-target/types';
 
 import { getBuffer } from '../fetch-utils.js';
-import { absoluteURL, all, entries, isArray } from '../utils.js';
+import { absoluteURL, all, entries, importCSS, importJS, isArray, isCSS } from '../utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -167,19 +168,20 @@ export const fetchFiles = (module, interpreter, config_files) =>
         ),
     );
 
-export const fetchJSModules = (module, interpreter, js_modules) => {
-    const modules = [];
-    for (const [source, name] of entries(js_modules)) {
-        modules.push(import(source).then(
-            esm => {
-                // { ...esm } is needed to avoid dealing w/ module records
-                module.registerJSModule(interpreter, name, { ...esm });
-            },
-            err => {
-                console.warn(`Unable to register ${name} due ${err}`);
-            }
-        ));
+const RUNNING_IN_WORKER = typeof document === UNDEFINED;
+
+export const fetchJSModules = ({ main, worker }) => {
+    const promises = [];
+    if (worker && RUNNING_IN_WORKER) {
+        for (const [source, name] of entries(worker))
+            promises.push(importJS(source, name));
     }
-    return all(modules);
+    if (main && !RUNNING_IN_WORKER) {
+        for (const [source, name] of entries(main)) {
+            if (isCSS(source)) importCSS(source);
+            else promises.push(importJS(source, name));
+        }
+    }
+    return all(promises);
 };
 /* c8 ignore stop */

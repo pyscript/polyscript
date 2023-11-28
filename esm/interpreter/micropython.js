@@ -15,7 +15,7 @@ export default {
         const interpreter = await get(loadMicroPython({ stderr, stdout, url }));
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(this, interpreter, config.js_modules);
+        if (config.js_modules) await fetchJSModules(config.js_modules);
         return interpreter;
     },
     registerJSModule,

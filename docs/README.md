@@ -254,6 +254,59 @@ Please read the [XWorker](#xworker) dedicated section to know more.
 </details>
 
 
+## Extra `config` features
+
+It is possible to land in either the *main* world or the *worker* one native *JS* modules (aka: *ESM*).
+
+In *polyscript*, this is possible by defining one or more `[js_modules.X]` fields in the config, where `X` is either *main* or *worker*:
+
+  * `[js_modules.main]` is a list of *source* -> *module name* pairs, similarly to how `[files]` field work, where the *module* name will then be reachable via `polyscript.js_modules.actual_name` in both *main* and *worker* world. As the *main* module lands on the main thread, where there is also likely some UI, it is also possible to define one or more related *CSS* to that module, as long as they target the very same name (see the example to better understand).
+  * `[js_modules.worker]` is a list of *source* -> *module name* pairs that actually land only in `<script type="x" worker>` cases. These modules are still reachable through the very same `polyscript.js_modules.actual_name` convention and this feature is meant to be used for modules that only works best, or work regardless, outside the *main* world. As example, if your *JS* module implies that `document` or `window` references, among other *DOM* related APIs, are globally available, it means that that module should be part of the `[js_modules.main]` list instead ... however, if the module works out of the box in a *Worker* environment, it is best for performance reasons to explicitly define such module under this field. Please note that *CSS* files are not accepted within this list because there's no way *CSS* can be useful or land in any meaningful way within a *Worker* environment.
+
+### js_modules config example
+
+```toml
+[js_modules.main]
+# this modules work best on main
+"https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js" = "leaflet"
+"https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" = "leaflet" # CSS
+# this works in both main and worker
+"https://cdn.jsdelivr.net/npm/html-escaper" = "html_escaper"
+
+[js_modules.worker]
+# this works out of the box in a worker too
+"https://cdn.jsdelivr.net/npm/html-escaper" = "html_escaper"
+# this works only in a worker
+"https://cdn.jsdelivr.net/npm/worker-only" = "worker_only"
+```
+
+```html
+<!-- main case -->
+<script type="pyodide" config="./that.toml">
+  # these both works
+  from polyscript.js_modules import leaflet as L
+  from polyscript.js_modules import html_escaper
+
+  # this fails as it's not reachable in main
+  from polyscript.js_modules import worker_only
+</script>
+
+<!-- worker case -->
+<script type="pyodide" config="./that.toml" worker>
+  # these works by proxying the main module and landing
+  # on main only when accessed, never before
+  # the CSS file also lands automatically on demand
+  from polyscript.js_modules import leaflet as L
+
+  # this works out of the box in the worker
+  from polyscript.js_modules import html_escaper
+
+  # this works only in a worker 👍
+  from polyscript.js_modules import worker_only
+</script>
+```
+
+
 ## How Events Work
 
 The event should contain the *interpreter* or *custom type* prefix, followed by the *event* type it'd like to handle.

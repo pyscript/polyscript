@@ -6,7 +6,6 @@
         <title>Polyscript JS Modules</title>
         <style>#main-map, #worker-map { height: 320px; } h3 { margin-bottom: 0; }</style>
         <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
         <script type="module" src="../core.js"></script>
     </head>
     <body>
@@ -19,13 +18,11 @@
 
         <h3>Main</h3>
         <div id="main-map"></div>
-        <!-- Use js_modules via config -->
         <script type="pyodide" config="./modules.toml">
-            # needed to fix pyodide proxies once passed along
+            # needed to fix pyodide proxies
             from pyodide.ffi import to_js
 
-            # registered as Python module
-            import leaflet as L
+            from polyscript.js_modules import leaflet as L
 
             center = to_js([51.505, -0.09])
             mark = to_js([51.5, -0.09])
@@ -36,24 +33,15 @@
                 to_js({"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
             ).addTo(map)
 
-            L.marker(mark).addTo(map).bindPopup('A pretty CSS popup.<br> Easily customizable.').openPopup()
+            L.marker(mark).addTo(map).bindPopup('Modules on Main are a no brainer 👍').openPopup()
         </script>
 
         <hr>
 
         <h3>Worker</h3>
         <div id="worker-map"></div>
-        <!-- Land js modules on main -->
-        <script type="module">
-            import * as leaflet from "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js";
-            globalThis.leaflet = leaflet;
-        </script>
-        <script type="pyodide" worker>
-            # used to reach the main thread window proxy
-            from polyscript import xworker
-
-            # reach directly the module from main
-            L = xworker.window.leaflet
+        <script type="pyodide" config="./modules.toml" worker>
+            from polyscript.js_modules import leaflet as L
 
             center = [51.505, -0.09]
             mark = [51.5, -0.09]
@@ -64,7 +52,7 @@
                 {"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
             ).addTo(map)
 
-            L.marker(mark).addTo(map).bindPopup('A pretty CSS popup.<br> Easily customizable.').openPopup()
+            L.marker(mark).addTo(map).bindPopup('Modules on Worker are awesome 🥳').openPopup()
         </script>
     </body>
 </html>

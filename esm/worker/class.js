@@ -2,7 +2,7 @@ import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
-import { assign, create, defineProperties } from '../utils.js';
+import { assign, create, defineProperties, importCSS, importJS } from '../utils.js';
 import { getText } from '../fetch-utils.js';
 import Hook from './hook.js';
 
@@ -43,15 +43,18 @@ export default (...args) =>
                 postMessage.call(worker, { options, config, code, hooks });
             });
 
+        const sync = assign(
+            coincident(worker, JSON).proxy,
+            { importJS, importCSS },
+        );
+
         defineProperties(worker, {
+            sync: { value: sync },
             postMessage: {
                 value: (data, ...rest) =>
                     bootstrap.then(() =>
                         postMessage.call(worker, data, ...rest),
                     ),
-            },
-            sync: {
-                value: coincident(worker, JSON).proxy,
             },
             onerror: {
                 writable: true,

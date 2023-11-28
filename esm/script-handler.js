@@ -4,7 +4,7 @@ import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
-import { all, dispatch, resolve, defineProperty, nodeInfo } from './utils.js';
+import { JSModules, all, dispatch, resolve, defineProperty, nodeInfo } from './utils.js';
 import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
@@ -60,7 +60,10 @@ const execute = async (script, source, XWorker, isAsync) => {
             configurable: true,
             get: () => script,
         });
-        module.registerJSModule(interpreter, 'polyscript', { XWorker });
+        module.registerJSModule(interpreter, 'polyscript', {
+            js_modules: JSModules,
+            XWorker,
+        });
         dispatch(script, type, 'ready');
         const result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
         const done = dispatch.bind(null, script, type, 'done');
