@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>Polyscript JS Modules</title>
+        <style>#main-map, #worker-map { height: 320px; } h3 { margin-bottom: 0; }</style>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+        <script type="module" src="../core.js"></script>
+    </head>
+    <body>
+        <!--
+            main only:      npx static-handler .
+            main/worker:    npx static-handler --coop --coep .
+
+            Note: --corp breaks the tiles server
+        -->
+
+        <h3>Main</h3>
+        <div id="main-map"></div>
+        <!-- Use js_modules via config -->
+        <script type="pyodide" config="./modules.toml">
+            # needed to fix pyodide proxies once passed along
+            from pyodide.ffi import to_js
+
+            # registered as Python module
+            import leaflet as L
+
+            center = to_js([51.505, -0.09])
+            mark = to_js([51.5, -0.09])
+            map = L.map('main-map').setView(center, 13)
+
+            L.tileLayer(
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                to_js({"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+            ).addTo(map)
+
+            L.marker(mark).addTo(map).bindPopup('A pretty CSS popup.<br> Easily customizable.').openPopup()
+        </script>
+
+        <hr>
+
+        <h3>Worker</h3>
+        <div id="worker-map"></div>
+        <!-- Land js modules on main -->
+        <script type="module">
+            import * as leaflet from "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js";
+            globalThis.leaflet = leaflet;
+        </script>
+        <script type="pyodide" worker>
+            # used to reach the main thread window proxy
+            from polyscript import xworker
+
+            # reach directly the module from main
+            L = xworker.window.leaflet
+
+            center = [51.505, -0.09]
+            mark = [51.5, -0.09]
+            map = L.map('worker-map').setView(center, 13)
+
+            L.tileLayer(
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+            ).addTo(map)
+
+            L.marker(mark).addTo(map).bindPopup('A pretty CSS popup.<br> Easily customizable.').openPopup()
+        </script>
+    </body>
+</html>

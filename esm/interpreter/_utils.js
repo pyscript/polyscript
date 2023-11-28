@@ -1,7 +1,7 @@
 import '@ungap/with-resolvers';
 
 import { getBuffer } from '../fetch-utils.js';
-import { absoluteURL } from '../utils.js';
+import { absoluteURL, all, entries, isArray } from '../utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -73,8 +73,6 @@ const resolve = (FS, path) => {
     return [FS.cwd()].concat(tree).join('/').replace(/^\/+/, '/');
 };
 
-import { all, isArray } from '../utils.js';
-
 const calculateFetchPaths = (config_fetch) => {
     // REQUIRES INTEGRATION TEST
     /* c8 ignore start */
@@ -142,7 +140,7 @@ const calculateFilesPaths = files => {
   const map = new Map;
   const targets = new Set;
   const sourceDest = [];
-  for (const [source, dest] of Object.entries(files)) {
+  for (const [source, dest] of entries(files)) {
     if (/^\{.+\}$/.test(source)) {
       if (map.has(source))
         throw new SyntaxError(`Duplicated template: ${source}`);
@@ -168,4 +166,20 @@ export const fetchFiles = (module, interpreter, config_files) =>
                 .then((buffer) => module.writeFile(interpreter, path, buffer)),
         ),
     );
+
+export const fetchJSModules = (module, interpreter, js_modules) => {
+    const modules = [];
+    for (const [source, name] of entries(js_modules)) {
+        modules.push(import(source).then(
+            esm => {
+                // { ...esm } is needed to avoid dealing w/ module records
+                module.registerJSModule(interpreter, name, { ...esm });
+            },
+            err => {
+                console.warn(`Unable to register ${name} due ${err}`);
+            }
+        ));
+    }
+    return all(modules);
+};
 /* c8 ignore stop */
