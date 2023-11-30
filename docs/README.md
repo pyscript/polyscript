@@ -7,6 +7,7 @@
  * [Terminology](#terminology) - what we mean by "_term_" in this document
  * [Bootstrapping core](#bootstrapping-core) - how to enable Polyscript in your page
  * [How Scripts Work](#how-scripts-work) - how `<script type="...">` works
+ * [Extra config Features](#extra-config-features) - how to load *JS* modules on either main or workers
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
