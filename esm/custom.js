@@ -1,7 +1,7 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
-import { assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo } from './utils.js';
+import { JSModules, assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
@@ -99,7 +99,10 @@ export const handleCustomType = (node) => {
                         XWorker,
                     };
 
-                    module.registerJSModule(interpreter, 'polyscript', { XWorker });
+                    module.registerJSModule(interpreter, 'polyscript', {
+                        js_modules: JSModules,
+                        XWorker,
+                    });
 
                     // patch methods accordingly to hooks (and only if needed)
                     for (const suffix of ['Run', 'RunAsync']) {

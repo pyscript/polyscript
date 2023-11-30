@@ -60,6 +60,31 @@ export const createOverload = (module, name) => ($, pre) => {
     module[name] = (interpreter, code, ...args) =>
         method(interpreter, `${pre ? $ : code}\n${pre ? code : $}`, ...args);
 };
+
+export const js_modules = Symbol.for('polyscript.js_modules');
+
+const jsModules = new Map;
+defineProperty(globalThis, js_modules, { value: jsModules });
+
+export const JSModules = new Proxy(jsModules, {
+    get: (map, name) => map.get(name),
+});
+
+export const importJS = (source, name) => import(source).then(esm => {
+    jsModules.set(name, { ...esm });
+});
+
+export const importCSS = href => new Promise((onload, onerror) => {
+    if (document.querySelector(`link[href="${href}"]`)) onload();
+    document.head.append(
+        assign(
+            document.createElement('link'),
+            { rel: 'stylesheet', href, onload, onerror },
+        )
+    )
+});
+
+export const isCSS = source => /\.css/i.test(new URL(source).pathname);
 /* c8 ignore stop */
 
 export {

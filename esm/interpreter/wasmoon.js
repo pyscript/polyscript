@@ -1,5 +1,5 @@
 import { dedent } from '../utils.js';
-import { fetchFiles, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
+import { fetchFiles, fetchJSModules, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
 
 const type = 'wasmoon';
 
@@ -21,6 +21,7 @@ export default {
         });
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
+        if (config.js_modules) await fetchJSModules(config.js_modules);
         return interpreter;
     },
     // Fallback to globally defined module fields
