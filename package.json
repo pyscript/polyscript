@@ -43,7 +43,7 @@
         "ascjs": "^6.0.3",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.54.0",
+        "eslint": "^8.55.0",
         "linkedom": "^0.16.4",
         "rollup": "^4.6.1",
         "static-handler": "^0.4.3",
