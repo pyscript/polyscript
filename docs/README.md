@@ -330,13 +330,13 @@ Just as the `env` attribute on a `<script>` tag specifies a specific instance of
 
 ```html
 <script type="micropython">
-    def log():
+    def log(event):
         print(1)
 </script>
 <!-- note the env value -->
 <script type="micropython" env="two">
     # the button will log 2
-    def log():
+    def log(event):
         print(2)
 </script>
 <!-- note the micropython-env value -->
