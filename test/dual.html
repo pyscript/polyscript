@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module">
+    import { define } from '../core.js';
+    define('mpy', {
+      interpreter: 'micropython',
+      hooks: {
+        main: {
+          onReady(wrap, element) {
+            wrap.run(element.textContent);
+          }
+        }
+      }
+    });
+    define('py', {
+      interpreter: 'pyodide',
+      hooks: {
+        main: {
+          onReady(wrap, element) {
+            wrap.run(element.textContent);
+          }
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <script type="micropython">
+    print("micropython")
+  </script>
+  <script type="pyodide">
+    print("pyodide")
+  </script>
+  <script type="micropython" worker>
+    print("micropython worker")
+  </script>
+  <script type="pyodide" worker>
+    print("pyodide worker")
+  </script>
+  <script type="mpy">
+    print("mpy")
+  </script>
+  <script type="py">
+    print("py")
+  </script>
+  <script type="mpy" worker>
+    print("mpy worker")
+  </script>
+  <script type="py" worker>
+    print("py worker")
+  </script>
+</body>
+</html>
