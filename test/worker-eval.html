@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyscript Long Running Worker</title>
+
+  <!-- this is the setup module script to expose long running Worker -->
+  <script type="module">
+    // grab utilities to bootstrap a Worker out of the blue
+    import { Hook, XWorker } from 'https://cdn.jsdelivr.net/npm/polyscript';
+
+    const runtimeURL = URL.createObjectURL(new Blob(['']));
+
+    // instrument the XWorker context
+    const xworker = XWorker.call(
+      new Hook(null, {
+        worker: {
+          // setup the I/O + expose runAsync + init on main
+          onReady: ({ runAsync, io }, { sync }) => {
+            io.stdout = line => sync.stdout(line);
+            io.stderr = line => sync.stderr(line);
+            // from main any callback is async anyway
+            // this is why either run or runAsync would do the same
+            sync.runAsync = runAsync;
+            sync.init();
+          },
+        },
+      }),
+
+      // the "fake" URL to use as worker script
+      runtimeURL,
+
+      // either pyodide or micropython
+      { type: 'pyodide' }
+    );
+
+    // once resolved everything is ready to work
+    const { promise, resolve } = Promise.withResolvers();
+
+    // expose utilities for I/O and cleanup + resolver
+    const { sync } = xworker;
+    sync.stdout = console.log;
+    sync.stderr = console.error;
+    sync.init = () => {
+      // drop the URL as it's not needed anymore
+      URL.revokeObjectURL(runtimeURL);
+      // expose the proxied/bridge `runAsync` utility
+      // as callback to await for results
+      resolve(code => sync.runAsync(code));
+    };
+
+    // define some "not so obtrusive" global entrypoint
+    // or dispatch an event once the worker is ready
+    globalThis[Symbol.for('pyodide-worker')] = promise;
+  </script>
+
+  <!-- this is any other script on the page -->
+  <script type="module">
+    const runPython = code => globalThis[Symbol.for('pyodide-worker')].then(
+      runAsync => runAsync(code)
+    );
+
+    document.getElementById('sum').addEventListener(
+      'click',
+      async event => {
+        event.preventDefault();
+        const { currentTarget } = event;
+        const result = await runPython(currentTarget.textContent);
+        currentTarget.textContent += ` + ${result}`;
+        document.getElementById('result').textContent = result;
+      }
+    );
+  </script>
+</head>
+<body>
+  <button id="sum">2 + 3</button>
+  <pre id="result"></button>
+</body>
+</html>
