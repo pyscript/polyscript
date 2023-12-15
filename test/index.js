@@ -167,6 +167,9 @@ const polyscript = require("../cjs");
                     { from: "utils" },
                     { from: "/utils", files: ["c.py"] },
                 ],
+                js_modules: {
+                    main: { "./modules.js": "random_js" }
+                }
             });
             patchFetch(() =>
                 Promise.resolve({

@@ -22,7 +22,8 @@
             # needed to fix pyodide proxies
             from pyodide.ffi import to_js
 
-            from polyscript.js_modules import leaflet as L
+            from polyscript.js_modules import random_js, leaflet as L
+            print(random_js.default)
 
             center = to_js([51.505, -0.09])
             mark = to_js([51.5, -0.09])
@@ -41,7 +42,9 @@
         <h3>Worker</h3>
         <div id="worker-map"></div>
         <script type="pyodide" config="./modules.toml" worker>
-            from polyscript.js_modules import leaflet as L
+            from polyscript.js_modules import random_js, leaflet as L
+
+            print(random_js.default)
 
             center = [51.505, -0.09]
             mark = [51.5, -0.09]

@@ -266,6 +266,8 @@ In *polyscript*, this is possible by defining one or more `[js_modules.X]` field
 
 ### js_modules config example
 
+**TOML**
+
 ```toml
 [js_modules.main]
 # this modules work best on main
@@ -280,6 +282,8 @@ In *polyscript*, this is possible by defining one or more `[js_modules.X]` field
 # this works only in a worker
 "https://cdn.jsdelivr.net/npm/worker-only" = "worker_only"
 ```
+
+**JSON**
 
 ```js
 {
@@ -296,6 +300,8 @@ In *polyscript*, this is possible by defining one or more `[js_modules.X]` field
   }
 }
 ```
+
+**Python**
 
 ```html
 <!-- main case -->
