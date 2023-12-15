@@ -281,6 +281,22 @@ In *polyscript*, this is possible by defining one or more `[js_modules.X]` field
 "https://cdn.jsdelivr.net/npm/worker-only" = "worker_only"
 ```
 
+```js
+{
+  "js_modules": {
+    "main": {
+      "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js": "leaflet",
+      "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css": "leaflet",
+      "https://cdn.jsdelivr.net/npm/html-escaper": "html_escaper"
+    },
+    "worker": {
+      "https://cdn.jsdelivr.net/npm/html-escaper": "html_escaper",
+      "https://cdn.jsdelivr.net/npm/worker-only": "worker_only"
+    }
+  }
+}
+```
+
 ```html
 <!-- main case -->
 <script type="pyodide" config="./that.toml">
