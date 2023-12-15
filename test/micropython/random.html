@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="../../core.js"></script>
+  <script type="micropython">
+    import random, js
+
+    print(random.randint(0,255))
+    print(js.performance.now())
+    print(js.Date.now())
+  </script>
+</head>
+</html>

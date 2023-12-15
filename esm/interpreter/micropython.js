@@ -22,7 +22,11 @@ export default {
     run,
     runAsync,
     runEvent,
-    transform: (_, value) => value,
+    transform: (interpreter, value) => (
+        value instanceof interpreter.PyProxy ?
+            interpreter.PyProxy.toJs(value) :
+            value
+    ),
     writeFile: ({ FS, _module: { PATH, PATH_FS } }, path, buffer) =>
         writeFile({ FS, PATH, PATH_FS }, path, buffer),
 };
