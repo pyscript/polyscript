@@ -44,10 +44,10 @@
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
         "eslint": "^8.55.0",
-        "linkedom": "^0.16.4",
-        "rollup": "^4.6.1",
+        "linkedom": "^0.16.5",
+        "rollup": "^4.9.0",
         "static-handler": "^0.4.3",
-        "typescript": "^5.3.2"
+        "typescript": "^5.3.3"
     },
     "type": "module",
     "module": "./core.js",
@@ -83,6 +83,6 @@
         "sticky-module": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-HHn1vC6k2vvHlcr/Nj6N9DNUDO5X6o6y+T2e4/1QfI8="
+        "blob": "sha256-HzMxq6cZquh//odEM+NnPqiEbGGFtAHGoJ6ldDNmJmE="
     }
 }

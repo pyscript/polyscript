@@ -10,7 +10,7 @@ const type = 'wasmoon';
 /* c8 ignore start */
 export default {
     type,
-    module: (version = '1.15.1') =>
+    module: (version = '1.16.0') =>
         `https://cdn.jsdelivr.net/npm/wasmoon@${version}/+esm`,
     async engine({ LuaFactory, LuaLibraries }, config) {
         const { stderr, stdout, get } = stdio();
