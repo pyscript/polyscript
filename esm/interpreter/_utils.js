@@ -173,11 +173,14 @@ const RUNNING_IN_WORKER = typeof document === UNDEFINED;
 export const fetchJSModules = ({ main, worker }) => {
     const promises = [];
     if (worker && RUNNING_IN_WORKER) {
-        for (const [source, name] of entries(worker))
+        for (let [source, name] of entries(worker)) {
+            source = absoluteURL(source, base.get(worker));
             promises.push(importJS(source, name));
+        }
     }
     if (main && !RUNNING_IN_WORKER) {
-        for (const [source, name] of entries(main)) {
+        for (let [source, name] of entries(main)) {
+            source = absoluteURL(source, base.get(main));
             if (isCSS(source)) importCSS(source);
             else promises.push(importJS(source, name));
         }

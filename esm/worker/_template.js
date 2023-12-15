@@ -7,7 +7,8 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { assign, create, createFunction, createOverload, createResolved, dispatch, entries, isCSS, js_modules } from '../utils.js';
+import { absoluteURL, assign, create, createFunction, createOverload, createResolved, dispatch, entries, isCSS, js_modules } from '../utils.js';
+import { base } from '../interpreter/_utils.js';
 import { configs, registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 import { patch, polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
@@ -144,8 +145,9 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
                 js_modules: new Proxy(globalThis[js_modules], {
                     get(map, name) {
                         if (!map.has(name) && mainModules) {
-                            for (const [source, module] of entries(mainModules)) {
+                            for (let [source, module] of entries(mainModules)) {
                                 if (module !== name) continue;
+                                source = absoluteURL(source, base.get(mainModules));
                                 if (isCSS(source)) sync.importCSS(source);
                                 else {
                                     sync.importJS(source, name);
