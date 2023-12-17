@@ -80,9 +80,10 @@
         "coincident": "^1.1.0",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.1",
+        "rollup-plugin-string": "^3.0.0",
         "sticky-module": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-cvr5TwJH3FX7KekdE0ALuJNaSIhhi7xaK7rHUQ0FNxE="
+        "blob": "sha256-cowo93fSxvSTo9Eq/OB5pPlHpKzNadyDQskdfyXIrEY="
     }
 }
