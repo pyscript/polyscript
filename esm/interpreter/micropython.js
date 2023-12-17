@@ -1,5 +1,6 @@
 import { fetchFiles, fetchJSModules, fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
+import mipSrc from './mip_src.py'     
 
 const type = 'micropython';
 
@@ -16,6 +17,10 @@ export default {
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.js_modules) await fetchJSModules(config.js_modules);
+        //Install Micropython Package
+        const enc = new TextEncoder()
+        this.writeFile(interpreter, './mip.py', enc.encode(mipSrc))
+        
         return interpreter;
     },
     registerJSModule,
