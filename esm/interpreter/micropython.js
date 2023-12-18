@@ -20,6 +20,12 @@ export default {
         //Install Micropython Package
         const enc = new TextEncoder()
         this.writeFile(interpreter, './mip.py', enc.encode(mipSrc))
+        if (config.packages){
+            const mip = interpreter.pyimport('mip');
+            config.packages.forEach(p => {
+                mip.install(p);
+            });
+        }
         
         return interpreter;
     },

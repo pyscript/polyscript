@@ -8,7 +8,20 @@
         <script type="module" src="../core.js"></script>
     </head>
     <body>
-        <script type="micropython" config="mip.toml" src="mip.py">
+        <!-- Test mip functionality -->
+        <script type="micropython" src="mip.py"></script>
+
+        <!-- Test that mip works inside of config -->
+        <script type="micropython" env="another" config="mip.toml">
+            from xmltok import tokenize
+
+            # Write file to test with xml tokenizer package
+            with open("temp.txt", "w") as f:
+                f.write("<first>Hi</first>")
+            
+            with open("temp.txt", "r") as f:
+                for tok in tokenize(f):
+                    print(tok)
         </script>
     </body>
 </html>
