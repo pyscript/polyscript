@@ -6,7 +6,7 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
+        "build": "mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
