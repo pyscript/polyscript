@@ -8,6 +8,7 @@ mip.install('keyword')
 import keyword
 print('The keyword list is', keyword.kwlist)
 
+# Install from raw URL
 mip.install('https://raw.githubusercontent.com/micropython/micropython-lib/master/python-stdlib/bisect/bisect.py')
 from bisect import insort_right
 my_list = [1,2,4]
