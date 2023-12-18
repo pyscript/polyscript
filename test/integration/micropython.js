@@ -39,4 +39,6 @@ module.exports = (playwright, baseURL) => {
     test('MicroPython ready-done events', python.waitForReadyDone(playwright, `${baseURL}/ready-done.html`));
 
     test('MicroPython local intepreter', python.localInterpreter(playwright, baseURL));
+
+    test('MicroPython mip', python.waitForDone(playwright, `${baseURL}/mip.html`));
 };

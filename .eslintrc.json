@@ -8,7 +8,7 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "ignorePatterns": ["__template.js", "xworker.js"],
+    "ignorePatterns": ["__template.js", "xworker.js", "esm/python/*.js"],
     "rules": {
         "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "single"]

@@ -6,7 +6,7 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
+        "build": "node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
@@ -43,9 +43,9 @@
         "ascjs": "^6.0.3",
         "c8": "^8.0.1",
         "chokidar": "^3.5.3",
-        "eslint": "^8.55.0",
+        "eslint": "^8.56.0",
         "linkedom": "^0.16.5",
-        "rollup": "^4.9.0",
+        "rollup": "^4.9.1",
         "static-handler": "^0.4.3",
         "typescript": "^5.3.3"
     },
@@ -83,6 +83,6 @@
         "sticky-module": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-cvr5TwJH3FX7KekdE0ALuJNaSIhhi7xaK7rHUQ0FNxE="
+        "blob": "sha256-Ff8OBms0P5eTVfjUpcA1RayQJVKinKqjW+A+nsLN/ns="
     }
 }

@@ -1,5 +1,6 @@
 import { fetchFiles, fetchJSModules, fetchPaths, stdio, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
+import mip from '../python/mip.js';
 
 const type = 'micropython';
 
@@ -16,6 +17,14 @@ export default {
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.js_modules) await fetchJSModules(config.js_modules);
+
+        // Install Micropython Package
+        this.writeFile(interpreter, './mip.py', mip);
+        if (config.packages){
+            const mpyPackageManager = interpreter.pyimport('mip');
+            for (const mpyPackage of config.packages)
+                mpyPackageManager.install(mpyPackage);
+        }
         return interpreter;
     },
     registerJSModule,
