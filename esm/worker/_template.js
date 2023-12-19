@@ -7,8 +7,8 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { absoluteURL, assign, create, createFunction, createOverload, createResolved, dispatch, entries, isCSS, js_modules } from '../utils.js';
-import { base } from '../interpreter/_utils.js';
+import { assign, create, createFunction, createOverload, createResolved, dispatch } from '../utils.js';
+import createJSModules from './js_modules.js';
 import { configs, registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 import { patch, polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
@@ -136,28 +136,14 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             const { CustomEvent, document } = window;
             const element = id && document.getElementById(id) || null;
             const notify = kind => dispatch(element, custom || type, kind, true, CustomEvent);
+            const JSModules = createJSModules(window, sync, mainModules);
 
             let target = '';
 
-            // set the `xworker` global reference once
+            details.registerJSModule(interpreter, 'polyscript.js_modules', JSModules);
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
-                js_modules: new Proxy(globalThis[js_modules], {
-                    get(map, name) {
-                        if (!map.has(name) && mainModules) {
-                            for (let [source, module] of entries(mainModules)) {
-                                if (module !== name) continue;
-                                source = absoluteURL(source, base.get(mainModules));
-                                if (isCSS(source)) sync.importCSS(source);
-                                else {
-                                    sync.importJS(source, name);
-                                    map.set(name, window[js_modules].get(name));
-                                }
-                            }
-                        }
-                        return map.get(name);
-                    }
-                }),
+                js_modules: JSModules,
                 get target() {
                     if (!target && element) {
                         if (tag === 'SCRIPT') {

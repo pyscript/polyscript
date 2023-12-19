@@ -99,6 +99,7 @@ export const handleCustomType = (node) => {
                         XWorker,
                     };
 
+                    module.registerJSModule(interpreter, 'polyscript.js_modules', JSModules);
                     module.registerJSModule(interpreter, 'polyscript', {
                         js_modules: JSModules,
                         XWorker,
