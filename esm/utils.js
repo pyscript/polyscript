@@ -68,6 +68,8 @@ defineProperty(globalThis, js_modules, { value: jsModules });
 
 export const JSModules = new Proxy(jsModules, {
     get: (map, name) => map.get(name),
+    has: (map, name) => map.has(name),
+    ownKeys: map => [...map.keys()],
 });
 
 export const importJS = (source, name) => import(source).then(esm => {

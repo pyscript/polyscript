@@ -22,8 +22,10 @@
             # needed to fix pyodide proxies
             from pyodide.ffi import to_js
 
-            from polyscript.js_modules import random_js, leaflet as L
-            print(random_js.default)
+            from polyscript import js_modules
+            from polyscript.js_modules import leaflet as L
+
+            print(js_modules.random_js.default)
 
             center = to_js([51.505, -0.09])
             mark = to_js([51.5, -0.09])

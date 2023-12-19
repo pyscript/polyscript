@@ -29,6 +29,7 @@ export default {
     },
     // Fallback to globally defined module fields (i.e. $xworker)
     registerJSModule(interpreter, name, value) {
+        name = name.replace(/\W+/g, '__');
         const id = `__module_${jsType}_${name}`;
         globalThis[id] = value;
         this.run(interpreter, `require "js";$${name}=JS.global[:${id}]`);

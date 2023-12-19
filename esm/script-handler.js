@@ -60,6 +60,7 @@ const execute = async (script, source, XWorker, isAsync) => {
             configurable: true,
             get: () => script,
         });
+        module.registerJSModule(interpreter, 'polyscript.js_modules', JSModules);
         module.registerJSModule(interpreter, 'polyscript', {
             js_modules: JSModules,
             XWorker,

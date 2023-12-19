@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>Polyscript JS Modules</title>
+        <style>#main-map, #worker-map { height: 320px; } h3 { margin-bottom: 0; }</style>
+        <script type="module" src="../core.js"></script>
+    </head>
+    <body>
+        <!--
+            main only:      npx static-handler .
+            main/worker:    npx static-handler --coop --coep .
+
+            Note: --corp breaks the tiles server
+        -->
+
+        <h3>Main</h3>
+        <script type="micropython" config="./modules.toml">
+            from polyscript import js_modules
+
+            print(js_modules.random_js.default)
+        </script>
+
+        <hr>
+
+        <h3>Worker</h3>
+        <script type="micropython" config="./modules.toml" worker>
+            from polyscript.js_modules import random_js
+
+            print(random_js.default)
+        </script>
+
+    </body>
+</html>
