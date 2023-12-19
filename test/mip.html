@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>MicroPython mip</title>
+        <link rel="stylesheet" href="style.css" />
+        <script type="module" src="../core.js"></script>
+    </head>
+    <body>
+        <!-- Test mip functionality -->
+        <script type="micropython" src="mip.py"></script>
+
+        <!-- Test that mip works inside of config -->
+        <script type="micropython" env="another" config="mip.toml">
+            from xmltok import tokenize
+
+            # Write file to test with xml tokenizer package
+            with open("temp.txt", "w") as f:
+                f.write("<first>Hi</first>")
+            
+            with open("temp.txt", "r") as f:
+                for tok in tokenize(f):
+                    print(tok)
+        </script>
+
+        <!-- Test that mip works inside a worker -->
+        <script type="micropython" worker config="mip.toml">
+            from polyscript import xworker
+            from xmltok import tokenize
+
+            # Write file to test with xml tokenizer package
+            with open("temp.txt", "w") as f:
+                f.write("<first>Hi</first>")
+            
+            with open("temp.txt", "r") as f:
+                for tok in tokenize(f):
+                    print(tok)
+        </script>
+    </body>
+</html>

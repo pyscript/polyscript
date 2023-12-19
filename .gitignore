@@ -11,3 +11,4 @@ pyscript.js
 esm/worker/xworker.js
 esm/worker/__template.js
 types/
+esm/python/
