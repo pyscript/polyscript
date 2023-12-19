@@ -712,7 +712,7 @@ Please note that if a worker is created explicitly, there won't be any element, 
 | name           | `run` | `runAsync` | `runEvent` | `registerJSModule` | `writeFile` | `transform` |
 | :------------- | :---: | :--------: | :--------: | :----------------: | :---------: | :---------: |
 | pyodide        | •     | •          | •          | •                  | •           | •           |
-| micropython    | •     | •          | •          | •                  | •           |             |
+| micropython    | •     | •          | •          | •                  | •           | •           |
 | wasmoon        | •     | •          | •          | !                  | •           |             |
 | ruby-wasm-wasi | •     | •          | •          | !                  |             |             |
 
