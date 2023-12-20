@@ -5,59 +5,56 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title>Polyscript JS Modules</title>
         <style>#main-map, #worker-map { height: 320px; } h3 { margin-bottom: 0; }</style>
-        <link rel="stylesheet" href="style.css">
         <script type="module" src="../core.js"></script>
     </head>
     <body>
-        <!--
-            main only:      npx static-handler .
-            main/worker:    npx static-handler --coop --coep .
-
-            Note: --corp breaks the tiles server
-        -->
-
         <h3>Main</h3>
-        <div id="main-map"></div>
-        <script type="pyodide" config="./modules.toml">
-            # needed to fix pyodide proxies
-            from pyodide.ffi import to_js
+        <script type="micropython" config="./modules.toml">
+            from polyscript.js_modules import random_js
+            print(random_js.default)
 
             from polyscript import js_modules
-            from polyscript.js_modules import leaflet as L
-
             print(js_modules.random_js.default)
 
-            center = to_js([51.505, -0.09])
-            mark = to_js([51.5, -0.09])
-            map = L.map('main-map').setView(center, 13)
+            from polyscript.js_modules.random_js import default as value
+            print(value)
+        </script>
 
-            L.tileLayer(
-                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                to_js({"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
-            ).addTo(map)
+        <script type="pyodide" config="./modules.toml">
+            from polyscript.js_modules import random_js
+            print(random_js.default)
 
-            L.marker(mark).addTo(map).bindPopup('Modules on Main are a no brainer 👍').openPopup()
+            from polyscript import js_modules
+            print(js_modules.random_js.default)
+
+            from polyscript.js_modules.random_js import default as value
+            print(value)
         </script>
 
         <hr>
 
         <h3>Worker</h3>
-        <div id="worker-map"></div>
-        <script type="pyodide" config="./modules.toml" worker>
-            from polyscript.js_modules import random_js, leaflet as L
-
+        <script type="micropython" config="./modules.toml" worker>
+            from polyscript.js_modules import random_js
             print(random_js.default)
 
-            center = [51.505, -0.09]
-            mark = [51.5, -0.09]
-            map = L.map('worker-map').setView(center, 13)
+            from polyscript import js_modules
+            print(js_modules.random_js.default)
 
-            L.tileLayer(
-                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                {"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
-            ).addTo(map)
-
-            L.marker(mark).addTo(map).bindPopup('Modules on Worker are awesome 🥳').openPopup()
+            from polyscript.js_modules.random_js import default as value
+            print(value)
         </script>
+
+        <script type="pyodide" config="./modules.toml" worker>
+            from polyscript.js_modules import random_js
+            print(random_js.default)
+
+            from polyscript import js_modules
+            print(js_modules.random_js.default)
+
+            from polyscript.js_modules.random_js import default as value
+            print(value)
+        </script>
+
     </body>
 </html>

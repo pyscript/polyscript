@@ -264,6 +264,26 @@ In *polyscript*, this is possible by defining one or more `[js_modules.X]` field
   * `[js_modules.main]` is a list of *source* -> *module name* pairs, similarly to how `[files]` field work, where the *module* name will then be reachable via `polyscript.js_modules.actual_name` in both *main* and *worker* world. As the *main* module lands on the main thread, where there is also likely some UI, it is also possible to define one or more related *CSS* to that module, as long as they target the very same name (see the example to better understand).
   * `[js_modules.worker]` is a list of *source* -> *module name* pairs that actually land only in `<script type="x" worker>` cases. These modules are still reachable through the very same `polyscript.js_modules.actual_name` convention and this feature is meant to be used for modules that only works best, or work regardless, outside the *main* world. As example, if your *JS* module implies that `document` or `window` references, among other *DOM* related APIs, are globally available, it means that that module should be part of the `[js_modules.main]` list instead ... however, if the module works out of the box in a *Worker* environment, it is best for performance reasons to explicitly define such module under this field. Please note that *CSS* files are not accepted within this list because there's no way *CSS* can be useful or land in any meaningful way within a *Worker* environment.
 
+All registeed modules can be then imported as such:
+
+```python
+# just import js_modules and reach names after
+from polyscript import js_modules
+js_modules.my_module.util()
+
+# import directly and reach names after
+from polyscript.js_modules import my_module
+my_module.util()
+
+# import deeply up to the module exports
+from polyscript.js_modules.my_module import util
+util()
+
+# import default or other fields with aliases
+from polyscript.js_modules.other import defalut as fn
+fn()
+```
+
 ### js_modules config example
 
 **TOML**

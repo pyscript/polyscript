@@ -72,6 +72,24 @@ export const JSModules = new Proxy(jsModules, {
     ownKeys: map => [...map.keys()],
 });
 
+const has = (_, field) => !field.startsWith('_');
+
+const proxy = (modules, name) => new Proxy(
+    modules,
+    { has, get: (modules, field) => modules[name][field] }
+);
+
+export const registerJSModules = (type, module, interpreter, modules) => {
+    // Pyodide resolves JS modules magically
+    if (type === 'pyodide') return;
+
+    // other runtimes need this pretty ugly dance (it works though)
+    const jsModules = 'polyscript.js_modules';
+    for (const name of Reflect.ownKeys(modules))
+        module.registerJSModule(interpreter, `${jsModules}.${name}`, proxy(modules, name));
+    module.registerJSModule(interpreter, jsModules, modules);
+};
+
 export const importJS = (source, name) => import(source).then(esm => {
     jsModules.set(name, { ...esm });
 });

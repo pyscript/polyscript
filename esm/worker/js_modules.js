@@ -1,43 +1,43 @@
-import { absoluteURL, defineProperties, defineProperty, entries, isCSS, js_modules } from '../utils.js';
+import { absoluteURL, entries, isArray, isCSS, js_modules } from '../utils.js';
 import { base } from '../interpreter/_utils.js';
 
-export default (window, sync, mainModules) => {
-    const JSModules = {};
-    const descriptors = {};
-    const known = new Set;
-    const ops = new Map;
-    for (const [name, value] of globalThis[js_modules]) {
-        known.add(name);
-        descriptors[name] = { value };
-    }
-    // define lazy main modules resolution
-    if (mainModules) {
-        for (let [source, module] of entries(mainModules)) {
-            // ignore modules already defined in worker
-            if (known.has(module)) continue;
-            let sources = ops.get(module);
-            if (!sources) ops.set(module, (sources = []));
-            sources.push(source);
-        }
-        for (const [name, sources] of ops) {
-            descriptors[name] = {
-                configurable: true,
-                get() {
-                    let value;
-                    for (let source of sources) {
-                        source = absoluteURL(source, base.get(mainModules));
-                        if (isCSS(source)) sync.importCSS(source);
-                        else {
-                            sync.importJS(source, name);
-                            value = window[js_modules].get(name);
-                        }
-                    }
-                    // override the getter and make it no more configurable
-                    defineProperty(JSModules, name, { configurable: false, get: () => value });
-                    return value;
+const has = (modules, name) => modules.has(name);
+
+const ownKeys = modules => [...modules.keys()];
+
+const proxy = (modules, window, sync, baseURL) => new Proxy(modules, {
+    has,
+    ownKeys,
+    get: (modules, name) => {
+        let value = modules.get(name);
+        if (isArray(value)) {
+            let sources = value;
+            value = null;
+            for (let source of sources) {
+                source = absoluteURL(source, baseURL);
+                if (isCSS(source)) sync.importCSS(source);
+                else {
+                    sync.importJS(source, name);
+                    value = window[js_modules].get(name);
                 }
-            };
+            }
+            modules.set(name, value);
+        }
+        return value;
+    },
+});
+
+export default (window, sync, mainModules) => {
+    let modules = globalThis[js_modules], baseURL = '';
+    if (mainModules) {
+        baseURL = base.get(mainModules);
+        for (let [source, module] of entries(mainModules)) {
+            let value = modules.get(module);
+            if (!value || isArray(value)) {
+                modules.set(module, value || (value = []));
+                value.push(source);
+            }
         }
     }
-    return defineProperties(JSModules, descriptors);
+    return proxy(modules, window, sync, baseURL);
 };

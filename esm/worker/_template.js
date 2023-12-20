@@ -7,7 +7,7 @@
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window';
 
-import { assign, create, createFunction, createOverload, createResolved, dispatch } from '../utils.js';
+import { assign, create, createFunction, createOverload, createResolved, dispatch, registerJSModules } from '../utils.js';
 import createJSModules from './js_modules.js';
 import { configs, registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
@@ -140,7 +140,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
 
             let target = '';
 
-            details.registerJSModule(interpreter, 'polyscript.js_modules', JSModules);
+            registerJSModules(type, details, interpreter, JSModules);
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
                 js_modules: JSModules,
