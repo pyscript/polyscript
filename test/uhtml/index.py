@@ -1,7 +1,23 @@
 from js import document
-from uhtml import render, html
+from uhtml import local
+# grab utilities passing current module name
+render, html, svg = local(__name__)
 
-def update(count):
+# define handlers and whatnot
+def h3_click(event):
+  print(event.type)
+
+def button_click(event):
+  global count, value
+  count = count + 1
+  value = f"World {count}"
+  show()
+
+value = "World"
+count = 0
+
+# define the driver
+def show():
     render(document.body, html(
         """
           <h3 onclick=${h3_click}>
@@ -10,11 +26,7 @@ def update(count):
           <button onclick=${button_click}>
             Clicks ${count}
           </button>
-        """,
-        h3_click=lambda event: print(event.type),
-        value="World",
-        button_click=lambda _: update(count + 1),
-        count=count
+        """
     ))
 
-update(0)
+show()

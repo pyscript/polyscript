@@ -1,5 +1,6 @@
 # A silly idea by Andrea Giammarchi
 from string import Template as _Template
+from sys import modules
 
 # The goal of this utility is to create a JS
 # Template Literal Tag like function that accepts
@@ -8,8 +9,8 @@ from string import Template as _Template
 # If a cache dictionary is passed, it never parses the same
 # template string more than once, improving performance
 # for more complex scenarios / use cases.
-def tag(fn, cache=None):
-    return lambda tpl, **kw: _tag(tpl, cache)(fn, **kw)
+def tag(name, fn, cache=None):
+    return lambda tpl: _tag(tpl, cache)(fn, modules[name])
 
 def _create(tpl):
     i = 0
@@ -36,7 +37,7 @@ def _create(tpl):
         i += 1
     # make the template immutable
     t = tuple(a)
-    return lambda fn, **kw: fn(t, *[kw[k] for k in keys])
+    return lambda fn, kw: fn(t, *[kw.__dict__[k] for k in keys])
 
 # given a template string, maps all non interpolated
 # parts as tuple and orchestrate ordered values to send

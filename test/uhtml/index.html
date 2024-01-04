@@ -4,7 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title>Template</title>
-        <script defer src="https://cdn.jsdelivr.net/npm/uhtml/es.js"></script>
+        <script type="module">
+            import * as uhtml from "https://cdn.jsdelivr.net/npm/uhtml/index.js";
+            globalThis.uhtml = uhtml;
+        </script>
         <script type="module" src="https://cdn.jsdelivr.net/npm/polyscript"></script>
         <script type="pyodide" src="./index.py" config="./config.toml"></script>
     </head>

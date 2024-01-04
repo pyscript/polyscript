@@ -27,7 +27,9 @@ def _kind(uhtml):
         return lambda: uhtml(_arrays[i], *[_to_js(v) for v in values])
     return hole
 
-# export uhtml API as Python
-html = _tag(_kind(_uhtml.html), cache=_cache)
-svg = _tag(_kind(_uhtml.svg), cache=_cache)
-render = _uhtml.render
+def local(name):
+    return (
+        _uhtml.render,
+        _tag(name, _kind(_uhtml.html), cache=_cache),
+        _tag(name, _kind(_uhtml.svg), cache=_cache)
+    )
