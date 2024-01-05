@@ -725,6 +725,7 @@ Please note that if a worker is created explicitly, there won't be any element, 
 
   * [multi-pompom](./examples/multi-pompom/) - draw 4 pompom via turtle out of 4 different workers
   * [non-blocking input](./examples/worker-input/) - ask a question from a worker and log results in a sync-like, yet non-blocking, style
+  * [reactive UI](./examples/uhtml/) - a different approach to render safely HTML content and use [Preact Signals](https://preactjs.com/guide/v10/signals/) to react to changes without needing to orchestrate updates manually
 
 
 ## Interpreter Features
