@@ -1,5 +1,4 @@
 from polyscript.js_modules import uhtml as _uhtml
-from sys import modules as _modules
 import js
 
 try:
@@ -20,12 +19,12 @@ except:
 # template string more than once, improving performance
 # for more complex scenarios / use cases.
 def _tag(name, fn, cache=None):
-    return lambda tpl: _transform(tpl, cache)(fn, _modules[name])
+    return lambda tpl: _transform(tpl, cache)(fn, __import__(name))
 
 def _create(tpl):
     i = 0
     d = {}
-    u = chr(0)
+    u = chr(1)
     template = _Template(tpl)
     identifiers = template.get_identifiers()
 
@@ -46,8 +45,11 @@ def _create(tpl):
         keys.append(identifiers[int(x)])
         a[i] = k[(d+1):]
         i += 1
+
     # make the template immutable
-    t = tuple(a)
+    # t = tuple(a)
+    # for MicroPython this works best
+    t = js.Array.new(*a)
     return lambda fn, kw: fn(t, *[_unwrap(kw.__dict__[k]) for k in keys])
 
 # given a template string, maps all non interpolated
@@ -58,6 +60,9 @@ def _transform(tpl, tags):
     return tags[tpl]
 
 def _unwrap(entry):
+    # if (_uhtml.Symbol.prototype.isPrototypeOf(entry)):
+    #     return entry.value
+    # return entry
     try:
         return entry.value
     except:

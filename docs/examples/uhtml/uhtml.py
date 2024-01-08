@@ -58,10 +58,9 @@ def _transform(tpl, tags):
     return tags[tpl]
 
 def _unwrap(entry):
-    try:
+    if (_uhtml.Symbol.prototype.isPrototypeOf(entry)):
         return entry.value
-    except:
-        return entry
+    return entry
 
 
 ### uhtml related
