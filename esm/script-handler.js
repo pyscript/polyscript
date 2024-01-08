@@ -43,14 +43,14 @@ const handled = new WeakMap();
 
 export const interpreters = new Map();
 
-const execute = async (script, source, XWorker, isAsync) => {
-    const { type } = script;
+const execute = async (currentScript, source, XWorker, isAsync) => {
+    const { type } = currentScript;
     const module = registry.get(type);
     /* c8 ignore start */
     if (module.experimental)
         console.warn(`The ${type} interpreter is experimental`);
     const [interpreter, content] = await all([
-        handled.get(script).interpreter,
+        handled.get(currentScript).interpreter,
         source,
     ]);
     try {
@@ -58,16 +58,17 @@ const execute = async (script, source, XWorker, isAsync) => {
         // but it deletes it right after to preserve native behavior (as it's sync: no trouble)
         defineProperty(document, 'currentScript', {
             configurable: true,
-            get: () => script,
+            get: () => currentScript,
         });
         registerJSModules(type, module, interpreter, JSModules);
         module.registerJSModule(interpreter, 'polyscript', {
-            js_modules: JSModules,
             XWorker,
+            currentScript,
+            js_modules: JSModules,
         });
-        dispatch(script, type, 'ready');
+        dispatch(currentScript, type, 'ready');
         const result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
-        const done = dispatch.bind(null, script, type, 'done');
+        const done = dispatch.bind(null, currentScript, type, 'done');
         if (isAsync) result.then(done);
         else done();
         return result;

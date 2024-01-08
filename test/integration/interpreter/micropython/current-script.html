@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { define } from '/core.js';
+        define('mpy', {
+          interpreter: 'micropython',
+          hooks: {
+            main: {
+              onReady(mpy, node) {
+                mpy.run(node.textContent);
+              }
+            }
+          }
+        });
+
+        import { init } from '../utils.js';
+        init('micropython');
+    </script>
+</head>
+<body>
+    <script type="micropython">
+        from polyscript import currentScript
+        currentScript.setAttribute("ok", "main")
+        currentScript.style.display = "block"
+    </script>
+    <script type="micropython" worker>
+        from polyscript import currentScript
+        currentScript.setAttribute("ok", "worker")
+        currentScript.style.display = "block"
+    </script>
+    <script type="mpy">
+        from polyscript import currentScript
+        currentScript.setAttribute("ok", "main")
+        currentScript.style.display = "block"
+    </script>
+    <script type="mpy" worker>
+        from polyscript import currentScript
+        currentScript.setAttribute("ok", "worker")
+        currentScript.style.display = "block"
+    </script>
+</body>
+</html>

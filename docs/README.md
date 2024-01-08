@@ -8,6 +8,7 @@
  * [Bootstrapping core](#bootstrapping-core) - how to enable Polyscript in your page
  * [How Scripts Work](#how-scripts-work) - how `<script type="...">` works
  * [Extra config Features](#extra-config-features) - how to load *JS* modules on either main or workers
+ * [The polyscript Module](#the-polyscript-module) - what is exported in *polyscript*
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
  * [Custom Scripts](#custom-scripts) - how *custom types* can be defined and used to enrich any core feature
@@ -348,6 +349,32 @@ fn()
   from polyscript.js_modules import worker_only
 </script>
 ```
+
+
+
+## The `polyscript` Module
+
+The module is registered within the interpreter as *JS* module and it offers various helpers or utilities accordingly if it's running on the **main** thread or the **worker** one.
+
+
+### Main exports
+
+| name          | example                                | description |
+| :------------ | :------------------------------------- | :---------- |
+| XWorker       | `from polyscript import XWorker`       | described in the [XWorker](#xworker) part. |
+| currentScript | `from polyscript import currentScript` | it's an explicit, always correct, reference to the current node running the generic script code. |
+| js_modules    | `from polyscript import js_modules`    | described in the [Extra config Features](#extra-config-features) part. |
+
+
+### Worker exports
+
+| name          | example                                | description |
+| :------------ | :------------------------------------- | :---------- |
+| xworker       | `from polyscript import xworker`       | described in the [XWorker](#xworker) part. |
+| currentScript | `from polyscript import currentScript` | it's an explicit, always correct, reference to the current node running the generic script code via a worker. |
+| js_modules    | `from polyscript import js_modules`    | described in the [Extra config Features](#extra-config-features) part. |
+| target        | `from polyscript import target`        | returns the element referenced by the `target` attribute, if any, or create a target node to display output when this has not been provided.
+
 
 
 ## How Events Work

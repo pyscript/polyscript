@@ -36,6 +36,15 @@ module.exports = (playwright, baseURL) => {
         await expect(result.trim()).toBe('OK');
     });
 
+    test('MicroPython currentScript', async ({ page }) => {
+        await page.goto(`${baseURL}/current-script.html`);
+        await page.waitForSelector(`html.ready`);
+        await page.waitForSelector('script[type="micropython"][ok="main"]');
+        await page.waitForSelector('script[type="mpy"][ok="main"]');
+        await page.waitForSelector('script[type="micropython"][worker][ok="worker"]');
+        await page.waitForSelector('script[type="mpy"][worker][ok="worker"]');
+    });
+
     test('MicroPython ready-done events', python.waitForReadyDone(playwright, `${baseURL}/ready-done.html`));
 
     test('MicroPython local intepreter', python.localInterpreter(playwright, baseURL));

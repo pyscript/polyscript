@@ -134,8 +134,8 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             }
 
             const { CustomEvent, document } = window;
-            const element = id && document.getElementById(id) || null;
-            const notify = kind => dispatch(element, custom || type, kind, true, CustomEvent);
+            const currentScript = id && document.getElementById(id) || null;
+            const notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
             const JSModules = createJSModules(window, sync, mainModules);
 
             let target = '';
@@ -143,19 +143,20 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             registerJSModules(type, details, interpreter, JSModules);
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
+                currentScript,
                 js_modules: JSModules,
                 get target() {
-                    if (!target && element) {
+                    if (!target && currentScript) {
                         if (tag === 'SCRIPT') {
-                            element.after(assign(
+                            currentScript.after(assign(
                                 document.createElement(`script-${custom || type}`),
                                 { id: (target = `${id}-target`) }
                             ));
                         }
                         else {
                             target = id;
-                            element.replaceChildren();
-                            element.style.display = 'block';
+                            currentScript.replaceChildren();
+                            currentScript.style.display = 'block';
                         }
                     }
                     return target;
@@ -169,7 +170,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             transform = details.transform.bind(details, interpreter);
 
             // notify worker ready to execute
-            if (element) notify('ready');
+            if (currentScript) notify('ready');
 
             // evaluate the optional `onReady` callback
             if (hooks?.onReady) {
@@ -184,7 +185,7 @@ add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
             await details[name](interpreter, code);
 
             // notify worker done executing
-            if (element) notify('done');
+            if (currentScript) notify('done');
             return interpreter;
         } catch (error) {
             postMessage(error);

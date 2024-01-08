@@ -101,8 +101,9 @@ export const handleCustomType = (node) => {
 
                     registerJSModules(runtime, module, interpreter, JSModules);
                     module.registerJSModule(interpreter, 'polyscript', {
-                        js_modules: JSModules,
                         XWorker,
+                        currentScript: type.startsWith('_') ? null : node,
+                        js_modules: JSModules,
                     });
 
                     // patch methods accordingly to hooks (and only if needed)
