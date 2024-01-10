@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <script type="module">
+      import '/core.js';
+
+      const script = Object.assign(document.createElement('script'), {
+        type: 'micropython',
+        textContent: `
+            import a
+            import js
+            js.document.documentElement.classList.add("ready")
+        `
+      });
+
+      script.setAttribute('config', JSON.stringify({
+        fetch: [
+          {files: ['../a.py']}
+        ]
+      }));
+
+      document.body.append(script);
+    </script>
+</body>
+</html>

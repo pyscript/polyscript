@@ -3,17 +3,25 @@ import { absoluteURL, resolve } from './utils.js';
 import { parse } from './toml.js';
 import { getJSON, getText } from './fetch-utils.js';
 
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
 export const getConfigURLAndType = config => {
-    // REQUIRES INTEGRATION TEST
-    /* c8 ignore start */
     let type = typeof config;
     if (type === 'string' && /\.(json|toml|txt)$/.test(config))
         type = RegExp.$1;
     else
         config = './config.txt';
     return [absoluteURL(config), type];
-    /* c8 ignore stop */
 };
+
+const parseString = config => {
+    try {
+        return JSON.parse(config);
+    } catch (_) {
+        return parse(config);
+    }
+};
+/* c8 ignore stop */
 
 /**
  * Parse a generic config if it came from an attribute either as URL
@@ -35,13 +43,11 @@ export const getRuntime = (id, config, options = {}) => {
         } else if (type === 'toml') {
             options = fetch(absolute).then(getText).then(parse);
         } else if (type === 'string') {
-            try {
-                options = JSON.parse(config);
-            } catch (_) {
-                options = parse(config);
-            }
+            options = parseString(config);
         } else if (type === 'object' && config) {
             options = config;
+        } else if (type === 'txt' && typeof options === 'string') {
+            options = parseString(options);
         }
         config = absolute;
         /* c8 ignore stop */

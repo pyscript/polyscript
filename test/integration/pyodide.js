@@ -11,6 +11,8 @@ module.exports = (playwright, baseURL) => {
 
     test('Pyodide to Pyodide Worker', shared.worker(playwright, `${baseURL}/worker.html`));
 
+    test('Pyodide config as JSON', python.configAsJSON(playwright, baseURL));
+
     test('Pyodide sync (time)', async ({ page }) => {
         const logs = [];
         page.on('console', msg => logs.push({text: msg.text(), time: new Date}));

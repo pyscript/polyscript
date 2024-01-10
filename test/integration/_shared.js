@@ -38,9 +38,18 @@ exports.python = {
         const logs = [];
         page.on('console', msg => logs.push(msg.text()));
         await page.goto(`${baseURL}/config-object.html`);
-        await page.waitForSelector('html.worker.ready');
+        await page.waitForSelector('html.worker');
         await expect(logs.length).toBe(1);
         await expect(logs[0]).toBe('hello from A');
+    },
+
+    configAsJSON: ({ expect }, baseURL) => async ({ page }) => {
+        // Test that a config passed as object works out of the box.
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(`${baseURL}/config-json.html`);
+        await page.waitForSelector('html.ready');
+        await expect(logs.at(-1)).toBe('hello from A');
     },
 
     customHooks: ({ expect }, baseURL) => async ({ page }) => {

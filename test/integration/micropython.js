@@ -21,6 +21,8 @@ module.exports = (playwright, baseURL) => {
 
     test('MicroPython config as object', python.configAsObject(playwright, baseURL));
 
+    test('MicroPython config as JSON', python.configAsJSON(playwright, baseURL));
+
     test('MicroPython worker attribute', python.workerAttribute(playwright, `${baseURL}/worker-attribute.html`));
 
     test('MicroPython worker empty attribute', python.workerAttribute(playwright, `${baseURL}/worker-empty-attribute.html`));
