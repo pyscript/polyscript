@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="../../core.js"></script>
+    <script type="module">
+        import { define } from "../../core.js";
+
+        const config = await fetch("./static/settings.json").then(b => b.json());
+        define("mpy", {
+            interpreter: "micropython",
+            configURL: new URL("./static/settings.json", location).href,
+            config,
+            hooks: {
+                main: {
+                    onReady(wrap, element) {
+                        fetch(element.src).then(b => b.text()).then(wrap.run);
+                    }
+                },
+                worker: {
+                    onReady({ run, runAsync }, xworker) {
+                        console.log('worker');
+                    },
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <script type="mpy" src="./main.py"></script>
+    <script worker type="mpy" src="./worker.py"></script>
+</body>
+</html>

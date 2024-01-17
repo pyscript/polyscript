@@ -10,7 +10,8 @@ import Hook from './hook.js';
  * @typedef {Object} WorkerOptions custom configuration
  * @prop {string} type the interpreter type to use
  * @prop {string} [version] the optional interpreter version to use
- * @prop {string} [config] the optional config to use within such interpreter
+ * @prop {string | object} [config] the optional config to use within such interpreter
+ * @prop {string} [configURL] the optional configURL used to resolve config entries
  */
 
 export default (...args) =>
@@ -34,7 +35,7 @@ export default (...args) =>
         // provide a base url to fetch or load config files from a Worker
         // because there's no location at all in the Worker as it's embedded.
         // fallback to a generic, ignored, config.txt file to still provide a URL.
-        const [ config ] = getConfigURLAndType(options.config);
+        const [ config ] = getConfigURLAndType(options.config, options.configURL);
 
         const bootstrap = fetch(url)
             .then(getText)

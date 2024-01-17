@@ -41,6 +41,7 @@ export const handleCustomType = (node) => {
                 known.add(node);
                 const {
                     interpreter: runtime,
+                    configURL,
                     config,
                     version,
                     env,
@@ -55,6 +56,7 @@ export const handleCustomType = (node) => {
                         const xworker = XWorker.call(new Hook(null, hooks), worker, {
                             ...nodeInfo(node, type),
                             version,
+                            configURL,
                             type: runtime,
                             custom: type,
                             config: node.getAttribute('config') || config || {},
@@ -78,6 +80,7 @@ export const handleCustomType = (node) => {
                     name,
                     version,
                     config,
+                    configURL,
                     runtime
                 );
                 engine.then((interpreter) => {

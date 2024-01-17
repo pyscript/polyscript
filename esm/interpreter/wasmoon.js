@@ -1,5 +1,6 @@
 import { dedent } from '../utils.js';
-import { fetchFiles, fetchJSModules, fetchPaths, io, stdio, writeFileShim } from './_utils.js';
+import { fetchFiles, fetchJSModules, fetchPaths, writeFileShim } from './_utils.js';
+import { io, stdio } from './_io.js';
 
 const type = 'wasmoon';
 

@@ -83,10 +83,10 @@ const getValue = (ref, prefix) => {
     return value ? prefix + value : '';
 };
 
-export const getDetails = (type, id, name, version, config, runtime = type) => {
+export const getDetails = (type, id, name, version, config, configURL, runtime = type) => {
     if (!interpreters.has(id)) {
         const details = {
-            interpreter: getRuntime(name, config),
+            interpreter: getRuntime(name, config, configURL),
             queue: resolve(),
             XWorker: $xworker(type, version),
         };

@@ -5,12 +5,12 @@ import { getJSON, getText } from './fetch-utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
-export const getConfigURLAndType = config => {
+export const getConfigURLAndType = (config, configURL = './config.txt') => {
     let type = typeof config;
     if (type === 'string' && /\.(json|toml|txt)$/.test(config))
         type = RegExp.$1;
     else
-        config = './config.txt';
+        config = configURL;
     return [absoluteURL(config), type];
 };
 
@@ -29,15 +29,16 @@ const parseString = config => {
  * options to use as it is to avoid needing at all a fetch operation.
  * In latter case, config will be suffixed as `config.txt`.
  * @param {string} id the interpreter name @ version identifier
- * @param {string} [config] optional config file to parse
+ * @param {string | object} config optional config file to parse
+ * @param {string} [configURL] optional config URL if config is not string
  * @param {object} [options] optional options used to bootstrap XWorker
  * @returns
  */
-export const getRuntime = (id, config, options = {}) => {
+export const getRuntime = (id, config, configURL, options = {}) => {
     if (config) {
         // REQUIRES INTEGRATION TEST
         /* c8 ignore start */
-        const [absolute, type] = getConfigURLAndType(config);
+        const [absolute, type] = getConfigURLAndType(config, configURL);
         if (type === 'json') {
             options = fetch(absolute).then(getJSON);
         } else if (type === 'toml') {

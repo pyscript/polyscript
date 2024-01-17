@@ -1,0 +1,7 @@
+{
+    "files":{
+        "{INVENT}": "../src/invent",
+        "{TO}": "./invent",
+        "{INVENT}/pubsub.py": "{TO}/pubsub.py"
+    }
+}

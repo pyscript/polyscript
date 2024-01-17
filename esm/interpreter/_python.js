@@ -1,5 +1,5 @@
 import { dedent } from '../utils.js';
-import { io } from './_utils.js';
+import { io } from './_io.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */

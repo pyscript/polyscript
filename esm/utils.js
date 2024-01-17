@@ -1,6 +1,6 @@
 import $dedent from 'codedent';
 import { unescape as $unescape } from 'html-escaper';
-import { io } from './interpreter/_utils.js';
+import { io } from './interpreter/_io.js';
 
 /** @type {(tpl: string | TemplateStringsArray, ...values:any[]) => string} */
 const dedent = $dedent;

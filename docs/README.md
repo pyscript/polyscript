@@ -586,6 +586,7 @@ The list of options' fields is described as such and all of these are *optional*
 | :------------------------ | :-------------------------------------------- | :--------|
 | interpreter               | `{interpreter: 'pyodide'}`                    | Specifies the interpreter to use, such as *pyodide*, *micropython*, *wasmoon* or others. |
 | config                    | `{config: 'type.toml'}` `{config: {}}`        | Ensure such config is already parsed and available, if not already passed as object, for every custom `type` that execute code. |
+| configURL                 | `{configURL: '/absolute/url/config.json'}`    | If the passed `config` is an already resolved object, this field is neded to help resolving files in *fetch* or *packages* or others. |
 | version                   | `{version: '0.23.2'}`                         | Allow the usage of a specific version of an interpreter, same way `version` attribute works with `<script>` elements. |
 | env                       | `{env: 'my-project'}`                         | Guarantee same environment for every custom `type`, avoiding conflicts with any other possible default or custom environment. |
 | onerror                   | `(error, element) => { throw error; }`        | Allows custom types to intercept early errors possibly happened while bootstrapping elements. |
