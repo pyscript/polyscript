@@ -1,5 +1,6 @@
-import { fetchFiles, fetchJSModules, fetchPaths, stdio, writeFile } from './_utils.js';
+import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { stdio } from './_io.js';
 import mip from '../python/mip.js';
 
 const type = 'micropython';

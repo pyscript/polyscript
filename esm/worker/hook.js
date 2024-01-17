@@ -1,3 +1,5 @@
+import toJSONCallback from 'to-json-callback';
+
 import { dedent } from '../utils.js';
 import { js as jsHooks, code as codeHooks } from '../hooks.js';
 
@@ -18,7 +20,7 @@ export default class Hook {
         const hooks = {};
         // ignore onWorker as that's main only
         for (const key of jsHooks.slice(1)) {
-            if (this[key]) hooks[key] = String(this[key]);
+            if (this[key]) hooks[key] = toJSONCallback(this[key]);
         }
         // code related: exclude `onReady` callback
         for (const key of codeHooks) {

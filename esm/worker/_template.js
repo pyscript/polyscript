@@ -65,13 +65,13 @@ const xworker = {
     postMessage: postMessage.bind(self),
 };
 
-add('message', ({ data: { options, config: baseURL, code, hooks } }) => {
+add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
             const { id, tag, type, custom, version, config, async: isAsync } = options;
             const runtimeID = getRuntimeID(type, version);
 
-            const interpreter = await getRuntime(runtimeID, baseURL, config);
+            const interpreter = await getRuntime(runtimeID, baseURL, configURL, config);
 
             const mainModules = configs.get(runtimeID).js_modules?.main;
 
