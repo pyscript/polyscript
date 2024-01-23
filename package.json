@@ -78,12 +78,13 @@
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
         "coincident": "^1.1.0",
+        "gc-hook": "^0.3.0",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.1",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-PKBZfnQ7M77Aa/aLk8qwkNzs3H1FkHlcvvaXmBd0UQQ="
+        "blob": "sha256-vXBVEcfN4nOSdjr+A0maM42l688AeU7Ob3jmoGcyBT0="
     }
 }

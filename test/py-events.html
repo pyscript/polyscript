@@ -9,7 +9,7 @@
         <script type="module" src="../core.js"></script>
     </head>
     <body>
-        <script type="pyodide" src="./py-events.py"></script>
+        <script type="pyodide" src="./py-events.py" config="./py-events.toml"></script>
         <button
             pyodide-pointerdown="print_version"
             pyodide-click="printer.version"
@@ -24,5 +24,8 @@
         >
             micropython version
         </button>
+
+        <script type="pyodide" src="./py-events-worker.py" worker></script>
+        <script type="micropython" src="./py-events-worker.py" worker></script>
     </body>
 </html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>python</title>
+        <link rel="stylesheet" href="style.css" />
+        <script type="module">
+            import { define } from '/core.js';
+            define('mpy', { interpreter: 'micropython' });
+        </script>
+    </head>
+    <body>
+        <script type="mpy">
+            from polyscript import currentScript
+            print("main", currentScript.outerHTML);
+        </script>
+        <hr />
+        <script type="mpy" worker>
+            from polyscript import currentScript
+            print("worker", currentScript.outerHTML);
+        </script>
+</html>
