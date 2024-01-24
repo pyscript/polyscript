@@ -37,15 +37,15 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.41.0",
+        "@playwright/test": "^1.41.1",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.5.3",
         "eslint": "^8.56.0",
-        "linkedom": "^0.16.6",
-        "rollup": "^4.9.5",
+        "linkedom": "^0.16.8",
+        "rollup": "^4.9.6",
         "static-handler": "^0.4.3",
         "typescript": "^5.3.3"
     },
