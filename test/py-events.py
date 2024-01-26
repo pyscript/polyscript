@@ -11,3 +11,10 @@ class Printer:
 
 
 printer = Printer()
+
+from js import document
+
+document.addEventListener(
+    'click',
+    lambda event: print("document", event.type)
+)
