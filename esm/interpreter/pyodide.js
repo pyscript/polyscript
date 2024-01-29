@@ -1,10 +1,8 @@
 import { create } from 'gc-hook';
 
-import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
+import { RUNNING_IN_WORKER, fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
 import { registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
-
-const RUNNING_ON_MAIN = !!globalThis.window;
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -84,7 +82,7 @@ export default {
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url) {
         // apply override ASAP then load foreign code
-        if (RUNNING_ON_MAIN && config.experimental_create_proxy === 'auto')
+        if (!RUNNING_IN_WORKER && config.experimental_create_proxy === 'auto')
             applyOverride();
         const { stderr, stdout, get } = stdio();
         const indexURL = url.slice(0, url.lastIndexOf('/'));

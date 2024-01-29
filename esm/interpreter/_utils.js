@@ -1,8 +1,9 @@
 import '@ungap/with-resolvers';
-import { UNDEFINED } from 'proxy-target/types';
 
 import { getBuffer } from '../fetch-utils.js';
 import { absoluteURL, all, entries, importCSS, importJS, isArray, isCSS } from '../utils.js';
+
+export const RUNNING_IN_WORKER = !globalThis.window;
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -150,8 +151,6 @@ export const fetchFiles = (module, interpreter, config_files) =>
                 .then((buffer) => module.writeFile(interpreter, path, buffer)),
         ),
     );
-
-const RUNNING_IN_WORKER = typeof document === UNDEFINED;
 
 export const fetchJSModules = ({ main, worker }) => {
     const promises = [];
