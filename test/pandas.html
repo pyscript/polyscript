@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="../core.js"></script>
+</head>
+<body>
+  <!-- always work -->
+  <script env="main" type="pyodide" config='{"packages":["pandas"]}' src="./pandas.py"></script>
+  <script env="async" async type="pyodide" config='{"packages":["pandas"]}' src="./pandas.py"></script>
+  <script env="worker" worker type="pyodide" config='{"packages":["pandas"]}' src="./pandas.py"></script>
+  <!-- most time doesn't work -->
+  <script env="async-worker" async worker type="pyodide" config='{"packages":["pandas"]}' src="./pandas.py"></script>
+  <div id="py-script-output"></div>
+</body>
+</html>

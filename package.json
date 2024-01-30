@@ -77,7 +77,7 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^1.1.0",
+        "coincident": "^1.1.1",
         "gc-hook": "^0.3.0",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.1",
@@ -85,6 +85,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-XZfj56y7812WiV/g/Hj2Q17onlNrBO5d1zHmtGkp24k="
+        "blob": "sha256-WI6BgTe4Bz/AD9yy6YPIykjstPZ5Sgu0PI6mBMvkltw="
     }
 }
