@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="../../core.js"></script>
+    <script type="module">
+        import { Hook, XWorker } from "../../core.js";
+
+        const { ready, sync } = new XWorker(
+          './worker.py',
+          {
+            type: 'micropython',
+            config: {
+              sync_main_only: true
+            }
+          }
+        );
+
+        await ready;
+        console.log(await sync.get_value());
+    </script>
+</head>
+</html>
