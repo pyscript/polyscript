@@ -77,14 +77,14 @@
         "@ungap/with-resolvers": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^1.1.1",
-        "gc-hook": "^0.3.0",
+        "coincident": "^1.2.1",
+        "gc-hook": "^0.3.1",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.1",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-WI6BgTe4Bz/AD9yy6YPIykjstPZ5Sgu0PI6mBMvkltw="
+        "blob": "sha256-WYi+sMeJyYWM3Vx6mNccr2Ld0gf4EIA9RhnWHs9SCxs="
     }
 }

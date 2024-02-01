@@ -13,19 +13,6 @@ import { configs, registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 import { patch, polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
 
-// bails out out of the box with a native/meaningful error
-// in case the SharedArrayBuffer is not available
-try {
-    new SharedArrayBuffer(4);
-} catch (_) {
-    throw new Error(
-        [
-            'Unable to use SharedArrayBuffer due insecure environment.',
-            'Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements',
-        ].join('\n'),
-    );
-}
-
 let interpreter, runEvent, transform;
 const add = (type, fn) => {
     addEventListener(
@@ -69,6 +56,33 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
     interpreter = (async () => {
         try {
             const { id, tag, type, custom, version, config, async: isAsync } = options;
+
+            // this flag allows interacting with the xworker.sync exposed
+            // *only in the worker* and eventually invoked *only from main*.
+            // If that flag is `false` or not present, then SharedArrayBuffer
+            // must be available or not much can work in here.
+            let syncMainAndWorker = !config?.sync_main_only;
+
+            // bails out out of the box with a native/meaningful error
+            // in case the SharedArrayBuffer is not available
+            try {
+                new SharedArrayBuffer(4);
+                // if this does not throw there's no reason to
+                // branch out of all the features ... but ...
+                syncMainAndWorker = true;
+            } catch (_) {
+                // if it does throw and `sync_main_only` was not `true`
+                // then there's no way to go further
+                if (syncMainAndWorker) {
+                    throw new Error(
+                        [
+                            'Unable to use SharedArrayBuffer due insecure environment.',
+                            'Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements',
+                        ].join('\n'),
+                    );
+                }
+            }
+
             const runtimeID = getRuntimeID(type, version);
 
             const interpreter = await getRuntime(runtimeID, baseURL, configURL, config);
@@ -133,12 +147,18 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                 polluteJS(details, resolved, xworker, isAsync, beforeCB, afterCB);
             }
 
-            const { CustomEvent, document } = window;
-            const currentScript = id && document.getElementById(id) || null;
-            const notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
-            const JSModules = createJSModules(window, sync, mainModules);
+            // there's no way to query the DOM, use foreign CustomEvent and so on
+            // in case there's no SharedArrayBuffer around.
+            let CustomEvent, document, notify, currentScript = null, target = '';
+            if (syncMainAndWorker) {
+                ({ CustomEvent, document } = window);
+                currentScript = id && document.getElementById(id) || null;
+                notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
+            }
 
-            let target = '';
+            // TODO: even this is problematic without SharedArrayBuffer
+            // but let's see if we can manage to make it work somehow.
+            const JSModules = createJSModules(window, sync, mainModules);
 
             registerJSModules(type, details, interpreter, JSModules);
             details.registerJSModule(interpreter, 'polyscript', {
@@ -186,6 +206,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             // notify worker done executing
             if (currentScript) notify('done');
+            postMessage('polyscript:done');
             return interpreter;
         } catch (error) {
             postMessage(error);

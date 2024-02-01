@@ -14,7 +14,7 @@ exports.shared = {
         page.on('console', msg => logs.push(msg.text()));
         await page.goto(url);
         await page.waitForSelector('html.worker.ready');
-        await expect(logs.join(',')).toBe('main,thread');
+        await expect(logs.filter(log => log !== 'polyscript:done').join(',')).toBe('main,thread');
     },
 
     workerWindow: ({ expect }, baseURL) => async ({ page }) => {

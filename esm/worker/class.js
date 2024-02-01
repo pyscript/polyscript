@@ -49,8 +49,11 @@ export default (...args) =>
             { importJS, importCSS },
         );
 
+        const resolver = Promise.withResolvers();
+
         defineProperties(worker, {
             sync: { value: sync },
+            ready: { value: resolver.promise },
             postMessage: {
                 value: (data, ...rest) =>
                     bootstrap.then(() =>
@@ -66,12 +69,17 @@ export default (...args) =>
 
         worker.addEventListener('message', event => {
             const { data } = event;
-            if (data instanceof Error) {
+            const isError = data instanceof Error;
+            if (isError || data === 'polyscript:done') {
                 event.stopImmediatePropagation();
-                worker.onerror(create(event, {
-                    type: { value: 'error' },
-                    error: { value: data }
-                }));
+                if (isError) {
+                    resolver.reject(data);
+                    worker.onerror(create(event, {
+                        type: { value: 'error' },
+                        error: { value: data }
+                    }));
+                }
+                else resolver.resolve(worker);
             }
         });
 
