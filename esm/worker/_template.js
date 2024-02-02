@@ -61,13 +61,15 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             const interpreter = await getRuntime(runtimeID, baseURL, configURL, config);
 
-            const mainModules = configs.get(runtimeID).js_modules?.main;
+            const { js_modules, sync_main_only } = configs.get(runtimeID);
+
+            const mainModules = js_modules?.main;
 
             // this flag allows interacting with the xworker.sync exposed
             // *only in the worker* and eventually invoked *only from main*.
             // If that flag is `false` or not present, then SharedArrayBuffer
             // must be available or not much can work in here.
-            let syncMainAndWorker = !configs.get(runtimeID).sync_main_only;
+            let syncMainAndWorker = !sync_main_only;
 
             // bails out out of the box with a native/meaningful error
             // in case the SharedArrayBuffer is not available
