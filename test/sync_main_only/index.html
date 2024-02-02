@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="../../core.js"></script>
     <script type="module">
-        import { Hook, XWorker } from "../../core.js";
+        // either bring in polyscript as module in your code or
+        import { XWorker } from '../../core.js';
 
+        // create one or more XWorker with `sync` ability and
+        // a `ready` callback resolved once such worker bootstrap
+        // and it's code has been executed
         const { ready, sync } = new XWorker(
           './worker.py',
           {
-            type: 'micropython',
+            // pyodide or micropython ... I think you want
+            // pyodide
+            type: 'pyodide',
+            // here you can pass also packages you want to bootstrap
+            // or load ... the docs should help you here:
+            // 
             config: {
               sync_main_only: true
             }
           }
         );
 
+        // await for the worker bootstrap to be completed
         await ready;
+
+        // so that you can invoke at any time any exposed
+        // method within the `sync` in that worker (Python) code
         console.log(await sync.get_value());
     </script>
 </head>
