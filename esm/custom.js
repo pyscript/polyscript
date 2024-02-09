@@ -125,10 +125,12 @@ export const handleCustomType = (node) => {
                         }
 
                         if (before || after) {
-                            createOverload(module, `r${suffix.slice(1)}`).push(
+                            createOverload(
+                                module,
+                                `r${suffix.slice(1)}`,
                                 before,
                                 after,
-                            )
+                            );
                         }
 
                         let beforeCB, afterCB;

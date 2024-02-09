@@ -123,12 +123,8 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                     }
                 }
 
-                if (before || after) {
-                    createOverload(details, name).push(
-                        before,
-                        after,
-                    )
-                }
+                if (before || after)
+                    createOverload(details, name, before, after);
 
                 let beforeCB, afterCB;
                 // exclude onWorker and onReady

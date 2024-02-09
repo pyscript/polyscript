@@ -57,13 +57,11 @@ export const createResolved = (module, type, config, interpreter) => ({
 
 const dropLine0 = code => code.replace(/^(?:\n|\r\n)/, '');
 
-export const createOverload = (module, name) => {
+export const createOverload = (module, name, before, after) => {
     const method = module[name].bind(module);
-    const stack = [];
     module[name] = name === 'run' ?
         // patch the sync method
         (interpreter, code, ...args) => {
-            const [before, after] = stack;
             if (before) method(interpreter, before, ...args);
             const result = method(interpreter, dropLine0(code), ...args);
             if (after) method(interpreter, after, ...args);
@@ -71,13 +69,11 @@ export const createOverload = (module, name) => {
         } :
         // patch the async one
         async (interpreter, code, ...args) => {
-            const [before, after] = stack;
             if (before) await method(interpreter, before, ...args);
             const result = await method(interpreter, dropLine0(code), ...args);
             if (after) await method(interpreter, after, ...args);
             return result;
         };
-    return stack;
 };
 
 export const js_modules = Symbol.for('polyscript.js_modules');
