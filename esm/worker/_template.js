@@ -104,8 +104,6 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             if (isAsync) name += 'Async';
 
             if (hooks) {
-                const overload = createOverload(details, name);
-
                 let before = '';
                 let after = '';
 
@@ -125,11 +123,12 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                     }
                 }
 
-                // append code that should be executed *after* first
-                if (after) overload(after, false);
-
-                // prepend code that should be executed *before* (so that after is post-patched)
-                if (before) overload(before, true);
+                if (before || after) {
+                    createOverload(details, name).push(
+                        before,
+                        after,
+                    )
+                }
 
                 let beforeCB, afterCB;
                 // exclude onWorker and onReady
