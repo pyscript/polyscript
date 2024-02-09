@@ -111,8 +111,6 @@ export const handleCustomType = (node) => {
 
                     // patch methods accordingly to hooks (and only if needed)
                     for (const suffix of ['Run', 'RunAsync']) {
-                        const overload = createOverload(module, `r${suffix.slice(1)}`);
-
                         let before = '';
                         let after = '';
 
@@ -126,11 +124,12 @@ export const handleCustomType = (node) => {
                             }
                         }
 
-                        // append code that should be executed *after* first
-                        if (after) overload(after, false);
-
-                        // prepend code that should be executed *before* (so that after is post-patched)
-                        if (before) overload(before, true);
+                        if (before || after) {
+                            createOverload(module, `r${suffix.slice(1)}`).push(
+                                before,
+                                after,
+                            )
+                        }
 
                         let beforeCB, afterCB;
                         // ignore onReady and onWorker
