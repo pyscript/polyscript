@@ -1,7 +1,8 @@
+import fetch from '@webreflection/fetch';
+
 import { interpreter } from './interpreters.js';
 import { absoluteURL, resolve } from './utils.js';
 import { parse } from './toml.js';
-import { getJSON, getText } from './fetch-utils.js';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -40,9 +41,9 @@ export const getRuntime = (id, config, configURL, options = {}) => {
         /* c8 ignore start */
         const [absolute, type] = getConfigURLAndType(config, configURL);
         if (type === 'json') {
-            options = fetch(absolute).then(getJSON);
+            options = fetch(absolute).json();
         } else if (type === 'toml') {
-            options = fetch(absolute).then(getText).then(parse);
+            options = fetch(absolute).text().then(parse);
         } else if (type === 'string') {
             options = parseString(config);
         } else if (type === 'object' && config) {
