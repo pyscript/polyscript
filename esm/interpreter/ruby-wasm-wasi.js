@@ -1,3 +1,5 @@
+import fetch from '@webreflection/fetch';
+
 import { dedent } from '../utils.js';
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
 
@@ -17,10 +19,9 @@ export default {
     module: (version = '2.2.0') =>
         `https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@${version}/dist/browser.esm.js`,
     async engine({ DefaultRubyVM }, config, url) {
-        const response = await fetch(
-            `${url.slice(0, url.lastIndexOf('/'))}/ruby.wasm`,
-        );
-        const module = await WebAssembly.compile(await response.arrayBuffer());
+        url = `${url.slice(0, url.lastIndexOf('/'))}/ruby.wasm`;
+        const buffer = await fetch(url).arrayBuffer();
+        const module = await WebAssembly.compile(buffer);
         const { vm: interpreter } = await DefaultRubyVM(module);
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);

@@ -1,9 +1,9 @@
 import * as JSON from '@ungap/structured-clone/json';
+import fetch from '@webreflection/fetch';
 import coincident from 'coincident/window';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
 import { assign, create, defineProperties, importCSS, importJS } from '../utils.js';
-import { getText } from '../fetch-utils.js';
 import Hook from './hook.js';
 
 /**
@@ -38,7 +38,7 @@ export default (...args) =>
         const [ config ] = getConfigURLAndType(options.config, options.configURL);
 
         const bootstrap = fetch(url)
-            .then(getText)
+            .text()
             .then(code => {
                 const hooks = isHook ? this.toJSON() : void 0;
                 postMessage.call(worker, { options, config, code, hooks });

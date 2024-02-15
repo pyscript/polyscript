@@ -1,3 +1,4 @@
+import fetch from '@webreflection/fetch';
 import { $ } from 'basic-devtools';
 
 import $xworker from './worker/class.js';
@@ -5,7 +6,6 @@ import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
 import { JSModules, all, dispatch, resolve, defineProperty, nodeInfo, registerJSModules } from './utils.js';
-import { getText } from './fetch-utils.js';
 
 const getRoot = (script) => {
     let parent = script;
@@ -161,7 +161,7 @@ export const handle = async (script) => {
         if (targetValue) targets.set(script, queryTarget(script, targetValue));
 
         // start fetching external resources ASAP
-        const source = src ? fetch(src).then(getText) : script.textContent;
+        const source = src ? fetch(src).text() : script.textContent;
         details.queue = details.queue.then(() =>
             execute(script, source, details.XWorker, !!isAsync),
         );

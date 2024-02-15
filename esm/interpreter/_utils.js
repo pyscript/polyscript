@@ -1,6 +1,6 @@
 import '@ungap/with-resolvers';
+import fetch from '@webreflection/fetch';
 
-import { getBuffer } from '../fetch-utils.js';
 import { absoluteURL, all, entries, importCSS, importJS, isArray, isCSS } from '../utils.js';
 
 export const RUNNING_IN_WORKER = !globalThis.window;
@@ -94,8 +94,8 @@ const joinPaths = (parts) => {
     return parts[0].startsWith('/') ? `/${res}` : res;
 };
 
-const fetchResolved = (config_fetch, url) =>
-    fetch(absoluteURL(url, base.get(config_fetch)));
+const fetchBuffer = (config_fetch, url) =>
+    fetch(absoluteURL(url, base.get(config_fetch))).arrayBuffer();
 
 export const base = new WeakMap();
 
@@ -103,8 +103,7 @@ export const base = new WeakMap();
 export const fetchPaths = (module, interpreter, config_fetch) =>
     all(
         calculateFetchPaths(config_fetch).map(({ url, path }) =>
-            fetchResolved(config_fetch, url)
-                .then(getBuffer)
+            fetchBuffer(config_fetch, url)
                 .then((buffer) => module.writeFile(interpreter, path, buffer)),
         ),
     );
@@ -146,8 +145,7 @@ const calculateFilesPaths = files => {
 export const fetchFiles = (module, interpreter, config_files) =>
     all(
         calculateFilesPaths(config_files).map(({ url, path }) =>
-            fetchResolved(config_files, url)
-                .then(getBuffer)
+            fetchBuffer(config_files, url)
                 .then((buffer) => module.writeFile(interpreter, path, buffer)),
         ),
     );
