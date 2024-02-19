@@ -31,12 +31,5 @@
             end
         </script>
         <button lua-click="print_version()">lua version</button>
-
-        <script type="ruby-wasm-wasi">
-            def print_version()
-              print "ruby #{ RUBY_VERSION }p#{ RUBY_PATCHLEVEL }"
-            end
-        </script>
-        <button ruby-wasm-wasi-click="print_version()">ruby version</button>
     </body>
 </html>
