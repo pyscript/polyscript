@@ -21,10 +21,9 @@
         "size:module": "echo module is $(cat core.js | brotli | wc -c) bytes once compressed",
         "size:worker": "echo worker is $(cat esm/worker/xworker.js | brotli | wc -c) bytes once compressed",
         "ts": "tsc -p .",
-        "update:interpreters": "npm run version:pyodide && npm run version:wasmoon && npm run version:ruby-wasm-wasi && npm run version:micropython && node rollup/update_versions.cjs && npm run build && npm run test",
+        "update:interpreters": "npm run version:pyodide && npm run version:wasmoon && npm run version:micropython && node rollup/update_versions.cjs && npm run build && npm run test",
         "version:micropython": "npm view @micropython/micropython-webassembly-pyscript version>versions/micropython",
         "version:pyodide": "npm view pyodide version>versions/pyodide",
-        "version:ruby-wasm-wasi": "git ls-remote --tags --refs --sort='v:refname' https://github.com/ruby/ruby.wasm.git | grep 'tags/[[:digit:]]\\.' | tail -n1 | sed 's/.*\\///'>versions/ruby-wasm-wasi",
         "version:wasmoon": "npm view wasmoon version>versions/wasmoon"
     },
     "keywords": [
@@ -45,7 +44,7 @@
         "chokidar": "^3.6.0",
         "eslint": "^8.56.0",
         "linkedom": "^0.16.8",
-        "rollup": "^4.11.0",
+        "rollup": "^4.12.0",
         "static-handler": "^0.4.3",
         "typescript": "^5.3.3"
     },
@@ -86,6 +85,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-IVoc7S6qee7yUDgbEvt9OJ5J8ScOKtCw6KrYnDnrGzU="
+        "blob": "sha256-T/f2KA0oqrxzDZAciEzSKvQpNrIrXxYxEIce9uYvUik="
     }
 }

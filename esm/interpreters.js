@@ -58,7 +58,6 @@ const register = (interpreter) => {
 //:RUNTIMES
 import micropython from './interpreter/micropython.js';
 import pyodide from './interpreter/pyodide.js';
-import ruby_wasm_wasi from './interpreter/ruby-wasm-wasi.js';
 import wasmoon from './interpreter/wasmoon.js';
-for (const interpreter of [micropython, pyodide, ruby_wasm_wasi, wasmoon])
+for (const interpreter of [micropython, pyodide, wasmoon])
     register(interpreter);
