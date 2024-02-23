@@ -7,6 +7,15 @@ export const registerJSModule = (interpreter, name, value) => {
     interpreter.registerJsModule(name, value);
 };
 
+export const getFormat = (path, url) => {
+    if (path.endsWith('/*')) {
+        if (/\.(zip|tar(?:\.gz)?)$/.test(url))
+            return RegExp.$1;
+        throw new Error(`Unsupported archive ${url}`);
+    }
+    return '';
+};
+
 export const run = (interpreter, code, ...args) => {
     try {
         return interpreter.runPython(dedent(code), ...args);

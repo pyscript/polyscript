@@ -1,0 +1,2 @@
+[files]
+"./index.tar.gz" = "./package/*"
