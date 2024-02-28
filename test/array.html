@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <title>Polyscript</title>
-        <script type="module" src="../core.js"></script>
+        <script type="module" src="../dist/index.js"></script>
     </head>
     <body>
         <script>
@@ -11,7 +11,7 @@
             }
         </script>
         <script type="module">
-            import { XWorker } from "../core.js";
+            import { XWorker } from "../dist/index.js";
 
             new XWorker("./array.py", { type: "pyodide"});
         </script>

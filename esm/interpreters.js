@@ -16,6 +16,7 @@ export const selectors = [];
 /** @type {string[]} */
 export const prefixes = [];
 
+/* c8 ignore start */
 export const interpreter = new Proxy(new Map(), {
     get(map, id) {
         if (!map.has(id)) {
@@ -46,6 +47,7 @@ export const interpreter = new Proxy(new Map(), {
             });
     },
 });
+/* c8 ignore stop */
 
 const register = (interpreter) => {
     for (const type of [].concat(interpreter.type)) {

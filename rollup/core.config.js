@@ -13,7 +13,7 @@ export default {
     plugins: process.env.NO_MIN ? [nodeResolve()] : [nodeResolve(), terser()],
     output: {
         esModule: true,
-        file: "./core.js",
+        dir: "./dist",
         sourcemap: true,
     },
 };

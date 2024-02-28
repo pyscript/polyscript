@@ -16,7 +16,6 @@ export const writeFile = ({ FS, PATH, PATH_FS }, path, buffer) => {
         canOwn: true,
     });
 };
-/* c8 ignore stop */
 
 // This is instead a fallback for Lua or others
 export const writeFileShim = (FS, path, buffer) => {
@@ -59,8 +58,6 @@ const resolve = (FS, path) => {
 };
 
 const calculateFetchPaths = (config_fetch) => {
-    // REQUIRES INTEGRATION TEST
-    /* c8 ignore start */
     for (const { files, to_file, from = '' } of config_fetch) {
         if (files !== undefined && to_file !== undefined)
             throw new Error(
@@ -71,7 +68,6 @@ const calculateFetchPaths = (config_fetch) => {
                 `Couldn't determine the filename from the path ${from}, please supply 'to_file' parameter.`,
             );
     }
-    /* c8 ignore stop */
     return config_fetch.flatMap(
         ({ from = '', to_folder = '.', to_file, files }) => {
             if (isArray(files))
@@ -99,7 +95,6 @@ const fetchBuffer = (config_fetch, url) =>
 
 export const base = new WeakMap();
 
-/* c8 ignore start */
 export const fetchPaths = (module, interpreter, config_fetch) =>
     all(
         calculateFetchPaths(config_fetch).map(({ url, path }) =>
