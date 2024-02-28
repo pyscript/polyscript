@@ -8,19 +8,20 @@ const { join, resolve } = require("node:path");
 const { readdirSync, readFileSync, rmSync, writeFileSync } = require("node:fs");
 const { createHash } = require("node:crypto");
 
+const DIST_DIR = resolve(join(__dirname, "..", "dist"));
 const WORKERS_DIR = resolve(join(__dirname, "..", "esm", "worker"));
 const PACKAGE_JSON = resolve(join(__dirname, "..", "package.json"));
 
-for (const file of readdirSync(WORKERS_DIR)) {
-    if (file.startsWith("__")) {
+for (const file of readdirSync(DIST_DIR)) {
+    if (file.startsWith("_")) {
         if (process.env.NO_MIN) {
             writeFileSync(
                 join(WORKERS_DIR, "xworker.js"),
-                `/* c8 ignore next */\nexport default () => new Worker('/esm/worker/__template.js',{type:'module'});`,
+                `/* c8 ignore next */\nexport default () => new Worker('/dist/_template.js',{type:'module'});`,
             );
         } else {
             const js = JSON.stringify(
-                readFileSync(join(WORKERS_DIR, file)).toString(),
+                readFileSync(join(DIST_DIR, file)).toString(),
             );
             const hash = createHash("sha256");
             hash.update(js);
@@ -32,9 +33,18 @@ for (const file of readdirSync(WORKERS_DIR)) {
             );
             writeFileSync(
                 join(WORKERS_DIR, "xworker.js"),
-                `/* c8 ignore next */\nexport default () => new Worker(URL.createObjectURL(new Blob([${js}],{type:'application/javascript'})),{type:'module'});`,
+                // this normalizes artifact paths otherwise not reachable via the blob
+                [
+                    '/* c8 ignore start */',
+                    'const {url} = import.meta;',
+                    `const re = ${/import\((['"])([^)]+?\.js)\1\)/}g;`,
+                    `const place = ${(_,q,f) => `import(${q}${new URL(f,url).href}${q})`};`,
+                    `export default () => new Worker(URL.createObjectURL(new Blob([${js}.replace(re,place)],{type:'application/javascript'})),{type:'module'})`,
+                    '/* c8 ignore stop */',
+                    ''
+                ].join("\n")
             );
-            rmSync(join(WORKERS_DIR, file));
+            rmSync(join(DIST_DIR, file));
         }
     }
 }

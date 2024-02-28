@@ -6,7 +6,9 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && cp core.* docs/",
+        "build": "npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && npm run build:docs",
+        "build:3rd-party": "node rollup/3rd-party.cjs",
+        "build:docs": "mv docs/coi.js ./; rm docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
         "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
@@ -18,9 +20,9 @@
         "test:integration": "static-handler --coi . 2>/dev/null & SH_PID=$!; EXIT_CODE=0; playwright test --fully-parallel test/ || EXIT_CODE=$?; kill $SH_PID 2>/dev/null; exit $EXIT_CODE",
         "coverage": "mkdir -p ./coverage; c8 report --reporter=text-lcov > ./coverage/lcov.info",
         "size": "npm run size:module && npm run size:worker",
-        "size:module": "echo module is $(cat core.js | brotli | wc -c) bytes once compressed",
+        "size:module": "echo module is $(cat dist/index.js | brotli | wc -c) bytes once compressed",
         "size:worker": "echo worker is $(cat esm/worker/xworker.js | brotli | wc -c) bytes once compressed",
-        "ts": "tsc -p .",
+        "ts": "rm -rf types && tsc -p .",
         "update:interpreters": "npm run version:pyodide && npm run version:wasmoon && npm run version:micropython && node rollup/update_versions.cjs && npm run build && npm run test",
         "version:micropython": "npm view @micropython/micropython-webassembly-pyscript version>versions/micropython",
         "version:pyodide": "npm view pyodide version>versions/pyodide",
@@ -39,6 +41,7 @@
         "@playwright/test": "^1.41.2",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
+        "@zip.js/zip.js": "^2.7.35",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.6.0",
@@ -49,10 +52,10 @@
         "typescript": "^5.3.3"
     },
     "type": "module",
-    "module": "./core.js",
-    "unpkg": "./core.js",
+    "module": "./dist/index.js",
+    "unpkg": "./dist/index.js",
     "jsdelivr": "./jsdelivr.js",
-    "browser": "./core.js",
+    "browser": "./dist/index.js",
     "exports": {
         ".": {
             "types": "./types/index.d.ts",
@@ -85,6 +88,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-T/f2KA0oqrxzDZAciEzSKvQpNrIrXxYxEIce9uYvUik="
+        "blob": "sha256-IxVHCm/doR/CVNO9urvV6owVVePCTl1xDm5ead/MXN0="
     }
 }

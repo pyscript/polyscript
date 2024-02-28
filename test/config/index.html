@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="../../core.js"></script>
+    <script type="module" src="../../dist/index.js"></script>
     <script type="module">
-        import { define } from "../../core.js";
+        import { define } from "../../dist/index.js";
 
         const config = await fetch("./static/settings.json").then(b => b.json());
         define("mpy", {

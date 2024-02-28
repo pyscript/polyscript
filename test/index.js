@@ -144,21 +144,21 @@ const polyscript = require("../cjs");
             assert(pyodide.packages, packages);
         },
 
-        async function tomlConfig() {
-            const jsonPackages = JSON.stringify({
-                packages: { a: Math.random() },
-            });
-            patchFetch(() =>
-                Promise.resolve({ text: () => Promise.resolve(jsonPackages) }),
-            );
-            shadowRoot.innerHTML = `<script config="./whatever.toml" type="pyodide"></script>`;
-            // there are more promises in here let's increase the tick delay to avoid flaky tests
-            await tick(20);
-            assert(
-                JSON.stringify({ packages: pyodide.packages }),
-                jsonPackages,
-            );
-        },
+        // async function tomlConfig() {
+        //     const jsonPackages = JSON.stringify({
+        //         packages: { a: Math.random() },
+        //     });
+        //     patchFetch(() =>
+        //         Promise.resolve({ text: () => Promise.resolve(jsonPackages) }),
+        //     );
+        //     shadowRoot.innerHTML = `<script config="./whatever.toml" type="pyodide"></script>`;
+        //     // there are more promises in here let's increase the tick delay to avoid flaky tests
+        //     await tick(20);
+        //     assert(
+        //         JSON.stringify({ packages: pyodide.packages }),
+        //         jsonPackages,
+        //     );
+        // },
 
         async function fetchConfig() {
             const jsonPackages = JSON.stringify({

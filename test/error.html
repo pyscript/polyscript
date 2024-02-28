@@ -17,7 +17,7 @@
             w.onerror = handle_error
         </script>
         <script type="module">
-            import { XWorker } from "../core.js";
+            import { XWorker } from "../dist/index.js";
 
             const w = new XWorker("./error.py", { type: "micropython" });
             w.onerror = ({ data: error }) => {

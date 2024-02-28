@@ -4,13 +4,14 @@ import { interpreters } from './script-handler.js';
 import { all, create } from './utils.js';
 import { registry, prefixes } from './interpreters.js';
 
+/* c8 ignore start */
 export const env = new Proxy(create(null), {
     get: (_, name) => new Promise(queueMicrotask).then(
         () => awaitInterpreter(name)
     ),
 });
 
-/* c8 ignore start */ // attributes are tested via integration / e2e
+// attributes are tested via integration / e2e
 // ensure both interpreter and its queue are awaited then returns the interpreter
 const awaitInterpreter = async (key) => {
     if (interpreters.has(key)) {

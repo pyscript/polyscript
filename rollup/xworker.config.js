@@ -19,6 +19,6 @@ export default {
     plugins: process.env.NO_MIN ? [nodeResolve()] : [nodeResolve(), terser()],
     output: {
         esModule: true,
-        file: join(WORKERS_DIR, "__template.js"),
+        dir: "./dist",
     },
 };

@@ -9,7 +9,7 @@
         <div>See console ➡️</div>
         <!-- XWorker - JavaScript to MicroPython -->
         <script type="module">
-            import { XWorker } from "/core.js";
+            import { XWorker } from "/dist/index.js";
 
             const w = new XWorker("./worker.py", { type: "micropython", config: "../fetch.toml" });
             w.postMessage("JavaScript: Hello MicroPython 👋");

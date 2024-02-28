@@ -12,3 +12,5 @@ esm/worker/xworker.js
 esm/worker/__template.js
 types/
 esm/python/
+esm/3rd-party/*.js
+dist/
