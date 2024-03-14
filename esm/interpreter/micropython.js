@@ -9,7 +9,7 @@ const type = 'micropython';
 /* c8 ignore start */
 export default {
     type,
-    module: (version = '1.21.0-279') =>
+    module: (version = '1.22.0-224') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url) {
         const { stderr, stdout, get } = stdio();
