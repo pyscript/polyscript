@@ -30,6 +30,7 @@ export const loadMicroPython = () => ({
     FS: {
         mkdirTree() {},
         writeFile() {},
+        cwd() { return '/' }
     },
     _module: {
         PATH: { dirname },

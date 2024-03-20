@@ -38,18 +38,18 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.41.2",
+        "@playwright/test": "^1.42.1",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "@zip.js/zip.js": "^2.7.35",
+        "@zip.js/zip.js": "^2.7.40",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.6.0",
-        "eslint": "^8.56.0",
-        "linkedom": "^0.16.8",
-        "rollup": "^4.12.0",
+        "eslint": "^8.57.0",
+        "linkedom": "^0.16.10",
+        "rollup": "^4.13.0",
         "static-handler": "^0.4.3",
-        "typescript": "^5.3.3"
+        "typescript": "^5.4.2"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -77,17 +77,17 @@
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
         "@ungap/with-resolvers": "^0.1.0",
-        "@webreflection/fetch": "^0.1.4",
+        "@webreflection/fetch": "^0.1.5",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^1.2.2",
+        "coincident": "^1.2.3",
         "gc-hook": "^0.3.1",
         "html-escaper": "^3.0.3",
-        "proxy-target": "^3.0.1",
+        "proxy-target": "^3.0.2",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-IxVHCm/doR/CVNO9urvV6owVVePCTl1xDm5ead/MXN0="
+        "blob": "sha256-zz411zHZTrOorw0BiT4Kv/TPirQWq8BnzpUgZOb810k="
     }
 }

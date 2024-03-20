@@ -33,7 +33,7 @@ const dirname = (path) => {
 const mkdirTree = (FS, path) => {
     const current = [];
     for (const branch of path.split('/')) {
-        if (branch === '.') continue;
+        if (branch === '.' || branch === '..') continue;
         current.push(branch);
         if (branch) FS.mkdir(current.join('/'));
     }
