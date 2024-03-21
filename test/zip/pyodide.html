@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="/dist/index.js"></script>
+  <style>
+    html.true::before {
+      content: "OK"
+    }
+  </style>
+</head>
+<body>
+  <script type="pyodide" config="zip.toml" worker>
+    from polyscript import xworker
+    f = open("./package/index.html", "r")
+    lines = f.readlines()
+    xworker.window.document.documentElement.classList.add(
+      lines[0] == "<!DOCTYPE html>\n"
+    )
+  </script>
+  <script type="pyodide" config="tar.gz.toml" worker>
+    from polyscript import xworker
+    f = open("./package/index.html", "r")
+    lines = f.readlines()
+    xworker.window.document.documentElement.classList.add(
+      lines[0] == "<!DOCTYPE html>\n"
+    )
+  </script>
+</body>
+</html>

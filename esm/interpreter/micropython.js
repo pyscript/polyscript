@@ -1,7 +1,9 @@
+// import fetch from '@webreflection/fetch';
 import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { getFormat, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 import mip from '../python/mip.js';
+import zip from '../zip.js';
 
 const type = 'micropython';
 
@@ -33,7 +35,58 @@ export default {
     runAsync,
     runEvent,
     transform: (interpreter, value) => interpreter.PyProxy.toJs(value),
-    writeFile: ({ FS, _module: { PATH, PATH_FS } }, path, buffer) =>
-        writeFile({ FS, PATH, PATH_FS }, path, buffer),
+    writeFile: (interpreter, path, buffer, url) => {
+        const { FS, _module: { PATH, PATH_FS } } = interpreter;
+        const fs = { FS, PATH, PATH_FS };
+        const format = getFormat(path, url);
+        if (format) {
+            const extractDir = path.slice(0, -1);
+            if (extractDir !== './') FS.mkdir(extractDir);
+            switch (format) {
+                case 'zip': {
+                    const blob = new Blob([buffer], { type: 'application/zip' });
+                    return zip().then(async ({ BlobReader, Uint8ArrayWriter, ZipReader }) => {
+                        const zipFileReader = new BlobReader(blob);
+                        const zipReader = new ZipReader(zipFileReader);
+                        for (const entry of await zipReader.getEntries()) {
+                            const { directory, filename } = entry;
+                            if (directory) {
+                                FS.mkdir(extractDir + filename);
+                            }
+                            else {
+                                const buffer = await entry.getData(new Uint8ArrayWriter);
+                                FS.writeFile(extractDir + filename, buffer, {
+                                    canOwn: true,
+                                });
+                            }
+                        }
+                        zipReader.close();
+                    });
+                }
+                case 'tar.gz': {
+                    const TMP = './_.tar.gz';
+                    writeFile(fs, TMP, buffer);
+                    interpreter.runPython(`
+                        import os, gzip, tarfile
+                        tar = tarfile.TarFile(fileobj=gzip.GzipFile(fileobj=open("${TMP}", "rb")))
+                        for f in tar:
+                            name = f"${extractDir}{f.name[2:]}"
+                            if f.type == tarfile.DIRTYPE:
+                                if f.name != "./":
+                                    os.mkdir(name.strip("/"))
+                            else:
+                                source = tar.extractfile(f)
+                                with open(name, "wb") as dest:
+                                    dest.write(source.read())
+                                    dest.close()
+                        tar.close()
+                        os.remove("${TMP}")
+                    `);
+                    return;
+                }
+            }
+        }
+        return writeFile(fs, path, buffer);
+    },
 };
 /* c8 ignore stop */

@@ -1,7 +1,7 @@
 import { create } from 'gc-hook';
 
 import { RUNNING_IN_WORKER, fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { getFormat, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 
 const type = 'pyodide';
@@ -109,7 +109,15 @@ export default {
             value.toJs(toJsOptions) :
             value
     ),
-    writeFile: ({ FS, PATH, _module: { PATH_FS } }, path, buffer) =>
-        writeFile({ FS, PATH, PATH_FS }, path, buffer),
+    writeFile: (interpreter, path, buffer, url) => {
+        const format = getFormat(path, url);
+        if (format) {
+            return interpreter.unpackArchive(buffer, format, {
+                extractDir: path.slice(0, -1)
+            });
+        }
+        const { FS, PATH, _module: { PATH_FS } } = interpreter;
+        return writeFile({ FS, PATH, PATH_FS }, path, buffer);
+    },
 };
 /* c8 ignore stop */

@@ -11,7 +11,9 @@ export const RUNNING_IN_WORKER = !globalThis.window;
 // This should be the only helper needed for all Emscripten based FS exports
 export const writeFile = ({ FS, PATH, PATH_FS }, path, buffer) => {
     const absPath = PATH_FS.resolve(path);
-    FS.mkdirTree(PATH.dirname(absPath));
+    const dirPath = PATH.dirname(absPath);
+    if (FS.mkdirTree) FS.mkdirTree(dirPath);
+    else mkdirTree(FS, dirPath);
     return FS.writeFile(absPath, new Uint8Array(buffer), {
         canOwn: true,
     });
@@ -141,7 +143,12 @@ export const fetchFiles = (module, interpreter, config_files) =>
     all(
         calculateFilesPaths(config_files).map(({ url, path }) =>
             fetchBuffer(config_files, url)
-                .then((buffer) => module.writeFile(interpreter, path, buffer)),
+                .then((buffer) => module.writeFile(
+                    interpreter,
+                    path,
+                    buffer,
+                    url,
+                )),
         ),
     );
 
