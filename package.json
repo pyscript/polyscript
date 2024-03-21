@@ -49,7 +49,7 @@
         "linkedom": "^0.16.10",
         "rollup": "^4.13.0",
         "static-handler": "^0.4.3",
-        "typescript": "^5.4.2"
+        "typescript": "^5.4.3"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -88,6 +88,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-zz411zHZTrOorw0BiT4Kv/TPirQWq8BnzpUgZOb810k="
+        "blob": "sha256-tV7jypF54M8P2vuzREc5ZRk1nPGj9AL1VmnxnE2az/s="
     }
 }

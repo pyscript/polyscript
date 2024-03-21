@@ -2,7 +2,7 @@
     "imports": {
         "http://pyodide": "./test/mocked/pyodide.mjs",
         "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.mjs": "./test/mocked/pyodide.mjs",
-        "https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@1.22.0-269/micropython.mjs": "./test/mocked/micropython.mjs",
+        "https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@1.22.0-272/micropython.mjs": "./test/mocked/micropython.mjs",
         "./3rd-party/toml.js": "./test/mocked/toml.mjs"
     }
 }
