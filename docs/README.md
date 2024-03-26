@@ -7,7 +7,7 @@
  * [Terminology](#terminology) - what we mean by "_term_" in this document
  * [Bootstrapping core](#bootstrapping-core) - how to enable Polyscript in your page
  * [How Scripts Work](#how-scripts-work) - how `<script type="...">` works
- * [Extra config Features](#extra-config-features) - how to load *JS* modules on either main or workers
+ * [Extra config Features](#extra-config-features) - how to load *JS* modules on either main or workers and how to untar or unzip archives into the Virtual File System
  * [The polyscript Module](#the-polyscript-module) - what is exported in *polyscript*
  * [How Events Work](#how-events-work) - how `<button py-click="...">` works
  * [XWorker](#xworker) - how `XWorker` class and its `xworker` reference work
@@ -345,6 +345,13 @@ fn()
   from polyscript.js_modules import worker_only
 </script>
 ```
+
+
+### .tar.gz and .zip files
+
+If the `[files]` entry in the *config* contains a `xxxxx.tar.gz` or `xxxxx.zip` **source**, and it's destination / target is a folder with a star, such as `/*` for root or `./dest/*` for local folders, both *Pyodide* and *MicroPython* runtimes will be able to extract that compressed archive automatically into the Virtual File System and at exactly that location.
+
+This feature is hence available on *PyScript* too.
 
 
 
