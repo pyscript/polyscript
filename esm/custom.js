@@ -166,7 +166,7 @@ const registry = new Map();
 
 /**
  * @typedef {Object} CustomOptions custom configuration
- * @prop {'pyodide' | 'micropython' | 'wasmoon'} interpreter the interpreter to use
+ * @prop {'pyodide' | 'micropython' | 'ruby-wasm-wasi' | 'wasmoon'} interpreter the interpreter to use
  * @prop {string} [version] the optional interpreter version to use
  * @prop {string} [config] the optional config to use within such interpreter
  */

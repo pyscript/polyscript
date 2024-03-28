@@ -33,6 +33,7 @@ We also explicitly use that "_piece of software_" as the interpreter name it ref
 
  * [pyodide](https://pyodide.org/en/stable/index.html) is the name of the interpreter that runs likely the most complete version of latest *Python*, enabling dozen official modules at run time, also offering a great *JS* integration in its core
  * [micropython](https://micropython.org/) is the name of the interpreter that runs a small subset of the *Python* standard library and is optimized to run in constrained environments such as *Mobile* phones, or even *Desktop*, thanks to its tiny size and an extremely fast bootstrap
+ * [ruby-wasm-wasi](https://github.com/ruby/ruby.wasm) is the name of the (currently *experimental*) interpreter that adds *Ruby* to the list of programming languages currently supported
  * [wasmoon](https://github.com/ceifa/wasmoon) is the name of the interpreter that runs *Lua* on the browser and that, among the previous two interpreters, is fully compatible with all core features
 
 `<script>` tags specify which *interpreter* to use via the `type` attribute. This is typically the full name of the interpreter:
@@ -46,6 +47,10 @@ We also explicitly use that "_piece of software_" as the interpreter name it ref
 <script type="micropython">
     import sys
     print(sys.version)
+</script>
+
+<script type="ruby-wasm-wasi">
+    print "ruby #{ RUBY_VERSION }"
 </script>
 
 <script type="wasmoon">
@@ -765,6 +770,7 @@ Please note that if a worker is created explicitly, there won't be any element, 
 | :------------- | :---: | :--------: | :--------: | :----------------: | :---------: | :---------: |
 | pyodide        | •     | •          | •          | •                  | •           | •           |
 | micropython    | •     | •          | •          | •                  | •           | •           |
+| ruby-wasm-wasi | •     | •          | •          | !                  |             |             |
 | wasmoon        | •     | •          | •          | !                  | •           |             |
 
   * **run** allows code to run synchronously and optionally return value

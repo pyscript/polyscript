@@ -9,27 +9,34 @@
     </head>
     <body>
         <script type="pyodide">
-            def print_version():
+            def print_version(event):
               import sys
               print(sys.version)
               print("bad.", file=sys.stderr)
         </script>
-        <button py-click="print_version()">python version</button>
+        <button pyodide-click="print_version">python version</button>
 
         <script type="micropython">
-            def print_version():
+            def print_version(event):
               import sys
               print(sys.version)
               print("bad.", file=sys.stderr)
         </script>
-        <button micropython-click="print_version()">micropython version</button>
+        <button micropython-click="print_version">micropython version</button>
+
+        <script type="ruby-wasm-wasi">
+            def print_version(event)
+              print "ruby #{ RUBY_VERSION }p#{ RUBY_PATCHLEVEL }"
+            end
+        </script>
+        <button ruby-wasm-wasi-click="print_version">ruby version</button>
 
         <script type="wasmoon">
-            function print_version()
+            function print_version(event)
               print(_VERSION)
               printErr(123)
             end
         </script>
-        <button lua-click="print_version()">lua version</button>
+        <button wasmoon-click="print_version">lua version</button>
     </body>
 </html>

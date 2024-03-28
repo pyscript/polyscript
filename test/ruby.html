@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>Ruby</title>
+        <link rel="stylesheet" href="style.css" />
+        <script type="module" src="../core.js"></script>
+    </head>
+    <body>
+        <script type="ruby-wasm-wasi">
+            def print_version(event)
+              puts event[:type]
+              print "ruby #{ RUBY_VERSION }p#{ RUBY_PATCHLEVEL }"
+            end
+        </script>
+        <button ruby-wasm-wasi-click="print_version">
+            ruby-wasm-wasi version
+        </button>
+    </body>
+</html>
