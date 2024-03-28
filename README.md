@@ -69,6 +69,7 @@ integration
           ├ interpreter
           │           ├ micropython
           │           ├ pyodide
+          │           ├ ruby-wasm-wasi
           │           ├ wasmoon
           │           ├ xxx.yy
           │           ├ xxx.toml
@@ -76,6 +77,7 @@ integration
           ├ _shared.js
           ├ micropython.js
           ├ pyodide.js
+          ├ ruby-wasm-wasi.js
           └ wasmoon.js
 ```
 
