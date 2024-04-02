@@ -6,11 +6,13 @@ import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
 import { addAllListeners } from './listeners.js';
-import { Hook, XWorker } from './xworker.js';
+import { Hook, XWorker as XW } from './xworker.js';
 import { polluteJS, js as jsHooks, code as codeHooks } from './hooks.js';
 import workerURL from './worker/url.js';
 
 export const CUSTOM_SELECTORS = [];
+
+export const customObserver = new Map();
 
 /**
  * @typedef {Object} Runtime custom configuration
@@ -30,131 +32,137 @@ const waitList = new Map();
 /**
  * @param {Element} node any DOM element registered via define.
  */
-export const handleCustomType = (node) => {
+export const handleCustomType = async (node) => {
     for (const selector of CUSTOM_SELECTORS) {
         if (node.matches(selector)) {
             const type = types.get(selector);
             const details = registry.get(type);
             const { resolve } = waitList.get(type);
             const { options, known } = details;
-            if (!known.has(node)) {
-                known.add(node);
-                const {
-                    interpreter: runtime,
-                    configURL,
-                    config,
-                    version,
-                    env,
-                    onerror,
-                    hooks,
-                } = options;
 
-                let error;
-                try {
-                    const worker = workerURL(node);
-                    if (worker) {
-                        const xworker = XWorker.call(new Hook(null, hooks), worker, {
-                            ...nodeInfo(node, type),
-                            version,
-                            configURL,
-                            type: runtime,
-                            custom: type,
-                            config: node.getAttribute('config') || config || {},
-                            async: node.hasAttribute('async')
-                        });
-                        defineProperty(node, 'xworker', { value: xworker });
-                        resolve({ type, xworker });
-                        return;
-                    }
-                }
-                // let the custom type handle errors via its `io`
-                catch (workerError) {
-                    error = workerError;
-                }
+            if (known.has(node)) return;
+            known.add(node);
 
-                const name = getRuntimeID(runtime, version);
-                const id = env || `${name}${config ? `|${config}` : ''}`;
-                const { interpreter: engine, XWorker: Worker } = getDetails(
-                    type,
-                    id,
-                    name,
-                    version,
-                    config,
-                    configURL,
-                    runtime
-                );
-                engine.then((interpreter) => {
-                    const module = create(defaultRegistry.get(runtime));
-
-                    const hook = new Hook(interpreter, hooks);
-
-                    const XWorker = function XWorker(...args) {
-                        return Worker.apply(hook, args);
-                    };
-
-                    const resolved = {
-                        ...createResolved(
-                            module,
-                            type,
-                            structuredClone(configs.get(name)),
-                            interpreter,
-                        ),
-                        XWorker,
-                    };
-
-                    registerJSModules(runtime, module, interpreter, JSModules);
-                    module.registerJSModule(interpreter, 'polyscript', {
-                        XWorker,
-                        currentScript: type.startsWith('_') ? null : node,
-                        js_modules: JSModules,
-                    });
-
-                    // patch methods accordingly to hooks (and only if needed)
-                    for (const suffix of ['Run', 'RunAsync']) {
-                        let before = '';
-                        let after = '';
-
-                        for (const key of codeHooks) {
-                            const value = hooks?.main?.[key];
-                            if (value && key.endsWith(suffix)) {
-                                if (key.startsWith('codeBefore'))
-                                    before = dedent(value());
-                                else
-                                    after = dedent(value());
-                            }
-                        }
-
-                        if (before || after) {
-                            createOverload(
-                                module,
-                                `r${suffix.slice(1)}`,
-                                before,
-                                after,
-                            );
-                        }
-
-                        let beforeCB, afterCB;
-                        // ignore onReady and onWorker
-                        for (let i = 2; i < jsHooks.length; i++) {
-                            const key = jsHooks[i];
-                            const value = hooks?.main?.[key];
-                            if (value && key.endsWith(suffix)) {
-                                if (key.startsWith('onBefore'))
-                                    beforeCB = value;
-                                else
-                                    afterCB = value;
-                            }
-                        }
-                        polluteJS(module, resolved, node, suffix.endsWith('Async'), beforeCB, afterCB);
-                    }
-
-                    details.queue = details.queue.then(() => {
-                        resolve(resolved);
-                        if (error) onerror?.(error, node);
-                        return hooks?.main?.onReady?.(resolved, node);
-                    });
-                });
+            for (const [selector, callback] of customObserver) {
+                if (node.matches(selector)) await callback(node);
             }
+
+            const {
+                interpreter: runtime,
+                configURL,
+                config,
+                version,
+                env,
+                onerror,
+                hooks,
+            } = options;
+
+            let error;
+            try {
+                const worker = workerURL(node);
+                if (worker) {
+                    const xworker = XW.call(new Hook(null, hooks), worker, {
+                        ...nodeInfo(node, type),
+                        version,
+                        configURL,
+                        type: runtime,
+                        custom: type,
+                        config: node.getAttribute('config') || config || {},
+                        async: node.hasAttribute('async')
+                    });
+                    defineProperty(node, 'xworker', { value: xworker });
+                    resolve({ type, xworker });
+                    return;
+                }
+            }
+            // let the custom type handle errors via its `io`
+            catch (workerError) {
+                error = workerError;
+            }
+
+            const name = getRuntimeID(runtime, version);
+            const id = env || `${name}${config ? `|${config}` : ''}`;
+            const { interpreter: engine, XWorker: Worker } = getDetails(
+                type,
+                id,
+                name,
+                version,
+                config,
+                configURL,
+                runtime
+            );
+
+            const interpreter = await engine;
+
+            const module = create(defaultRegistry.get(runtime));
+
+            const hook = new Hook(interpreter, hooks);
+
+            const XWorker = function XWorker(...args) {
+                return Worker.apply(hook, args);
+            };
+
+            const resolved = {
+                ...createResolved(
+                    module,
+                    type,
+                    structuredClone(configs.get(name)),
+                    interpreter,
+                ),
+                XWorker,
+            };
+
+            registerJSModules(runtime, module, interpreter, JSModules);
+            module.registerJSModule(interpreter, 'polyscript', {
+                XWorker,
+                currentScript: type.startsWith('_') ? null : node,
+                js_modules: JSModules,
+            });
+
+            // patch methods accordingly to hooks (and only if needed)
+            for (const suffix of ['Run', 'RunAsync']) {
+                let before = '';
+                let after = '';
+
+                for (const key of codeHooks) {
+                    const value = hooks?.main?.[key];
+                    if (value && key.endsWith(suffix)) {
+                        if (key.startsWith('codeBefore'))
+                            before = dedent(value());
+                        else
+                            after = dedent(value());
+                    }
+                }
+
+                if (before || after) {
+                    createOverload(
+                        module,
+                        `r${suffix.slice(1)}`,
+                        before,
+                        after,
+                    );
+                }
+
+                let beforeCB, afterCB;
+                // ignore onReady and onWorker
+                for (let i = 2; i < jsHooks.length; i++) {
+                    const key = jsHooks[i];
+                    const value = hooks?.main?.[key];
+                    if (value && key.endsWith(suffix)) {
+                        if (key.startsWith('onBefore'))
+                            beforeCB = value;
+                        else
+                            afterCB = value;
+                    }
+                }
+                polluteJS(module, resolved, node, suffix.endsWith('Async'), beforeCB, afterCB);
+            }
+
+            details.queue = details.queue.then(() => {
+                resolve(resolved);
+                if (error) onerror?.(error, node);
+                return hooks?.main?.onReady?.(resolved, node);
+            });
         }
     }
 };

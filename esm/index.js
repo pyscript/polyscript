@@ -7,13 +7,14 @@ import { selectors, prefixes } from './interpreters.js';
 import { CUSTOM_SELECTORS, handleCustomType } from './custom.js';
 import { listener, addAllListeners } from './listeners.js';
 
-import { define as $define, whenDefined as $whenDefined } from './custom.js';
+import { customObserver as $customObserver, define as $define, whenDefined as $whenDefined } from './custom.js';
 import { env as $env } from './listeners.js';
 import { Hook as $Hook, XWorker as $XWorker } from './xworker.js';
 
 // avoid multiple initialization of the same library
 const [
     {
+        customObserver,
         define,
         whenDefined,
         env,
@@ -24,6 +25,7 @@ const [
 ] = stickyModule(
     'polyscript',
     {
+        customObserver: $customObserver,
         define: $define,
         whenDefined: $whenDefined,
         env: $env,
@@ -32,7 +34,7 @@ const [
     }
 );
 
-export { define, whenDefined, env, Hook, XWorker };
+export { customObserver, define, whenDefined, env, Hook, XWorker };
 export * from './errors.js';
 
 
