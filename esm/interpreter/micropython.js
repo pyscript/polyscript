@@ -1,7 +1,7 @@
 // import fetch from '@webreflection/fetch';
 import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
 import { getFormat, registerJSModule, run, runAsync, runEvent } from './_python.js';
-import { stdio } from './_io.js';
+import { stdio, buffered } from './_io.js';
 import mip from '../python/mip.js';
 import zip from '../zip.js';
 
@@ -14,9 +14,12 @@ export default {
     module: (version = '1.22.0-272') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url) {
-        const { stderr, stdout, get } = stdio();
+        const { stderr, stdout, get } = stdio({
+            stderr: buffered(console.error),
+            stdout: buffered(console.log),
+        });
         url = url.replace(/\.m?js$/, '.wasm');
-        const interpreter = await get(loadMicroPython({ stderr, stdout, url }));
+        const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.js_modules) await fetchJSModules(config.js_modules);
