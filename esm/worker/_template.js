@@ -78,7 +78,9 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                 // if this does not throw there's no reason to
                 // branch out of all the features ... but ...
                 syncMainAndWorker = true;
-            } catch (_) {
+            }
+            // eslint-disable-next-line no-unused-vars
+            catch (_) {
                 // if it does throw and `sync_main_only` was not `true`
                 // then there's no way to go further
                 if (syncMainAndWorker) {

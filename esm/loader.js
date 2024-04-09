@@ -18,7 +18,9 @@ export const getConfigURLAndType = (config, configURL = './config.txt') => {
 const parseString = config => {
     try {
         return JSON.parse(config);
-    } catch (_) {
+    }
+    // eslint-disable-next-line no-unused-vars
+    catch (_) {
         return parse(config);
     }
 };

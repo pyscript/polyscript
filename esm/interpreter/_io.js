@@ -4,6 +4,9 @@ export const io = new WeakMap();
 export const stdio = (init) => {
     const context = init || console;
     const localIO = {
+        // allow plugins or other io manipulating logic to reuse
+        // the buffered utility exposed in here (see py-editor)
+        buffered,
         stderr: (context.stderr || console.error).bind(context),
         stdout: (context.stdout || console.log).bind(context),
     };

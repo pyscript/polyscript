@@ -6,7 +6,7 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && npm run build:docs",
+        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && npm run build:docs",
         "build:3rd-party": "node rollup/3rd-party.cjs",
         "build:docs": "mv docs/coi.js ./; rm docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
         "cjs": "ascjs --no-default esm cjs",
@@ -39,18 +39,18 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.42.1",
+        "@playwright/test": "^1.43.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.41",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.6.0",
-        "eslint": "^8.57.0",
+        "eslint": "^9.0.0",
         "linkedom": "^0.16.11",
-        "rollup": "^4.14.0",
+        "rollup": "^4.14.1",
         "static-handler": "^0.4.3",
-        "typescript": "^5.4.3"
+        "typescript": "^5.4.4"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -89,6 +89,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-16iVq8sMsDeuh75NeaBghJiiiri1XHV0F442mkx5LF0="
+        "blob": "sha256-x9FnCN9Oz1l5i3eTcOPg2IrqbdU7VfskuTHKznW4/L0="
     }
 }
