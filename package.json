@@ -39,7 +39,7 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.43.0",
+        "@playwright/test": "^1.43.1",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.41",
@@ -48,9 +48,9 @@
         "chokidar": "^3.6.0",
         "eslint": "^9.0.0",
         "linkedom": "^0.16.11",
-        "rollup": "^4.14.1",
+        "rollup": "^4.14.3",
         "static-handler": "^0.4.3",
-        "typescript": "^5.4.4"
+        "typescript": "^5.4.5"
     },
     "type": "module",
     "module": "./dist/index.js",
