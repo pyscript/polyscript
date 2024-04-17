@@ -29,12 +29,13 @@ This section goal is to avoid confusion around topics discussed in this document
 
 Also commonly referred as *runtime* or *engine*, we consider an **interpreter** any "_piece of software_" able to parse, understand, and ultimately execute, a *Programming Language* through this project.
 
-We also explicitly use that "_piece of software_" as the interpreter name it refers to. We currently bundle references to four interpreters:
+We also explicitly use that "_piece of software_" as the interpreter name it refers to. We currently bundle references to the following interpreters:
 
  * [pyodide](https://pyodide.org/en/stable/index.html) is the name of the interpreter that runs likely the most complete version of latest *Python*, enabling dozen official modules at run time, also offering a great *JS* integration in its core
  * [micropython](https://micropython.org/) is the name of the interpreter that runs a small subset of the *Python* standard library and is optimized to run in constrained environments such as *Mobile* phones, or even *Desktop*, thanks to its tiny size and an extremely fast bootstrap
  * [ruby-wasm-wasi](https://github.com/ruby/ruby.wasm) is the name of the (currently *experimental*) interpreter that adds *Ruby* to the list of programming languages currently supported
  * [wasmoon](https://github.com/ceifa/wasmoon) is the name of the interpreter that runs *Lua* on the browser and that, among the previous two interpreters, is fully compatible with all core features
+ * [webr](https://docs.r-wasm.org/webr/latest/) is the name of the (currently *experimental*) interpreter that adds *R* to the list of programming languages currently supported
 
 `<script>` tags specify which *interpreter* to use via the `type` attribute. This is typically the full name of the interpreter:
 
@@ -55,6 +56,10 @@ We also explicitly use that "_piece of software_" as the interpreter name it ref
 
 <script type="wasmoon">
     print(_VERSION)
+</script>
+
+<script type="webr">
+    print(R.version.string)
 </script>
 ```
 
@@ -772,6 +777,7 @@ Please note that if a worker is created explicitly, there won't be any element, 
 | micropython    | •     | •          | •          | •                  | •           | •           |
 | ruby-wasm-wasi | •     | •          | •          | !                  |             |             |
 | wasmoon        | •     | •          | •          | !                  | •           |             |
+| webr           | r     | •          | re         |                    |             |             |
 
   * **run** allows code to run synchronously and optionally return value
   * **runAsync** allows code to run asynchronously and optionally return value
@@ -779,3 +785,6 @@ Please note that if a worker is created explicitly, there won't be any element, 
   * **registerJSModule** allows `from polyscript import Xworker` or registration of arbitrary modules for *custom types*. It currently fallback to globally defined reference (the module name) whenever it's not possible to register a module (i.e. `polyscriptXWorker` in Lua or `$polyscript.XWorker` in Ruby).
   * **writeFile** it's used to save *fetch* config files into virtual FS (usually the one provided by Emscripten). It is then possible to import those files as module within the evaluated code.
   * **transform** allows `xworker.sync` related invokes to pass as argument internal objects without issues, simplifying as example the dance needed with *pyodide* and the `ffi.PyProxy` interface, automatically using `.toJs()` for better DX.
+
+  * issue **r**: the runtime exposes the `run` utility but this is *not synchronous*
+  * issue **re**: the event or its listener somehow run but it's not possible to `stopPropagation()` or do other regular *event* operations even on the main thread

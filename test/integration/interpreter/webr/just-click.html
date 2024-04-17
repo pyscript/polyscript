@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('webr');
+    </script>
+</head>
+<body>
+    <script type="webr">
+        show_OK <- function(event) {
+            if (event["type"] == "click")
+                print("OK")
+        }
+    </script>
+    <button webr-click="show_OK"></button>
+</body>
+</html>
