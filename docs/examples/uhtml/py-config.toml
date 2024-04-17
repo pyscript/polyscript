@@ -1,5 +1,0 @@
-[js_modules.main]
-"https://cdn.jsdelivr.net/npm/uhtml/preactive.js" = "uhtml"
-
-[[fetch]]
-files = ["./uhtml.py"]

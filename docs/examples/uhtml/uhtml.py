@@ -7,8 +7,7 @@ try:
     from pyodide.ffi import create_proxy as _create_proxy, to_js as _to_js
 except:
     from template import Template as _Template
-    _create_proxy = lambda fn: fn
-    _to_js = lambda value: value
+    from jsffi import create_proxy as _create_proxy, to_js as _to_js
 
 ### template literal related
 
@@ -58,7 +57,7 @@ def _transform(tpl, tags):
     return tags[tpl]
 
 def _unwrap(entry):
-    if (_uhtml.Symbol.prototype.isPrototypeOf(entry)):
+    if (_uhtml.Signal.prototype.isPrototypeOf(entry)):
         return entry.value
     return entry
 
