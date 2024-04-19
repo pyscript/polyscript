@@ -1,9 +1,17 @@
 import { dedent } from '../utils.js';
 import { io } from './_io.js';
 
+export const loader = new WeakMap();
+
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 export const registerJSModule = (interpreter, name, value) => {
+    if (name === 'polyscript') {
+        value.lazy_py_modules = async (...packages) => {
+            await loader.get(interpreter)(packages);
+            return packages.map(name => interpreter.pyimport(name));
+        };
+    }
     interpreter.registerJsModule(name, value);
 };
 
