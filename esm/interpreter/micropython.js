@@ -9,6 +9,16 @@ const type = 'micropython';
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
+const mkdir = (FS, path) => {
+    try {
+        FS.mkdir(path);
+    }
+    // eslint-disable-next-line no-unused-vars
+    catch (_) {
+        // ignore as there's no path.exists here
+    }
+};
+
 export default {
     type,
     module: (version = '1.22.0-272') =>
@@ -51,12 +61,12 @@ export default {
                         const zipReader = new ZipReader(zipFileReader);
                         for (const entry of await zipReader.getEntries()) {
                             const { directory, filename } = entry;
-                            if (directory) {
-                                FS.mkdir(extractDir + filename);
-                            }
+                            const name = extractDir + filename;
+                            if (directory) mkdir(FS, name);
                             else {
+                                mkdir(FS, PATH.dirname(name));
                                 const buffer = await entry.getData(new Uint8ArrayWriter);
-                                FS.writeFile(extractDir + filename, buffer, {
+                                FS.writeFile(name, buffer, {
                                     canOwn: true,
                                 });
                             }
@@ -71,11 +81,14 @@ export default {
                         import os, gzip, tarfile
                         tar = tarfile.TarFile(fileobj=gzip.GzipFile(fileobj=open("${TMP}", "rb")))
                         for f in tar:
-                            name = f"${extractDir}{f.name[2:]}"
+                            name = f"${extractDir}{f.name}"
                             if f.type == tarfile.DIRTYPE:
                                 if f.name != "./":
                                     os.mkdir(name.strip("/"))
                             else:
+                                dir = os.path.dirname(name)
+                                if not os.path.exists(dir):
+                                    os.mkdir(dir)
                                 source = tar.extractfile(f)
                                 with open(name, "wb") as dest:
                                     dest.write(source.read())
