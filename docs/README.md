@@ -372,11 +372,25 @@ The module is registered within the interpreter as *JS* module and it offers var
 
 ### Main exports
 
-| name          | example                                | description |
-| :------------ | :------------------------------------- | :---------- |
-| XWorker       | `from polyscript import XWorker`       | described in the [XWorker](#xworker) part. |
-| currentScript | `from polyscript import currentScript` | it's an explicit, always correct, reference to the current node running the generic script code. |
-| js_modules    | `from polyscript import js_modules`    | described in the [Extra config Features](#extra-config-features) part. |
+| name            | example                                  | description |
+| :-------------- | :--------------------------------------- | :---------- |
+| XWorker         | `from polyscript import XWorker`         | described in the [XWorker](#xworker) part. |
+| currentScript   | `from polyscript import currentScript`   | it's an explicit, always correct, reference to the current node running the generic script code. |
+| js_modules      | `from polyscript import js_modules`      | described in the [Extra config Features](#extra-config-features) part. |
+| lazy_py_modules | `from polyscript import lazy_py_modules` | allows, only in *Python* related interpreters, and without needing static config entries, to import lazily any available module.
+
+
+#### lazy_py_modules
+
+```html
+<script type="pyodide" async>
+  from polyscript import lazy_py_modules
+
+  matplotlib, regex, = await lazy_py_modules("matplotlib", "regex")
+
+  print(matplotlib, regex)
+</script>
+```
 
 
 ### Worker exports

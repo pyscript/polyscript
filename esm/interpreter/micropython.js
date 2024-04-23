@@ -1,6 +1,6 @@
 // import fetch from '@webreflection/fetch';
 import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { getFormat, registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio, buffered } from './_io.js';
 import mip from '../python/mip.js';
 import zip from '../zip.js';
@@ -20,17 +20,15 @@ export default {
         });
         url = url.replace(/\.m?js$/, '.wasm');
         const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
+        const py_imports = importPackages.bind(interpreter);
+        loader.set(interpreter, py_imports);
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.js_modules) await fetchJSModules(config.js_modules);
 
         // Install Micropython Package
         this.writeFile(interpreter, './mip.py', mip);
-        if (config.packages){
-            const mpyPackageManager = interpreter.pyimport('mip');
-            for (const mpyPackage of config.packages)
-                mpyPackageManager.install(mpyPackage);
-        }
+        if (config.packages) await py_imports(config.packages);
         return interpreter;
     },
     registerJSModule,
@@ -92,4 +90,10 @@ export default {
         return writeFile(fs, path, buffer);
     },
 };
+
+async function importPackages(packages) {
+    const mpyPackageManager = this.pyimport('mip');
+    for (const mpyPackage of packages)
+        mpyPackageManager.install(mpyPackage);
+}
 /* c8 ignore stop */

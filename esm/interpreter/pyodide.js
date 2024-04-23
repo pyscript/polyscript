@@ -1,7 +1,7 @@
 import { create } from 'gc-hook';
 
 import { RUNNING_IN_WORKER, fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { getFormat, registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 
 const type = 'pyodide';
@@ -89,15 +89,12 @@ export default {
         const interpreter = await get(
             loadPyodide({ stderr, stdout, indexURL }),
         );
+        const py_imports = importPackages.bind(interpreter);
+        loader.set(interpreter, py_imports);
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
         if (config.js_modules) await fetchJSModules(config.js_modules);
-        if (config.packages) {
-            await interpreter.loadPackage('micropip');
-            const micropip = await interpreter.pyimport('micropip');
-            await micropip.install(config.packages, { keep_going: true });
-            micropip.destroy();
-        }
+        if (config.packages) await py_imports(config.packages);
         return interpreter;
     },
     registerJSModule,
@@ -120,4 +117,12 @@ export default {
         return writeFile({ FS, PATH, PATH_FS }, path, buffer);
     },
 };
+
+// exposed utility to import packages via polyscript.lazy_py_modules
+async function importPackages(packages) {
+    await this.loadPackage('micropip');
+    const micropip = this.pyimport('micropip');
+    await micropip.install(packages, { keep_going: true });
+    micropip.destroy();
+}
 /* c8 ignore stop */
