@@ -21,7 +21,7 @@ const mkdir = (FS, path) => {
 
 export default {
     type,
-    module: (version = '1.22.0-272') =>
+    module: (version = '1.22.0-335') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url) {
         const { stderr, stdout, get } = stdio({
