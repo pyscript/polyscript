@@ -163,6 +163,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             details.registerJSModule(interpreter, 'polyscript', {
                 xworker,
                 currentScript,
+                config: resolved.config,
                 js_modules: JSModules,
                 get target() {
                     if (!target && currentScript) {

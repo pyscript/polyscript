@@ -375,6 +375,7 @@ The module is registered within the interpreter as *JS* module and it offers var
 | name            | example                                  | description |
 | :-------------- | :--------------------------------------- | :---------- |
 | XWorker         | `from polyscript import XWorker`         | described in the [XWorker](#xworker) part. |
+| config          | `from polyscript import config`          | **custom only**: the used config as object literal
 | currentScript   | `from polyscript import currentScript`   | it's an explicit, always correct, reference to the current node running the generic script code. |
 | js_modules      | `from polyscript import js_modules`      | described in the [Extra config Features](#extra-config-features) part. |
 | lazy_py_modules | `from polyscript import lazy_py_modules` | allows, only in *Python* related interpreters, and without needing static config entries, to import lazily any available module.
@@ -398,6 +399,7 @@ The module is registered within the interpreter as *JS* module and it offers var
 | name          | example                                | description |
 | :------------ | :------------------------------------- | :---------- |
 | xworker       | `from polyscript import xworker`       | described in the [XWorker](#xworker) part. |
+| config        | `from polyscript import config`        | **custom only**: the used config as object literal
 | currentScript | `from polyscript import currentScript` | it's an explicit, always correct, reference to the current node running the generic script code via a worker. |
 | js_modules    | `from polyscript import js_modules`    | described in the [Extra config Features](#extra-config-features) part. |
 | target        | `from polyscript import target`        | returns the element referenced by the `target` attribute, if any, or create a target node to display output when this has not been provided.

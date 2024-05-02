@@ -21,7 +21,7 @@ const run = async (interpreter, code) => {
 export default {
     type,
     experimental: true,
-    module: (version = '0.3.2') =>
+    module: (version = '0.3.3') =>
         `https://cdn.jsdelivr.net/npm/webr@${version}/dist/webr.mjs`,
     async engine(module, config) {
         const { get } = stdio();

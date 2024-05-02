@@ -115,6 +115,7 @@ export const handleCustomType = async (node) => {
             registerJSModules(runtime, module, interpreter, JSModules);
             module.registerJSModule(interpreter, 'polyscript', {
                 XWorker,
+                config: resolved.config,
                 currentScript: type.startsWith('_') ? null : node,
                 js_modules: JSModules,
             });

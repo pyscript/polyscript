@@ -43,13 +43,13 @@
         "@playwright/test": "^1.43.1",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "@zip.js/zip.js": "^2.7.41",
+        "@zip.js/zip.js": "^2.7.43",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.6.0",
-        "eslint": "^9.0.0",
+        "eslint": "^9.1.1",
         "linkedom": "^0.16.11",
-        "rollup": "^4.14.3",
+        "rollup": "^4.17.2",
         "static-handler": "^0.4.3",
         "typescript": "^5.4.5"
     },
@@ -90,6 +90,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-/Ld6pQFHSFJ2UobnJifW3wBkFG0wYIX04CXMMqFz+MA="
+        "blob": "sha256-pRCTp2C2rEBl+Dopyw7pGKNqP05HYFIzEb0tZ6vhTRo="
     }
 }
