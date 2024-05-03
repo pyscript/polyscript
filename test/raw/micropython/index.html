@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script type="module">
+      const base = 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@latest';
+      const { loadMicroPython } = await import(`${base}/micropython.mjs`);
+      const interpreter = await loadMicroPython({ url: `${base}/micropython.wasm` });
+      const { textContent } = document.querySelector('script[type=micropython]');
+      interpreter.runPythonAsync(textContent);
+    </script>
+    <script type="micropython" async>
+      import js
+      js.document.body.textContent = "MicroPython"
+    </script>
+  </head>
+</html>
