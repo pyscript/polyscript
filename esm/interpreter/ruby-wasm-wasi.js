@@ -16,7 +16,7 @@ const jsType = type.replace(/\W+/g, '_');
 export default {
     type,
     experimental: true,
-    module: (version = '2.5.1') =>
+    module: (version = '2.6.0') =>
         `https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@${version}/dist/browser/+esm`,
     async engine({ DefaultRubyVM }, config, url) {
         url = url.replace(/\/browser\/\+esm$/, '/ruby.wasm');
