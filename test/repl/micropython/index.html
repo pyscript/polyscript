@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyscript - MicroPython REPL</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      background-color: black;
+      color: white;
+    }
+  </style>
+  <script type="module">
+    import { define } from '../../../dist/index.js';
+    import createTerminal from './repl.js';
+
+    define(null, {
+      interpreter: 'micropython',
+      hooks: {
+        main: {
+          onReady: async wrap => {
+            const terminal = await createTerminal(wrap, output);
+            globalThis.terminal = terminal;
+          }
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <pre id="output"></pre>
+</body>
+</html>
