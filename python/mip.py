@@ -263,7 +263,8 @@ def _install_package(package, index, target, version, mpy):
             sys.implementation._mpy & 0xFF if mpy and hasattr(sys.implementation, "_mpy") else "py"
         )
 
-        package = "{}/package/{}/{}/{}.json".format(index, mpy_version, package, version)
+        # WARNING: mpy_version fails miserably with 1.22.0-380
+        package = "{}/package/{}/{}/{}.json".format(index, "py", package, version)
 
     return _install_json(package, index, target, version, mpy)
 

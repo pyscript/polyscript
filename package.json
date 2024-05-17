@@ -40,15 +40,15 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.43.1",
+        "@playwright/test": "^1.44.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "@zip.js/zip.js": "^2.7.43",
+        "@zip.js/zip.js": "^2.7.44",
         "ascjs": "^6.0.3",
         "c8": "^9.1.0",
         "chokidar": "^3.6.0",
-        "eslint": "^9.1.1",
-        "linkedom": "^0.16.11",
+        "eslint": "^9.2.0",
+        "linkedom": "^0.18.0",
         "rollup": "^4.17.2",
         "static-handler": "^0.4.3",
         "typescript": "^5.4.5"
@@ -90,6 +90,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-8QyuNCkcmpFcUO8pGcqhraGjCiYJpRl07F1KfYutnLA="
+        "blob": "sha256-QTjb5vtqOJ5V9mH8aqm9FMwCozlYMaxggZse9SYTKRM="
     }
 }
