@@ -78,7 +78,7 @@ const applyOverride = () => {
 /* c8 ignore start */
 export default {
     type,
-    module: (version = '0.25.1') =>
+    module: (version = '0.26.0') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url) {
         // apply override ASAP then load foreign code
