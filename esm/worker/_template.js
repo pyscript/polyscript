@@ -98,7 +98,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             const resolved = createResolved(
                 details,
                 custom || type,
-                config,
+                config || {},
                 interpreter
             );
 
