@@ -1,7 +1,9 @@
-// import fetch from '@webreflection/fetch';
+import fetch from '@webreflection/fetch';
+
 import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
 import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio, buffered } from './_io.js';
+import { absoluteURL } from '../utils.js';
 import mip from '../python/mip.js';
 import zip from '../zip.js';
 
@@ -23,14 +25,14 @@ export default {
     type,
     module: (version = '1.22.0-380') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
-    async engine({ loadMicroPython }, config, url) {
+    async engine({ loadMicroPython }, config, url, baseURL) {
         const { stderr, stdout, get } = stdio({
             stderr: buffered(console.error),
             stdout: buffered(console.log),
         });
         url = url.replace(/\.m?js$/, '.wasm');
         const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
-        const py_imports = importPackages.bind(interpreter);
+        const py_imports = importPackages.bind(this, interpreter, baseURL);
         loader.set(interpreter, py_imports);
         if (config.files) await fetchFiles(this, interpreter, config.files);
         if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
@@ -54,6 +56,7 @@ export default {
             const extractDir = path.slice(0, -1);
             if (extractDir !== './') FS.mkdir(extractDir);
             switch (format) {
+                case 'whl':
                 case 'zip': {
                     const blob = new Blob([buffer], { type: 'application/zip' });
                     return zip().then(async ({ BlobReader, Uint8ArrayWriter, ZipReader }) => {
@@ -74,6 +77,7 @@ export default {
                         zipReader.close();
                     });
                 }
+                case 'tgz':
                 case 'tar.gz': {
                     const TMP = './_.tar.gz';
                     writeFile(fs, TMP, buffer);
@@ -104,9 +108,18 @@ export default {
     },
 };
 
-async function importPackages(packages) {
-    const mpyPackageManager = this.pyimport('mip');
-    for (const mpyPackage of packages)
-        mpyPackageManager.install(mpyPackage);
+async function importPackages(interpreter, baseURL, packages) {
+    let mip;
+    for (const mpyPackage of packages) {
+        if (mpyPackage.endsWith('.whl')) {
+            const url = absoluteURL(mpyPackage, baseURL);
+            const buffer = await fetch(url).arrayBuffer();
+            await this.writeFile(interpreter, './*', buffer, url);
+        }
+        else {
+            if (!mip) mip = interpreter.pyimport('mip');
+            mip.install(mpyPackage);
+        }
+    }
 }
 /* c8 ignore stop */

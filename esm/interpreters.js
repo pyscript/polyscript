@@ -43,7 +43,7 @@ export const interpreter = new Proxy(new Map(), {
                     const value = config?.js_modules?.[entry];
                     if (value) base.set(value, baseURL);
                 }
-                return engine(module, config, url);
+                return engine(module, config, url, baseURL);
             });
     },
 });

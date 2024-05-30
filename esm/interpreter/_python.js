@@ -17,7 +17,7 @@ export const registerJSModule = (interpreter, name, value) => {
 
 export const getFormat = (path, url) => {
     if (path.endsWith('/*')) {
-        if (/\.(zip|tar(?:\.gz)?)$/.test(url))
+        if (/\.(zip|whl|tgz|tar(?:\.gz)?)$/.test(url))
             return RegExp.$1;
         throw new Error(`Unsupported archive ${url}`);
     }
