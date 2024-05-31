@@ -2,7 +2,9 @@ import fetch from '@webreflection/fetch';
 
 import { interpreter } from './interpreters.js';
 import { absoluteURL, resolve } from './utils.js';
-import { parse } from './toml.js';
+import { toml } from './3rd-party.js';
+
+const { parse } = JSON;
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -17,11 +19,11 @@ export const getConfigURLAndType = (config, configURL = './config.txt') => {
 
 const parseString = config => {
     try {
-        return JSON.parse(config);
+        return parse(config);
     }
     // eslint-disable-next-line no-unused-vars
     catch (_) {
-        return parse(config);
+        return toml(config);
     }
 };
 /* c8 ignore stop */
@@ -45,7 +47,7 @@ export const getRuntime = (id, config, configURL, options = {}) => {
         if (type === 'json') {
             options = fetch(absolute).json();
         } else if (type === 'toml') {
-            options = fetch(absolute).text().then(parse);
+            options = fetch(absolute).text().then(toml);
         } else if (type === 'string') {
             options = parseString(config);
         } else if (type === 'object' && config) {

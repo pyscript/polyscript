@@ -1,5 +1,4 @@
 import { absoluteURL, entries, isArray, isCSS, js_modules } from '../utils.js';
-import { base } from '../interpreter/_utils.js';
 
 const has = (modules, name) => modules.has(name);
 
@@ -27,10 +26,9 @@ const proxy = (modules, window, sync, baseURL) => new Proxy(modules, {
     },
 });
 
-export default (window, sync, mainModules) => {
-    let modules = globalThis[js_modules], baseURL = '';
+export default (window, sync, mainModules, baseURL) => {
+    const modules = globalThis[js_modules];
     if (mainModules) {
-        baseURL = base.get(mainModules);
         for (let [source, module] of entries(mainModules)) {
             let value = modules.get(module);
             if (!value || isArray(value)) {

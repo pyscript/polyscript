@@ -80,7 +80,7 @@ export default {
     type,
     module: (version = '0.26.0') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
-    async engine({ loadPyodide }, config, url) {
+    async engine({ loadPyodide }, config, url, baseURL) {
         // apply override ASAP then load foreign code
         if (!RUNNING_IN_WORKER && config.experimental_create_proxy === 'auto')
             applyOverride();
@@ -91,9 +91,9 @@ export default {
         );
         const py_imports = importPackages.bind(interpreter);
         loader.set(interpreter, py_imports);
-        if (config.files) await fetchFiles(this, interpreter, config.files);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(config.js_modules);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
         if (config.packages) await py_imports(config.packages);
         return interpreter;
     },

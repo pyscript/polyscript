@@ -5,7 +5,7 @@ import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './
 import { stdio, buffered } from './_io.js';
 import { absoluteURL } from '../utils.js';
 import mip from '../python/mip.js';
-import zip from '../zip.js';
+import { zip } from '../3rd-party.js';
 
 const type = 'micropython';
 
@@ -34,9 +34,9 @@ export default {
         const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
         const py_imports = importPackages.bind(this, interpreter, baseURL);
         loader.set(interpreter, py_imports);
-        if (config.files) await fetchFiles(this, interpreter, config.files);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(config.js_modules);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
 
         // Install Micropython Package
         this.writeFile(interpreter, './mip.py', mip);
