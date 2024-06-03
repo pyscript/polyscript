@@ -23,7 +23,7 @@ export default {
     experimental: true,
     module: (version = '0.3.3') =>
         `https://cdn.jsdelivr.net/npm/webr@${version}/dist/webr.mjs`,
-    async engine(module, config) {
+    async engine(module, config, _, baseURL) {
         const { get } = stdio();
         const interpreter = new module.WebR();
         await get(interpreter.init().then(() => interpreter));
@@ -34,9 +34,9 @@ export default {
           destroy: shelter.destroy.bind(shelter),
           io: io.get(interpreter),
         });
-        if (config.files) await fetchFiles(this, interpreter, config.files);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(config.js_modules);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
         return interpreter;
     },
     // Fallback to globally defined module fields (i.e. $xworker)

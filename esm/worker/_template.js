@@ -157,7 +157,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             // TODO: even this is problematic without SharedArrayBuffer
             // but let's see if we can manage to make it work somehow.
-            const JSModules = createJSModules(window, sync, mainModules);
+            const JSModules = createJSModules(window, sync, mainModules, baseURL);
 
             registerJSModules(type, details, interpreter, JSModules);
             details.registerJSModule(interpreter, 'polyscript', {

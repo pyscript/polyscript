@@ -13,16 +13,16 @@ export default {
     type,
     module: (version = '1.16.0') =>
         `https://cdn.jsdelivr.net/npm/wasmoon@${version}/+esm`,
-    async engine({ LuaFactory, LuaLibraries }, config) {
+    async engine({ LuaFactory, LuaLibraries }, config, _, baseURL) {
         const { stderr, stdout, get } = stdio();
         const interpreter = await get(new LuaFactory().createEngine());
         interpreter.global.getTable(LuaLibraries.Base, (index) => {
             interpreter.global.setField(index, 'print', stdout);
             interpreter.global.setField(index, 'printErr', stderr);
         });
-        if (config.files) await fetchFiles(this, interpreter, config.files);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(config.js_modules);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
         return interpreter;
     },
     // Fallback to globally defined module fields

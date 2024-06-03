@@ -18,14 +18,14 @@ export default {
     experimental: true,
     module: (version = '2.6.1') =>
         `https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@${version}/dist/browser/+esm`,
-    async engine({ DefaultRubyVM }, config, url) {
+    async engine({ DefaultRubyVM }, config, url, baseURL) {
         url = url.replace(/\/browser\/\+esm$/, '/ruby.wasm');
         const buffer = await fetch(url).arrayBuffer();
         const module = await WebAssembly.compile(buffer);
         const { vm: interpreter } = await DefaultRubyVM(module);
-        if (config.files) await fetchFiles(this, interpreter, config.files);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch);
-        if (config.js_modules) await fetchJSModules(config.js_modules);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
         return interpreter;
     },
     // Fallback to globally defined module fields (i.e. $xworker)

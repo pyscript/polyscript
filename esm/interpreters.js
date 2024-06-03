@@ -2,8 +2,6 @@
 //    The :RUNTIMES comment is a delimiter and no code should be written/changed after
 //    See rollup/build_interpreters.cjs to know more
 
-import { base } from './interpreter/_utils.js';
-
 /** @type {Map<string, object>} */
 export const registry = new Map();
 
@@ -35,14 +33,6 @@ export const interpreter = new Proxy(new Map(), {
         return (config, baseURL) =>
             module.then((module) => {
                 configs.set(id, config);
-                for (const entry of ['files', 'fetch']) {
-                    const value = config?.[entry];
-                    if (value) base.set(value, baseURL);
-                }
-                for (const entry of ['main', 'worker']) {
-                    const value = config?.js_modules?.[entry];
-                    if (value) base.set(value, baseURL);
-                }
                 return engine(module, config, url, baseURL);
             });
     },
