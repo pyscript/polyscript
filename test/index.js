@@ -29,6 +29,7 @@ const patchFetch = (callback) => {
 const { parseHTML } = require("linkedom");
 const { document, window, CustomEvent } = parseHTML("...");
 
+globalThis.indexedDB = { open: () => ({}) };
 globalThis.document = document;
 globalThis.Element = window.Element;
 globalThis.CustomEvent = CustomEvent;

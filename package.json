@@ -80,6 +80,7 @@
         "@ungap/structured-clone": "^1.2.0",
         "@ungap/with-resolvers": "^0.1.0",
         "@webreflection/fetch": "^0.1.5",
+        "@webreflection/idb-map": "^0.2.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
         "coincident": "^1.2.3",
@@ -90,6 +91,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-pWERQSHp3qDvCx7LVz9I3QMz9+k3IwDLVMixPMRxxI4="
+        "blob": "sha256-Hk7668b3LO3+h+E5ZCRGmVXrW8WMox6JQWJaIY7MXrE="
     }
 }
