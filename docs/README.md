@@ -379,6 +379,7 @@ The module is registered within the interpreter as *JS* module and it offers var
 | currentScript   | `from polyscript import currentScript`   | it's an explicit, always correct, reference to the current node running the generic script code. |
 | js_modules      | `from polyscript import js_modules`      | described in the [Extra config Features](#extra-config-features) part. |
 | lazy_py_modules | `from polyscript import lazy_py_modules` | allows, only in *Python* related interpreters, and without needing static config entries, to import lazily any available module.
+| storage | `from polyscript import storage` | a utility to instantiate a named [idb-map](https://github.com/WebReflection/idb-map/#readme) that can be consumed synchronously.
 
 
 #### lazy_py_modules
@@ -392,6 +393,26 @@ The module is registered within the interpreter as *JS* module and it offers var
   print(matplotlib, regex)
 </script>
 ```
+
+#### storage
+
+```html
+<script type="micropython" async>
+  from polyscript import storage
+
+  # await its loading
+  map = await storage("my-user-persistent-storage")
+
+  # just use it synchronously
+  map.set("key", "value")
+  print(map.get("key"))
+
+  # after set, delete, or clear
+  # it is possible to sync operations
+  await map.sync()
+</script>
+```
+
 
 
 ### Worker exports

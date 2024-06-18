@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('micropython');
+    </script>
+</head>
+<body>
+  <script type="micropython" async>
+    from polyscript import storage
+
+    store = await storage("@polyscript/storage")
+
+    # just a devtools console check
+    # it is true on refresh
+    print(store.get("main") == True, store.size)
+
+    store.set("main", True)
+
+    import js
+    js.document.documentElement.classList.add(f"main")
+  </script>
+  <script type="micropython" worker async>
+    from polyscript import xworker, storage
+
+    store = await storage("@polyscript/storage")
+
+    # just a devtools console check
+    # it is true on refresh
+    print(store.get("worker") == True, store.size)
+
+    store.set("worker", True)
+
+    xworker.window.document.documentElement.classList.add(f"worker")
+  </script>
+</body>
+</html>

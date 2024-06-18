@@ -1,5 +1,6 @@
 import { dedent } from '../utils.js';
 import { io } from './_io.js';
+import Storage from '../storage.js';
 
 export const loader = new WeakMap();
 
@@ -10,6 +11,11 @@ export const registerJSModule = (interpreter, name, value) => {
         value.lazy_py_modules = async (...packages) => {
             await loader.get(interpreter)(packages);
             return packages.map(name => interpreter.pyimport(name));
+        };
+        value.storage = async (name) => {
+            const storage = new Storage(name);
+            await storage.sync();
+            return storage;
         };
     }
     interpreter.registerJsModule(name, value);

@@ -52,4 +52,9 @@ module.exports = (playwright, baseURL) => {
     test('MicroPython local intepreter', python.localInterpreter(playwright, baseURL));
 
     test('MicroPython mip', python.waitForDone(playwright, `${baseURL}/mip.html`));
+
+    test('MicroPython Storage', async ({ page }) => {
+        await page.goto(`${baseURL}/storage.html`);
+        await page.waitForSelector(`html.ready.main.worker`);
+    });
 };
