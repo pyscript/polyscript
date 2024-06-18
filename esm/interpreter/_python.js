@@ -1,6 +1,6 @@
+import IDBMapSync from '@webreflection/idb-map/sync';
 import { dedent } from '../utils.js';
 import { io } from './_io.js';
-import Storage from '../storage.js';
 
 export const loader = new WeakMap();
 
@@ -13,7 +13,7 @@ export const registerJSModule = (interpreter, name, value) => {
             return packages.map(name => interpreter.pyimport(name));
         };
         value.storage = async (name) => {
-            const storage = new Storage(name);
+            const storage = new IDBMapSync(name);
             await storage.sync();
             return storage;
         };
