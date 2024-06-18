@@ -12,13 +12,13 @@
   <script type="micropython" async>
     from polyscript import storage
 
-    map = await storage("@polyscript/storage")
+    store = await storage("@polyscript/storage")
 
     # just a devtools console check
     # it is true on refresh
-    print(map.get("main") == True, map.size)
+    print(store.get("main") == True, store.size)
 
-    map.set("main", True)
+    store.set("main", True)
 
     import js
     js.document.documentElement.classList.add(f"main")
@@ -26,13 +26,13 @@
   <script type="micropython" worker async>
     from polyscript import xworker, storage
 
-    map = await storage("@polyscript/storage")
+    store = await storage("@polyscript/storage")
 
     # just a devtools console check
     # it is true on refresh
-    print(map.get("worker") == True, map.size)
+    print(store.get("worker") == True, store.size)
 
-    map.set("worker", True)
+    store.set("worker", True)
 
     xworker.window.document.documentElement.classList.add(f"worker")
   </script>
