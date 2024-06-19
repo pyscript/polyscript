@@ -1,3 +1,4 @@
+import * as JSON from '@ungap/structured-clone/json';
 import IDBMapSync from '@webreflection/idb-map/sync';
 import { dedent } from '../utils.js';
 import { io } from './_io.js';
@@ -17,6 +18,7 @@ export const registerJSModule = (interpreter, name, value) => {
             await storage.sync();
             return storage;
         };
+        value.JSON = JSON;
     }
     interpreter.registerJsModule(name, value);
 };
