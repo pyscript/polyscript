@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { init } from '../utils.js';
+        init('micropython');
+    </script>
+</head>
+<body>
+  <script type="micropython" async>
+    import js
+    from polyscript import workers
+
+    js.document.body.append("waiting Pyodide version ... ")
+
+    print("waiting for test worker ...")
+    test = await workers["test"]
+    print("test worker ready ...")
+
+    print("waiting for test.pyodide_version() ...")
+    version = await test.pyodide_version()
+    print("done")
+
+    js.document.body.append(version)
+    js.document.documentElement.classList.add("ok")
+  </script>
+  <script type="pyodide" name="test" worker>
+    def pyodide_version():
+        import sys
+        return sys.version
+
+    __export__ = ['pyodide_version']
+  </script>
+</body>
+</html>

@@ -7,6 +7,7 @@ import { registry as defaultRegistry, prefixes, configs } from './interpreters.j
 import { getRuntimeID } from './loader.js';
 import { addAllListeners } from './listeners.js';
 import { Hook, XWorker as XW } from './xworker.js';
+import { workers, workersHandler } from './workers.js';
 import { polluteJS, js as jsHooks, code as codeHooks } from './hooks.js';
 import workerURL from './worker/url.js';
 
@@ -72,6 +73,8 @@ export const handleCustomType = async (node) => {
                     });
                     defineProperty(node, 'xworker', { value: xworker });
                     resolve({ type, xworker });
+                    const workerName = node.getAttribute('name');
+                    if (workerName) workers[workerName].resolve(xworker.ready);
                     return;
                 }
             }
@@ -118,6 +121,7 @@ export const handleCustomType = async (node) => {
                 config: resolved.config,
                 currentScript: type.startsWith('_') ? null : node,
                 js_modules: JSModules,
+                workers: workersHandler,
             });
 
             // patch methods accordingly to hooks (and only if needed)
