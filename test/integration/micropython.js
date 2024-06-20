@@ -57,4 +57,9 @@ module.exports = (playwright, baseURL) => {
         await page.goto(`${baseURL}/storage.html`);
         await page.waitForSelector(`html.ready.main.worker`);
     });
+
+    test('MicroPython using workers', async ({ page }) => {
+        await page.goto(`${baseURL}/workers.html`);
+        await page.waitForSelector(`html.ok`);
+    });
 };

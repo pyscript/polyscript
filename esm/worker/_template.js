@@ -204,6 +204,28 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             // run either sync or async code in the worker
             await details[name](interpreter, code);
 
+            if (['micropython', 'pyodide'].includes(details.type)) {
+                // this dance is required due Pyodide issues with runtime sync exports
+                // or MicroPython issue with `runPython` not returning values
+                const polyscript = 'polyscript';
+                const workers = `__${polyscript}_workers__`;
+                const exports = '__export__';
+                interpreter.runPython([
+                    `import js as ${workers}`,
+                    `${workers}.${workers} = "${exports}" in locals() and ${exports} or []`,
+                    `del ${workers}`,
+                ].join('\n'));
+                const list = [...globalThis[workers]];
+                delete globalThis[workers];
+                if (list.length) {
+                    interpreter.runPython([
+                        `from ${polyscript} import xworker as ${workers}`,
+                        ...list.map(util => `${workers}.sync.${util} = ${util}`),
+                        `del ${workers}`,
+                    ].join('\n'));
+                }
+            }
+
             // notify worker done executing
             if (currentScript) notify('done');
             postMessage('polyscript:done');

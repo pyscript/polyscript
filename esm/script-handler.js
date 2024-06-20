@@ -1,6 +1,7 @@
 import fetch from '@webreflection/fetch';
 import { $ } from 'basic-devtools';
 
+import { workers, workersHandler } from './workers.js';
 import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
@@ -65,6 +66,7 @@ const execute = async (currentScript, source, XWorker, isAsync) => {
             XWorker,
             currentScript,
             js_modules: JSModules,
+            workers: workersHandler,
         });
         dispatch(currentScript, type, 'ready');
         const result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
@@ -122,7 +124,7 @@ export const handle = async (script) => {
         // allow a shared config among scripts, beside interpreter,
         // and/or source code with different config or interpreter
         const {
-            attributes: { async: isAsync, config, env, target, version },
+            attributes: { async: isAsync, config, env, name: wn, target, version },
             src,
             type,
         } = script;
@@ -140,12 +142,14 @@ export const handle = async (script) => {
             const xworker = new XWorker(url, {
                 ...nodeInfo(script, type),
                 async: !!isAsync,
-                config: configValue
+                config: configValue,
             });
             handled.set(
                 defineProperty(script, 'xworker', { value: xworker }),
-                { xworker }
+                { xworker },
             );
+            const workerName = wn?.value;
+            if (workerName) workers[workerName].resolve(xworker.ready);
             return;
         }
         /* c8 ignore stop */
