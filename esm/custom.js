@@ -62,6 +62,7 @@ export const handleCustomType = async (node) => {
             try {
                 const worker = workerURL(node);
                 if (worker) {
+                    const workerName = node.getAttribute('name');
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
                         version,
@@ -69,11 +70,11 @@ export const handleCustomType = async (node) => {
                         type: runtime,
                         custom: type,
                         config: node.getAttribute('config') || config || {},
-                        async: node.hasAttribute('async')
+                        async: node.hasAttribute('async'),
+                        named: !!workerName,
                     });
                     defineProperty(node, 'xworker', { value: xworker });
                     resolve({ type, xworker });
-                    const workerName = node.getAttribute('name');
                     if (workerName) workers[workerName].resolve(xworker.ready);
                     return;
                 }

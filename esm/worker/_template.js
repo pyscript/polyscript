@@ -13,6 +13,8 @@ import { configs, registry } from '../interpreters.js';
 import { getRuntime, getRuntimeID } from '../loader.js';
 import { patch, polluteJS, js as jsHooks, code as codeHooks } from '../hooks.js';
 
+const SAB = 'SharedArrayBuffer';
+
 let interpreter, runEvent, transform;
 const add = (type, fn) => {
     addEventListener(
@@ -43,7 +45,7 @@ const xworker = {
     sync,
     // allow access to the main thread world
     window,
-    // allow introspection for foreign (main thread) refrences
+    // allow introspection for foreign (main thread) references
     isWindowProxy,
     // standard worker related events / features
     onmessage: console.info,
@@ -55,7 +57,7 @@ const xworker = {
 add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) => {
     interpreter = (async () => {
         try {
-            const { id, tag, type, custom, version, config, async: isAsync } = options;
+            const { id, tag, type, custom, version, config, named, async: isAsync } = options;
 
             const runtimeID = getRuntimeID(type, version);
 
@@ -84,13 +86,18 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                 // if it does throw and `sync_main_only` was not `true`
                 // then there's no way to go further
                 if (syncMainAndWorker) {
-                    throw new Error(
-                        [
-                            'Unable to use SharedArrayBuffer due insecure environment.',
-                            'Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements',
-                        ].join('\n'),
-                    );
+                    const prefix = `Unable to use ${SAB}`;
+                    if (!named || sync_main_only === false) {
+                        throw new Error(
+                            [
+                                `${prefix} due insecure environment.`,
+                                `Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/${SAB}#security_requirements`,
+                            ].join('\n'),
+                        );
+                    }
+                    console.warn(`${prefix}. Fallback to async only interaction.`);
                 }
+                syncMainAndWorker = false;
             }
 
             const details = create(registry.get(type));
