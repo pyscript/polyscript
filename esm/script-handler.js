@@ -138,17 +138,18 @@ export const handle = async (script) => {
         /* c8 ignore start */
         const url = workerURL(script);
         if (url) {
+            const workerName = wn?.value;
             const XWorker = $xworker(type, versionValue);
             const xworker = new XWorker(url, {
                 ...nodeInfo(script, type),
                 async: !!isAsync,
                 config: configValue,
+                named: !!workerName,
             });
             handled.set(
                 defineProperty(script, 'xworker', { value: xworker }),
                 { xworker },
             );
-            const workerName = wn?.value;
             if (workerName) workers[workerName].resolve(xworker.ready);
             return;
         }
