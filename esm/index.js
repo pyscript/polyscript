@@ -1,13 +1,21 @@
+/** @typedef {(type: string, options: import("./custom.js").CustomOptions) => void} CustomOptions */
+
 import stickyModule from 'sticky-module';
 import { $$ } from 'basic-devtools';
 
 import { handle } from './script-handler.js';
 import { assign } from './utils.js';
 import { selectors, prefixes } from './interpreters.js';
-import { CUSTOM_SELECTORS, handleCustomType } from './custom.js';
 import { listener, addAllListeners } from './listeners.js';
 
-import { customObserver as $customObserver, define as $define, whenDefined as $whenDefined } from './custom.js';
+import {
+    CUSTOM_SELECTORS,
+    handleCustomType,
+    customObserver as $customObserver,
+    define as $define,
+    whenDefined as $whenDefined
+} from './custom.js';
+
 import { env as $env } from './listeners.js';
 import { Hook as $Hook, XWorker as $XWorker } from './xworker.js';
 
@@ -34,7 +42,15 @@ const [
     }
 );
 
-export { customObserver, define, whenDefined, env, Hook, XWorker };
+export {
+    customObserver,
+    define,
+    whenDefined,
+    env,
+    Hook,
+    XWorker
+};
+
 export * from './errors.js';
 
 
