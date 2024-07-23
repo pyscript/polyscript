@@ -2,14 +2,13 @@
     "name": "polyscript",
     "version": "0.13.10",
     "description": "PyScript single core to rule them all",
-    "main": "./cjs/index.js",
+    "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run cjs && npm run rollup:integrations && npm run build:docs",
+        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run rollup:integrations && npm run build:docs",
         "build:3rd-party": "node rollup/3rd-party.cjs",
         "build:docs": "mv docs/coi.js ./; rm docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
-        "cjs": "ascjs --no-default esm cjs",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
         "rollup:integrations": "node rollup/build_integrations.cjs",
@@ -40,18 +39,17 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.45.2",
+        "@playwright/test": "^1.45.3",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.47",
-        "ascjs": "^6.0.3",
         "c8": "^10.1.2",
         "chokidar": "^3.6.0",
         "eslint": "^9.7.0",
         "linkedom": "^0.18.4",
-        "rollup": "^4.18.1",
+        "rollup": "^4.19.0",
         "static-handler": "^0.4.3",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -61,18 +59,15 @@
     "exports": {
         ".": {
             "types": "./types/index.d.ts",
-            "import": "./esm/index.js",
-            "default": "./cjs/index.js"
+            "import": "./esm/index.js"
         },
         "./exports": {
             "types": "./types/exports.d.ts",
-            "import": "./esm/exports.js",
-            "default": "./cjs/exports.js"
+            "import": "./esm/exports.js"
         },
         "./xworker": {
             "types": "./types/xworker.d.ts",
-            "import": "./esm/xworker.js",
-            "default": "./cjs/xworker.js"
+            "import": "./esm/xworker.js"
         },
         "./package.json": "./package.json"
     },
@@ -83,7 +78,7 @@
         "@webreflection/idb-map": "^0.3.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^1.2.3",
+        "coincident": "^2.0.0",
         "gc-hook": "^0.3.1",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.2",
@@ -91,6 +86,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-1GVYWvaeoNZQWMkVaV243TH9CjdQ95JPuNGGAj3OrDI="
+        "blob": "sha256-jyja7vDWOV2Fy/al1o2uc7OkyteLjKTTY6jkJhlIEAg="
     }
 }

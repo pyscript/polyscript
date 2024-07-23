@@ -1,6 +1,4 @@
-import * as JSON from '@ungap/structured-clone/json';
 import fetch from '@webreflection/fetch';
-import coincident from 'coincident/window';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
 import { assign, create, defineProperties, importCSS, importJS } from '../utils.js';
@@ -12,8 +10,11 @@ import Hook from './hook.js';
  * @prop {string} [version] the optional interpreter version to use
  * @prop {string | object} [config] the optional config to use within such interpreter
  * @prop {string} [configURL] the optional configURL used to resolve config entries
+ * @prop {string} [serviceWorker] the optional Service Worker for SharedArrayBuffer fallback
  */
 
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
 export default (...args) =>
     /**
      * A XWorker is a Worker facade able to bootstrap a channel with any desired interpreter.
@@ -22,10 +23,6 @@ export default (...args) =>
      * @returns {Worker}
      */
     function XWorker(url, options) {
-        const worker = xworker();
-        const { postMessage } = worker;
-        const isHook = this instanceof Hook;
-
         if (args.length) {
             const [type, version] = args;
             options = assign({}, options || { type, version });
@@ -37,28 +34,35 @@ export default (...args) =>
         // fallback to a generic, ignored, config.txt file to still provide a URL.
         const [ config ] = getConfigURLAndType(options.config, options.configURL);
 
-        const bootstrap = fetch(url)
-            .text()
-            .then(code => {
-                const hooks = isHook ? this.toJSON() : void 0;
-                postMessage.call(worker, { options, config, code, hooks });
-            });
+        const worker = xworker({ serviceWorker: options?.serviceWorker });
+        const { postMessage } = worker;
+        const isHook = this instanceof Hook;
 
         const sync = assign(
-            coincident(worker, JSON).proxy,
+            worker.proxy,
             { importJS, importCSS },
         );
 
         const resolver = Promise.withResolvers();
 
+        let bootstrap = fetch(url)
+            .text()
+            .then(code => {
+                const hooks = isHook ? this.toJSON() : void 0;
+                postMessage.call(worker, { options, config, code, hooks });
+            })
+            .then(() => {
+                // boost postMessage performance
+                bootstrap = { then: fn => fn() };
+            });
+
         defineProperties(worker, {
             sync: { value: sync },
             ready: { value: resolver.promise },
             postMessage: {
-                value: (data, ...rest) =>
-                    bootstrap.then(() =>
-                        postMessage.call(worker, data, ...rest),
-                    ),
+                value: (data, ...rest) => bootstrap.then(
+                    () => postMessage.call(worker, data, ...rest),
+                ),
             },
             onerror: {
                 writable: true,
@@ -87,3 +91,5 @@ export default (...args) =>
 
         return worker;
     };
+
+/* c8 ignore stop */

@@ -5,7 +5,7 @@
 //    bigger than it used to be before any changes is applied to this file.
 
 import * as JSON from '@ungap/structured-clone/json';
-import coincident from 'coincident/window';
+import coincident from 'coincident/window/worker';
 
 import { assign, create, createFunction, createOverload, createResolved, dispatch, registerJSModules } from '../utils.js';
 import createJSModules from './js_modules.js';
@@ -32,17 +32,19 @@ const add = (type, fn) => {
 
 const { parse, stringify } = JSON;
 
-const { proxy: sync, window, isWindowProxy } = coincident(self, {
+const { proxy: sync, sync: syncMainAndWorker, polyfill, window, isWindowProxy } = await coincident({
     parse,
     stringify,
     transform: value => transform ? transform(value) : value
 });
 
 const xworker = {
+    // propagate the fact SharedArrayBuffer is polyfilled
+    polyfill,
     // allows synchronous utilities between this worker and the main thread
     sync,
-    // allow access to the main thread world
-    window,
+    // allow access to the main thread world whenever it's possible
+    window: syncMainAndWorker ? window : null,
     // allow introspection for foreign (main thread) refrences
     isWindowProxy,
     // standard worker related events / features
@@ -61,37 +63,9 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             const interpreter = await getRuntime(runtimeID, baseURL, configURL, config);
 
-            const { js_modules, sync_main_only } = configs.get(runtimeID);
+            const { js_modules } = configs.get(runtimeID);
 
             const mainModules = js_modules?.main;
-
-            // this flag allows interacting with the xworker.sync exposed
-            // *only in the worker* and eventually invoked *only from main*.
-            // If that flag is `false` or not present, then SharedArrayBuffer
-            // must be available or not much can work in here.
-            let syncMainAndWorker = !sync_main_only;
-
-            // bails out out of the box with a native/meaningful error
-            // in case the SharedArrayBuffer is not available
-            try {
-                new SharedArrayBuffer(4);
-                // if this does not throw there's no reason to
-                // branch out of all the features ... but ...
-                syncMainAndWorker = true;
-            }
-            // eslint-disable-next-line no-unused-vars
-            catch (_) {
-                // if it does throw and `sync_main_only` was not `true`
-                // then there's no way to go further
-                if (syncMainAndWorker) {
-                    throw new Error(
-                        [
-                            'Unable to use SharedArrayBuffer due insecure environment.',
-                            'Please read requirements in MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements',
-                        ].join('\n'),
-                    );
-                }
-            }
 
             const details = create(registry.get(type));
 
