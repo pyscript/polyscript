@@ -1,6 +1,6 @@
 'use strict';
 
-exports.shared = {
+export const shared = {
     bootstrap: ({ expect }, baseURL) => async ({ page }) => {
         await page.goto(`${baseURL}/bootstrap.html`);
         await page.waitForSelector('html.ready');
@@ -37,7 +37,7 @@ exports.shared = {
     },
 };
 
-exports.python = {
+export const python = {
     bootstrap: ({ expect }, baseURL) => async ({ page }) => {
         await page.goto(`${baseURL}/bootstrap.html`);
         await page.waitForSelector('html.ready');

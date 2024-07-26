@@ -1,6 +1,6 @@
-const dedent = require("codedent");
-const assert = require("./assert.js");
-require("./_utils.js");
+import dedent from "codedent";
+import assert from "./assert.js";
+import "./_utils.js";
 
 const { fetch } = globalThis;
 
@@ -20,13 +20,16 @@ const patchFetch = (callback) => {
             try {
                 return callback;
             } finally {
-                globalThis.fetch = fetch;
+                Object.defineProperty(globalThis, "fetch", {
+                    configurable: true,
+                    value: fetch
+                });
             }
         },
     });
 };
 
-const { parseHTML } = require("linkedom");
+import { parseHTML } from "linkedom";
 const { document, window, CustomEvent } = parseHTML("...");
 
 globalThis.indexedDB = { open: () => ({}) };
@@ -34,6 +37,7 @@ globalThis.document = document;
 globalThis.Element = window.Element;
 globalThis.CustomEvent = CustomEvent;
 globalThis.MutationObserver = window.MutationObserver;
+globalThis.Worker = class {};
 globalThis.XPathResult = {};
 globalThis.XPathEvaluator =
     window.XPathEvaluator ||
@@ -43,9 +47,8 @@ globalThis.XPathEvaluator =
         }
     };
 
-const polyscript = require("../cjs");
 
-(async () => {
+import("../esm/index.js").then(async polyscript => {
     // shared 3rd party mocks
     const {
         python: pyodide,
@@ -212,4 +215,4 @@ const polyscript = require("../cjs");
     }
 
     globalThis.URL = URL;
-})();
+});

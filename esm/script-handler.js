@@ -124,7 +124,15 @@ export const handle = async (script) => {
         // allow a shared config among scripts, beside interpreter,
         // and/or source code with different config or interpreter
         const {
-            attributes: { async: isAsync, config, env, name: wn, target, version },
+            attributes: {
+                async: isAsync,
+                config,
+                env,
+                name: wn,
+                target,
+                version,
+                ['service-worker']: sw,
+            },
             src,
             type,
         } = script;
@@ -143,6 +151,7 @@ export const handle = async (script) => {
                 ...nodeInfo(script, type),
                 async: !!isAsync,
                 config: configValue,
+                serviceWorker: sw?.value,
             });
             handled.set(
                 defineProperty(script, 'xworker', { value: xworker }),

@@ -1,12 +1,12 @@
-const { writeFileShim } = require("../cjs/interpreter/_utils.js");
-
-const assert = require("./assert.js");
+import { writeFileShim } from "../esm/interpreter/_utils.js";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const FS = {
     mkdir(...args) {
         this.mkdir_args = args;
     },
-    cwd: () => __dirname,
+    cwd: () => dirname(fileURLToPath(import.meta.url)),
     writeFile(...args) {
         this.writeFile_args = args;
     },

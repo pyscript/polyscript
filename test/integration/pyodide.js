@@ -1,8 +1,8 @@
 'use strict';
 
-const { shared, python } = require('./_shared.js');
+import { shared, python } from './_shared.js';
 
-module.exports = (playwright, baseURL) => {
+export default (playwright, baseURL) => {
     const { expect, test } = playwright;
 
     test('Pyodide bootstrap', python.bootstrap(playwright, baseURL));

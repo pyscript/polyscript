@@ -110,16 +110,20 @@ export const importJS = (source, name) => import(source).then(esm => {
 });
 
 export const importCSS = href => new Promise((onload, onerror) => {
-    if (document.querySelector(`link[href="${href}"]`)) onload();
-    document.head.append(
-        assign(
-            document.createElement('link'),
-            { rel: 'stylesheet', href, onload, onerror },
-        )
-    )
+    if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+        onload();
+    }
+    else {
+        document.head.append(
+            assign(
+                document.createElement('link'),
+                { rel: 'stylesheet', href, onload, onerror },
+            )
+        );
+    }
 });
 
-export const isCSS = source => /\.css/i.test(new URL(source).pathname);
+export const isCSS = source => /\.css$/i.test(new URL(source).pathname);
 /* c8 ignore stop */
 
 export {

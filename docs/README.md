@@ -211,6 +211,7 @@ We encourage everyone to be careful when using this *core* API as we definitivel
 | type      | `<script type="micropython">`                 | Define the *interpreter* to use with this script. Please read the [Terminology](#terminology) **interpreter** dedicated details to know more. |
 | version   | `<script type="pyodide" version="0.23.2">`    | Allow the usage of a specific version where, if numeric, must be available through the project *CDN* used by *core* but if specified as fully qualified *URL*, allows usage of any interpreter's version: `<script type="pyodide" version="http://localhost:8080/pyodide.local.mjs">` |
 | worker    | `<script type="pyodide" worker="./file.py">`  | Bootstraps an *interpreter* **only** within a *worker*, allowing `config` and `version` attributes too, also attaching an `xworker` property/field directly to the *script* tag on the main page. Please note the interpreter will not be available on the main thread when this attribute is used. |
+| service-worker | `<script type="pyodide" service-worker="../sw.js" worker>` | Eventually does fallback to a *Service Worker* able to enable also synchronous interactions to grant access to the `xworker.window` proxy. |
 
 
 ### Script Features
@@ -499,12 +500,13 @@ There are **alternative ways** to enable these headers for your site or local ho
 
 Before showing any example, it's important to understand how the offered API differs from Web standard *workers*:
 
-| name      | example                                                  | behavior |
-| :-------- | :------------------------------------------------------- | :--------|
-| async     | `XWorker('./file.py', async=True)`                       | The worker code is evaluated via `runAsync` utility where, if the *interpreter* allows it, top level *await* would be possible, among other *PL* specific asynchronous features.  |
-| config    | `XWorker('./file.py', config='./cfg.toml')`              | The worker will either use the config object as it is or load and parse its referencing *JSON* or *TOML* file, or syntax, to configure itself. Please see [currently supported config values](https://docs.pyscript.net/latest/reference/elements/py-config.html#supported-configuration-values) as this is currently based on `<py-config>` features. |
-| type      | `XWorker('./file.py', type='pyodide')`                   | Define the *interpreter* to use with this worker which is, by default, the same one used within the running code. Please read the [Terminology](#terminology) **interpreter** dedicated details to know more. |
-| version   | `XWorker('./file.py', type='pyodide', version='0.23.2')` | Allow the usage of a specific version where, if numeric, must be available through the project *CDN* used by *core* but if specified as fully qualified *URL*, allows usage of any interpreter's version: `<script type="pyodide" version="http://localhost:8080/pyodide.local.mjs">` |
+| name          | example                                                          | behavior |
+| :------------ | :--------------------------------------------------------------- | :--------|
+| async         | `XWorker('./file.py', async=True)`                               | The worker code is evaluated via `runAsync` utility where, if the *interpreter* allows it, top level *await* would be possible, among other *PL* specific asynchronous features.  |
+| config        | `XWorker('./file.py', config='./cfg.toml')`                      | The worker will either use the config object as it is or load and parse its referencing *JSON* or *TOML* file, or syntax, to configure itself. Please see [currently supported config values](https://docs.pyscript.net/latest/reference/elements/py-config.html#supported-configuration-values) as this is currently based on `<py-config>` features. |
+| type          | `XWorker('./file.py', type='pyodide')`                           | Define the *interpreter* to use with this worker which is, by default, the same one used within the running code. Please read the [Terminology](#terminology) **interpreter** dedicated details to know more. |
+| version       | `XWorker('./file.py', type='pyodide', version='0.23.2')`         | Allow the usage of a specific version where, if numeric, must be available through the project *CDN* used by *core* but if specified as fully qualified *URL*, allows usage of any interpreter's version: `<script type="pyodide" version="http://localhost:8080/pyodide.local.mjs">` |
+| serviceWorker | `XWorker('./file.py', type='pyodide', serviceWorker='../sw.js')` | When the server cannot enable *SharedArrayBuffer* it is still possible to fallback to a *Service Worker* file based orchestration provided by [mini-coi](https://github.com/WebReflection/mini-coi?tab=readme-ov-file#how-to-use-mini-coi-as-service-worker), [sabayon](https://github.com/WebReflection/sabayon?tab=readme-ov-file#service-worker) or others. Please note that **this string must point to a file in the current server**. |
 
 The returning *JS* reference to any `XWorker(...)` call is literally a `Worker` instance that, among its default API, have the extra following feature:
 
@@ -544,9 +546,11 @@ Within a *Worker* execution context, the `xworker` exposes the following feature
 
 | name          | example                                    | behavior |
 | :------------ | :------------------------------------------| :--------|
-| sync          | `xworker.sync.from_main(1, "two")`         | Executes the exposed `from_main` function in the main thread. Returns synchronously its result, if any. |
-| window        | `xworker.window.document.title = 'Worker'` | Differently from *pyodide* or *micropython* `import js`, this field allows every single possible operation directly in the main thread. It does not refer to the local `js` environment the interpreter might have decided to expose, it is a proxy to handle otherwise impossible operations in the main thread, such as manipulating the *DOM*, reading `localStorage` otherwise not available in workers, change location or anything else usually possible to do in the main thread. |
-| isWindowProxy | `xworker.isWindowProxy(ref)`               | **Advanced** - Allows introspection of *JS* references, helping differentiating between local worker references, and main thread global JS references. This is valid both for non primitive objects (array, dictionaries) as well as functions, as functions are also enabled via `xworker.window` in both ways: we can add a listener from the worker or invoke a function in the main. Please note that functions passed to the main thread will always be invoked asynchronously.
+| polyfill      | `xworker.polyfill`                         | Returns `true` if *sabayon* polyfill is used behind the scene. |
+| sync          | `xworker.sync.from_main(1, "two")`         | Executes the exposed `from_main` function in the main thread. Returns synchronously its result when *SharedArrayBuffer* can work synchronously. Returns asynchronously otherwise exposed callbacsk from the *main* thread. |
+| window        | `xworker.window.document.title = 'Worker'` | Differently from *pyodide* or *micropython* `import js`, this field allows every single possible operation directly in the main thread when that is possible (*SharedArrayBuffer* either available or polyfilled for `sync` operations too). It does not refer to the local `js` environment the interpreter might have decided to expose, it is a proxy to handle otherwise impossible operations in the main thread, such as manipulating the *DOM*, reading `localStorage` otherwise not available in workers, change location or anything else usually possible to do in the main thread. |
+| isWindowProxy | `xworker.isWindowProxy(ref)`               | **Advanced** - Allows introspection of *JS* references, helping differentiating between local worker references, and main thread global JS references. This is valid both for non primitive objects (array, dictionaries) as well as functions, as functions are also enabled via `xworker.window` in both ways: we can add a listener from the worker or invoke a function in the main. Please note that functions passed to the main thread will always be invoked asynchronously. |
+
 
 ```python
 from polyscript import xworker

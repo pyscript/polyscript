@@ -1,8 +1,8 @@
 'use strict';
 
-const { shared } = require('./_shared.js');
+import { shared } from './_shared.js';
 
-module.exports = (playwright, baseURL) => {
+export default (playwright, baseURL) => {
     const { test } = playwright;
 
     test('Wasmoon bootstrap', shared.bootstrap(playwright, baseURL));
