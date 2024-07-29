@@ -51,7 +51,7 @@ export default {
     runAsync: run,
     async runEvent(interpreter, code, event) {
         // TODO: WebR cannot convert exoteric objects or any literal
-        // to an easy to reason about data/frame ... that convertion
+        // to an easy to reason about data/frame ... that conversion
         // is reserved for the future:
         // https://docs.r-wasm.org/webr/latest/convert-js-to-r.html#constructing-r-objects-from-javascript-objects
         await interpreter.evalRVoid(`${code}(event)`, {

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyscript dummy interpreter (JS)</title>
+  <script type="module" src="../dist/index.js"></script>
+</head>
+<body>
+  <script type="dummy">
+    self.greetings = () => {
+      console.log('Hello World');
+    };
+  </script>
+  <button dummy-click="greetings">click me</button>
+  <script type="dummy" worker>
+    const { xworker: { window } } = require('polyscript');
+    window.document.body.append('OK');
+  </script>
+</body>
+</html>
