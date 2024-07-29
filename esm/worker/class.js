@@ -11,6 +11,7 @@ import Hook from './hook.js';
  * @prop {string | object} [config] the optional config to use within such interpreter
  * @prop {string} [configURL] the optional configURL used to resolve config entries
  * @prop {string} [serviceWorker] the optional Service Worker for SharedArrayBuffer fallback
+ * @prop {string} [service_worker] alias for `serviceWorker`
  */
 
 // REQUIRES INTEGRATION TEST
@@ -34,7 +35,8 @@ export default (...args) =>
         // fallback to a generic, ignored, config.txt file to still provide a URL.
         const [ config ] = getConfigURLAndType(options.config, options.configURL);
 
-        const worker = xworker({ serviceWorker: options?.serviceWorker });
+        const serviceWorker = options?.serviceWorker || options?.service_worker;
+        const worker = xworker({ serviceWorker });
         const { postMessage } = worker;
         const isHook = this instanceof Hook;
 
