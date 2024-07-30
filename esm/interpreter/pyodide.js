@@ -3,6 +3,7 @@ import { create } from 'gc-hook';
 import { RUNNING_IN_WORKER, fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
 import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
+import { isArray } from '../utils.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -101,11 +102,7 @@ export default {
     run: overrideMethod(run),
     runAsync: overrideMethod(runAsync),
     runEvent: overrideMethod(runEvent),
-    transform: ({ ffi: { PyProxy } }, value) => (
-        value instanceof PyProxy ?
-            value.toJs(toJsOptions) :
-            value
-    ),
+    transform: (interpreter, value) => transform.call(interpreter, value),
     writeFile: (interpreter, path, buffer, url) => {
         const format = getFormat(path, url);
         if (format) {
@@ -117,6 +114,18 @@ export default {
         return writeFile({ FS, PATH, PATH_FS }, path, buffer);
     },
 };
+
+function transform(value) {
+    const { ffi: { PyProxy } } = this;
+    if (value && typeof value === 'object') {
+        if (value instanceof PyProxy) return value.toJs(toJsOptions);
+        // I believe this case is for LiteralMap which is not a PyProxy
+        // and yet it needs to be re-converted to something useful.
+        if (value instanceof Map) return new Map([...value.entries()]);
+        if (isArray(value)) return value.map(transform, this);
+    }
+    return value;
+}
 
 // exposed utility to import packages via polyscript.lazy_py_modules
 async function importPackages(packages) {
