@@ -69,7 +69,7 @@ export const handleCustomType = async (node) => {
                         type: runtime,
                         custom: type,
                         config: node.getAttribute('config') || config || {},
-                        async: node.hasAttribute('async'),
+                        async: node.getAttribute('async') !== 'false',
                         serviceWorker: node.getAttribute('service-worker'),
                     });
                     defineProperty(node, 'xworker', { value: xworker });

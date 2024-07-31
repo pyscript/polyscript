@@ -19,6 +19,9 @@ export const loadMicroPython = () => ({
             python.target = document.currentScript.target;
         }
     },
+    runPythonAsync(content) {
+        return this.runPython(content);
+    },
     globals: {
         set(name, value) {
             globalThis[name] = value;

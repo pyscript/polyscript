@@ -125,7 +125,7 @@ export const handle = async (script) => {
         // and/or source code with different config or interpreter
         const {
             attributes: {
-                async: isAsync,
+                async: asyncAttribute,
                 config,
                 env,
                 name: wn,
@@ -137,19 +137,21 @@ export const handle = async (script) => {
             type,
         } = script;
 
+        /* c8 ignore start */
+        const isAsync = asyncAttribute?.value !== 'false';
+
         const versionValue = version?.value;
         const name = getRuntimeID(type, versionValue);
         let configValue = getValue(config, '|');
         const id = getValue(env, '') || `${name}${configValue}`;
         configValue = configValue.slice(1);
 
-        /* c8 ignore start */
         const url = workerURL(script);
         if (url) {
             const XWorker = $xworker(type, versionValue);
             const xworker = new XWorker(url, {
                 ...nodeInfo(script, type),
-                async: !!isAsync,
+                async: isAsync,
                 config: configValue,
                 serviceWorker: sw?.value,
             });
@@ -176,7 +178,7 @@ export const handle = async (script) => {
         // start fetching external resources ASAP
         const source = src ? fetch(src).text() : script.textContent;
         details.queue = details.queue.then(() =>
-            execute(script, source, details.XWorker, !!isAsync),
+            execute(script, source, details.XWorker, isAsync),
         );
     }
 };
