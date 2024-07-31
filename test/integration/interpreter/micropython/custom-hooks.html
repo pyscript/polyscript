@@ -12,9 +12,10 @@
           hooks: {
             main: {
               onReady: ({ run, runAsync }, element) => {
+                const isAsync = element.getAttribute('async') !== 'false';
                 console.log('onMainReady');
                 dispatchEvent(new Event('mpy:ready'));
-                const exec = element.hasAttribute('async') ? runAsync : run;
+                const exec = isAsync ? runAsync : run;
                 exec(element.textContent.trim());
               },
               onWorker: () => console.log('onWorkerMain'),
@@ -70,10 +71,8 @@
             const isScript = type === 'script';
             const tag = document.createElement(isScript ? 'script' : type + '-script');
             if (isScript) tag.type = 'mpy';
-            if (current.async) {
-              type += '-async';
-              tag.setAttribute('async', '');
-            }
+            if (current.async) type += '-async';
+            else tag.setAttribute('async', 'false');
             if (current.worker) {
               type += '-worker';
               tag.setAttribute('worker', '');
