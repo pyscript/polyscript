@@ -1,7 +1,7 @@
 {
     "imports": {
         "http://pyodide": "./test/mocked/pyodide.mjs",
-        "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.mjs": "./test/mocked/pyodide.mjs",
+        "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs": "./test/mocked/pyodide.mjs",
         "https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@1.24.0-preview-114/micropython.mjs": "./test/mocked/micropython.mjs",
         "./3rd-party/toml.js": "./test/mocked/toml.mjs"
     }
