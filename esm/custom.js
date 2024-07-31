@@ -1,7 +1,7 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
-import { JSModules, assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo, registerJSModules } from './utils.js';
+import { JSModules, isSync, assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo, registerJSModules } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
 import { getRuntimeID } from './loader.js';
@@ -69,7 +69,7 @@ export const handleCustomType = async (node) => {
                         type: runtime,
                         custom: type,
                         config: node.getAttribute('config') || config || {},
-                        async: node.getAttribute('async') !== 'false',
+                        async: !isSync(node),
                         serviceWorker: node.getAttribute('service-worker'),
                     });
                     defineProperty(node, 'xworker', { value: xworker });

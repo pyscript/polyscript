@@ -6,7 +6,7 @@ import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
 import { getRuntime, getRuntimeID } from './loader.js';
 import { registry } from './interpreters.js';
-import { JSModules, all, dispatch, resolve, defineProperty, nodeInfo, registerJSModules } from './utils.js';
+import { JSModules, isSync, all, dispatch, resolve, defineProperty, nodeInfo, registerJSModules } from './utils.js';
 
 const getRoot = (script) => {
     let parent = script;
@@ -55,12 +55,6 @@ const execute = async (currentScript, source, XWorker, isAsync) => {
         source,
     ]);
     try {
-        // temporarily override inherited document.currentScript in a non writable way
-        // but it deletes it right after to preserve native behavior (as it's sync: no trouble)
-        defineProperty(document, 'currentScript', {
-            configurable: true,
-            get: () => currentScript,
-        });
         registerJSModules(type, module, interpreter, JSModules);
         module.registerJSModule(interpreter, 'polyscript', {
             XWorker,
@@ -69,10 +63,16 @@ const execute = async (currentScript, source, XWorker, isAsync) => {
             workers: workersHandler,
         });
         dispatch(currentScript, type, 'ready');
-        const result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
+        // temporarily override inherited document.currentScript in a non writable way
+        // but it deletes it right after to preserve native behavior (as it's sync: no trouble)
+        defineProperty(document, 'currentScript', {
+            configurable: true,
+            get: () => currentScript,
+        });
         const done = dispatch.bind(null, currentScript, type, 'done');
-        if (isAsync) result.then(done);
-        else done();
+        let result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
+        if (isAsync) result = await result;
+        done();
         return result;
     } finally {
         delete document.currentScript;
@@ -125,7 +125,6 @@ export const handle = async (script) => {
         // and/or source code with different config or interpreter
         const {
             attributes: {
-                async: asyncAttribute,
                 config,
                 env,
                 name: wn,
@@ -138,7 +137,7 @@ export const handle = async (script) => {
         } = script;
 
         /* c8 ignore start */
-        const isAsync = asyncAttribute?.value !== 'false';
+        const isAsync = !isSync(script);
 
         const versionValue = version?.value;
         const name = getRuntimeID(type, versionValue);
