@@ -124,6 +124,10 @@ export const importCSS = href => new Promise((onload, onerror) => {
 });
 
 export const isCSS = source => /\.css$/i.test(new URL(source).pathname);
+
+export const isSync = element =>
+    /^(?:false|0|no)$/i.test(element.getAttribute('async'));
+
 /* c8 ignore stop */
 
 export {
