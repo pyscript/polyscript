@@ -11,6 +11,7 @@ pyscript.js
 !esm/custom/pyscript.js
 esm/worker/xworker.js
 esm/worker/__template.js
+env/
 types/
 esm/python/
 esm/3rd-party/*.js
