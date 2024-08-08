@@ -1,5 +1,6 @@
 .DS_Store
 coverage/
+env/
 node_modules/
 test-results/
 cjs/*
