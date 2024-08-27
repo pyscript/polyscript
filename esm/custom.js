@@ -4,7 +4,7 @@ import { $$ } from 'basic-devtools';
 import { JSModules, isSync, assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo, registerJSModules } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
-import { getRuntimeID } from './loader.js';
+import { getRuntimeID, resolveConfig } from './loader.js';
 import { addAllListeners } from './listeners.js';
 import { Hook, XWorker as XW } from './xworker.js';
 import { workers, workersHandler } from './workers.js';
@@ -62,13 +62,20 @@ export const handleCustomType = async (node) => {
             try {
                 const worker = workerURL(node);
                 if (worker) {
+                    let v = version;
+                    const cfg = node.getAttribute('config') || config || {};
+                    if (!v) {
+                        const [o] = resolveConfig(cfg, configURL);
+                        const details = await o;
+                        v = details.version || details.interpreter;
+                    }
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
-                        version,
                         configURL,
+                        version: v,
                         type: runtime,
                         custom: type,
-                        config: node.getAttribute('config') || config || {},
+                        config: cfg,
                         async: !isSync(node),
                         serviceWorker: node.getAttribute('service-worker'),
                     });

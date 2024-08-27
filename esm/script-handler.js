@@ -150,6 +150,7 @@ export const handle = async (script) => {
             const XWorker = $xworker(type, versionValue);
             const xworker = new XWorker(url, {
                 ...nodeInfo(script, type),
+                version: versionValue,
                 async: isAsync,
                 config: configValue,
                 serviceWorker: sw?.value,

@@ -17,6 +17,23 @@ export const getConfigURLAndType = (config, configURL = './config.txt') => {
     return [absoluteURL(config), type];
 };
 
+export const resolveConfig = (config, configURL, options = {}) => {
+    const [absolute, type] = getConfigURLAndType(config, configURL);
+    if (type === 'json') {
+        options = fetch(absolute).json();
+    } else if (type === 'toml') {
+        options = fetch(absolute).text().then(toml);
+    } else if (type === 'string') {
+        options = parseString(config);
+    } else if (type === 'object' && config) {
+        options = config;
+    } else if (type === 'txt' && typeof options === 'string') {
+        options = parseString(options);
+    }
+    config = absolute;
+    return [options, config];
+};
+
 const parseString = config => {
     try {
         return parse(config);
@@ -43,19 +60,7 @@ export const getRuntime = (id, config, configURL, options = {}) => {
     if (config) {
         // REQUIRES INTEGRATION TEST
         /* c8 ignore start */
-        const [absolute, type] = getConfigURLAndType(config, configURL);
-        if (type === 'json') {
-            options = fetch(absolute).json();
-        } else if (type === 'toml') {
-            options = fetch(absolute).text().then(toml);
-        } else if (type === 'string') {
-            options = parseString(config);
-        } else if (type === 'object' && config) {
-            options = config;
-        } else if (type === 'txt' && typeof options === 'string') {
-            options = parseString(options);
-        }
-        config = absolute;
+        [options, config] = resolveConfig(config, configURL, options);
         /* c8 ignore stop */
     }
     return resolve(options).then(options => interpreter[id](options, config));
