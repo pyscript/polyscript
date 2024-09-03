@@ -31,6 +31,9 @@ This project requires some automatic artifact creation to:
 Accordingly, to build latest project:
 
 ```sh
+# activate once the Python env (to use pyminify)
+. env.sh # or source env.sh
+
 # create all artifacts needed to test core
 npm run build
 

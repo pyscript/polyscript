@@ -21,7 +21,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: python -m venv env
+    - run: source env/bin/activate
+    - run: pip install --upgrade pip
+    - run: pip install --ignore-requires-python python-minifier
+    - run: pip install setuptools
     - run: npm ci
-    - run: npx playwright install
+    - run: npx playwright install chromium
     - run: npm run build
     - run: npm run test
