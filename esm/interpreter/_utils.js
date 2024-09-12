@@ -167,4 +167,8 @@ export const fetchJSModules = ({ main, worker }, baseURL) => {
     }
     return all(promises);
 };
+
+export const createProgress = prefix => detail => {
+    dispatchEvent(new CustomEvent(`${prefix}:progress`, { detail }));
+};
 /* c8 ignore stop */

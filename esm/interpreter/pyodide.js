@@ -1,7 +1,7 @@
 import { create } from 'gc-hook';
 
-import { RUNNING_IN_WORKER, fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { RUNNING_IN_WORKER, createProgress, writeFile } from './_utils.js';
+import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 import { isArray } from '../utils.js';
 
@@ -73,6 +73,8 @@ const applyOverride = () => {
         }
     });
 };
+
+const progress = createProgress('py');
 /* c8 ignore stop */
 
 // REQUIRES INTEGRATION TEST
@@ -85,6 +87,7 @@ export default {
         // apply override ASAP then load foreign code
         if (!RUNNING_IN_WORKER && config.experimental_create_proxy === 'auto')
             applyOverride();
+        progress('Loading Pyodide');
         const { stderr, stdout, get } = stdio();
         const indexURL = url.slice(0, url.lastIndexOf('/'));
         const interpreter = await get(
@@ -92,10 +95,9 @@ export default {
         );
         const py_imports = importPackages.bind(interpreter);
         loader.set(interpreter, py_imports);
-        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
-        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
+        await loadProgress(this, progress, interpreter, config, baseURL);
         if (config.packages) await py_imports(config.packages);
+        progress('Loaded Pyodide');
         return interpreter;
     },
     registerJSModule,
@@ -129,9 +131,21 @@ function transform(value) {
 
 // exposed utility to import packages via polyscript.lazy_py_modules
 async function importPackages(packages) {
+    // temporary patch/fix console.log which is used
+    // not only by Pyodide but by micropip too and there's
+    // no way to intercept those calls otherwise
+    const { log } = console;
+    const _log = (detail, ...rest) => {
+        log(detail, ...rest);
+        console.log = log;
+        progress(detail);
+        console.log = _log;
+    };
+    console.log = _log;
     await this.loadPackage('micropip');
     const micropip = this.pyimport('micropip');
     await micropip.install(packages, { keep_going: true });
+    console.log = log;
     micropip.destroy();
 }
 /* c8 ignore stop */

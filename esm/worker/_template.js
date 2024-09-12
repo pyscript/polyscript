@@ -211,4 +211,9 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
     add('error');
     add('message');
     add('messageerror');
+    if (syncMainAndWorker) {
+        addEventListener('py:progress', ({ type, detail }) => {
+            window.dispatchEvent(new window.CustomEvent(type, { detail }));
+        });
+    }
 });

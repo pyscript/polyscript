@@ -1,5 +1,6 @@
 import * as JSON from '@ungap/structured-clone/json';
 import IDBMapSync from '@webreflection/idb-map/sync';
+import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
 import { dedent } from '../utils.js';
 import { io } from './_io.js';
 
@@ -7,6 +8,24 @@ export const loader = new WeakMap();
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
+export const loadProgress = async (self, progress, interpreter, config, baseURL) => {
+    if (config.files) {
+        progress('Loading files');
+        await fetchFiles(self, interpreter, config.files, baseURL);
+        progress('Loaded files');
+    }
+    if (config.fetch) {
+        progress('Loading fetch');
+        await fetchPaths(self, interpreter, config.fetch, baseURL);
+        progress('Loaded fetch');
+    }
+    if (config.js_modules) {
+        progress('Loading JS modules');
+        await fetchJSModules(config.js_modules, baseURL);
+        progress('Loaded JS modules');
+    }
+};
+
 export const registerJSModule = (interpreter, name, value) => {
     if (name === 'polyscript') {
         value.lazy_py_modules = async (...packages) => {

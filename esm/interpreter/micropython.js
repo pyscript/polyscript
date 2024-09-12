@@ -1,7 +1,7 @@
 import fetch from '@webreflection/fetch';
 
-import { fetchFiles, fetchJSModules, fetchPaths, writeFile } from './_utils.js';
-import { getFormat, loader, registerJSModule, run, runAsync, runEvent } from './_python.js';
+import { createProgress, writeFile } from './_utils.js';
+import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio, buffered } from './_io.js';
 import { absoluteURL } from '../utils.js';
 import mip from '../python/mip.js';
@@ -21,6 +21,8 @@ const mkdir = (FS, path) => {
     }
 };
 
+const progress = createProgress('mpy');
+
 export default {
     type,
     module: (version = '1.24.0-preview-114') =>
@@ -31,16 +33,19 @@ export default {
             stdout: buffered(console.log),
         });
         url = url.replace(/\.m?js$/, '.wasm');
+        progress('Loading MicroPython');
         const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
         const py_imports = importPackages.bind(this, interpreter, baseURL);
         loader.set(interpreter, py_imports);
-        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
-        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
-        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
-
+        await loadProgress(this, progress, interpreter, config, baseURL);
         // Install Micropython Package
         this.writeFile(interpreter, './mip.py', mip);
-        if (config.packages) await py_imports(config.packages);
+        if (config.packages) {
+            progress('Loading packages');
+            await py_imports(config.packages);
+            progress('Loaded packages');
+        }
+        progress('Loaded MicroPython');
         return interpreter;
     },
     registerJSModule,
