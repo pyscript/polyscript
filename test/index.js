@@ -36,6 +36,7 @@ globalThis.indexedDB = { open: () => ({}) };
 globalThis.document = document;
 globalThis.Element = window.Element;
 globalThis.CustomEvent = CustomEvent;
+globalThis.dispatchEvent = Object;
 globalThis.MutationObserver = window.MutationObserver;
 globalThis.Worker = class {};
 globalThis.XPathResult = {};
