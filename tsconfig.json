@@ -9,6 +9,7 @@
         "declarationDir": "types"
     },
     "include": [
+        "node_modules/@webreflection/idb-map/sync.js",
         "esm/index.js",
         "esm/exports.js",
         "esm/xworker.js"
