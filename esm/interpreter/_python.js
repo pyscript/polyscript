@@ -1,7 +1,6 @@
 import * as JSON from '@ungap/structured-clone/json';
-import IDBMapSync from '@webreflection/idb-map/sync';
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
-import { dedent } from '../utils.js';
+import { IDBMapSync, dedent } from '../utils.js';
 import { io } from './_io.js';
 
 export const loader = new WeakMap();

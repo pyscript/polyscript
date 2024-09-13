@@ -1,3 +1,4 @@
+import IDBMapSync from '@webreflection/idb-map/sync';
 import $dedent from 'codedent';
 import { unescape as $unescape } from 'html-escaper';
 import { io } from './interpreter/_io.js';
@@ -131,6 +132,7 @@ export const isSync = element =>
 /* c8 ignore stop */
 
 export {
+    IDBMapSync,
     dedent, unescape,
     dispatch,
     isArray,
