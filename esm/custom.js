@@ -63,15 +63,17 @@ export const handleCustomType = async (node) => {
                 const worker = workerURL(node);
                 if (worker) {
                     let v = version;
-                    const cfg = node.getAttribute('config') || config || {};
-                    if (!v) {
-                        const [o] = resolveConfig(cfg, configURL);
-                        const details = await o;
-                        v = details.version || details.interpreter;
+                    let url = configURL;
+                    let cfg = node.getAttribute('config') || config || {};
+                    if (!v || !cfg) {
+                        const [o, u] = resolveConfig(cfg, configURL);
+                        cfg = await o;
+                        url = u;
+                        v = cfg.version || cfg.interpreter;
                     }
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
-                        configURL,
+                        configURL: url,
                         version: v,
                         type: runtime,
                         custom: type,
