@@ -122,11 +122,10 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             // there's no way to query the DOM, use foreign CustomEvent and so on
             // in case there's no SharedArrayBuffer around.
-            let CustomEvent, document, notify, currentScript = null, target = '';
+            let notify, currentScript = null, target = '';
             if (syncMainAndWorker) {
-                ({ CustomEvent, document } = window);
-                currentScript = id && document.getElementById(id) || null;
-                notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
+                currentScript = id && window.document.getElementById(id) || null;
+                notify = kind => dispatch(currentScript, custom || type, kind, true, window.CustomEvent);
             }
 
             // TODO: even this is problematic without SharedArrayBuffer
@@ -143,7 +142,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                     if (!target && currentScript) {
                         if (tag === 'SCRIPT') {
                             currentScript.after(assign(
-                                document.createElement(`script-${custom || type}`),
+                                window.document.createElement(`script-${custom || type}`),
                                 { id: (target = `${id}-target`) }
                             ));
                         }
