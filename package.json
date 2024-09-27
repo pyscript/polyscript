@@ -78,7 +78,7 @@
         "@webreflection/idb-map": "^0.3.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^2.1.4",
+        "coincident": "^2.1.5",
         "gc-hook": "^0.4.1",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.2",
@@ -86,6 +86,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-tgJwlipNdA+alH1VirlPwq87PFbjdxaVJ6OpJflekE0="
+        "blob": "sha256-eVizgwvZYPrPNvrH4k4nQSVPsGv4MfdGuGWgQdpQvm0="
     }
 }
