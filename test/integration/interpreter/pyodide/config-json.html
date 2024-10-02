@@ -8,6 +8,12 @@
     <script type="module">
       import '/dist/index.js';
 
+      addEventListener('py:progress', ({ detail }) => {
+        const [action, what] = detail.split(/\s+/);
+        if (action === 'Loading') console.time(what);
+        else console.timeEnd(what);
+      });
+
       const script = Object.assign(document.createElement('script'), {
         type: 'pyodide',
         textContent: `
@@ -21,7 +27,9 @@
       script.toggleAttribute('worker');
 
       script.setAttribute('config', JSON.stringify({
-        packages: ['numpy']
+        packages: ['numpy'],
+        // comment next line to see cache in action
+        packages_cache: 'never',
       }));
 
       document.body.append(script);
