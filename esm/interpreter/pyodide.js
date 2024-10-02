@@ -3,11 +3,14 @@ import { create } from 'gc-hook';
 import { RUNNING_IN_WORKER, createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
-import { isArray } from '../utils.js';
+import { IDBMapSync, isArray } from '../utils.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
 
+const { stringify } = JSON;
+
+// REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 let overrideFunction = false;
 const overrideMethod = method => (...args) => {
@@ -75,10 +78,7 @@ const applyOverride = () => {
 };
 
 const progress = createProgress('py');
-/* c8 ignore stop */
 
-// REQUIRES INTEGRATION TEST
-/* c8 ignore start */
 export default {
     type,
     module: (version = '0.26.2') =>
@@ -88,15 +88,45 @@ export default {
         if (!RUNNING_IN_WORKER && config.experimental_create_proxy === 'auto')
             applyOverride();
         progress('Loading Pyodide');
-        const { stderr, stdout, get } = stdio();
+        let { packages } = config;
+        progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
+        // each pyodide version shares its own cache
+        const storage = new IDBMapSync(indexURL);
+        const options = { indexURL };
+        const save = config.packages_cache !== 'never';
+        await storage.sync();
+        // packages_cache = 'never' means: erase the whole DB
+        if (!save) storage.clear();
+        // otherwise check if cache is known
+        else if (packages) {
+            packages = packages.slice(0).sort();
+            // packages are uniquely stored as JSON key
+            const key = stringify(packages);
+            if (storage.has(key)) {
+                const blob = new Blob(
+                    [storage.get(key)],
+                    { type: 'application/json' },
+                );
+                // this should be used to bootstrap loadPyodide
+                options.lockFileURL = URL.createObjectURL(blob);
+                // no need to use micropip manually here
+                options.packages = packages;
+                packages = null;
+            }
+        }
+        progress('Loaded Storage');
+        const { stderr, stdout, get } = stdio();
         const interpreter = await get(
-            loadPyodide({ stderr, stdout, indexURL }),
+            loadPyodide({ stderr, stdout, ...options }),
         );
         const py_imports = importPackages.bind(interpreter);
         loader.set(interpreter, py_imports);
         await loadProgress(this, progress, interpreter, config, baseURL);
-        if (config.packages) await py_imports(config.packages);
+        // if cache wasn't know, import and freeze it for the next time
+        if (packages) await py_imports(packages, storage, save);
+        await storage.close();
+        if (options.lockFileURL) URL.revokeObjectURL(options.lockFileURL);
         progress('Loaded Pyodide');
         return interpreter;
     },
@@ -130,7 +160,7 @@ function transform(value) {
 }
 
 // exposed utility to import packages via polyscript.lazy_py_modules
-async function importPackages(packages) {
+async function importPackages(packages, storage, save = false) {
     // temporary patch/fix console.log which is used
     // not only by Pyodide but by micropip too and there's
     // no way to intercept those calls otherwise
@@ -146,6 +176,10 @@ async function importPackages(packages) {
     const micropip = this.pyimport('micropip');
     await micropip.install(packages, { keep_going: true });
     console.log = log;
+    if (save && (storage instanceof IDBMapSync)) {
+        const frozen = micropip.freeze();
+        storage.set(stringify(packages), frozen);
+    }
     micropip.destroy();
 }
 /* c8 ignore stop */
