@@ -80,7 +80,7 @@
         "@webreflection/idb-map": "^0.3.2",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^2.2.1",
+        "coincident": "^2.2.2",
         "gc-hook": "^0.4.1",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.2",
