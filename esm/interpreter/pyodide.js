@@ -81,7 +81,7 @@ const progress = createProgress('py');
 
 export default {
     type,
-    module: (version = '0.26.2') =>
+    module: (version = '0.26.3') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url, baseURL) {
         // apply override ASAP then load foreign code
@@ -110,8 +110,10 @@ export default {
                 );
                 // this should be used to bootstrap loadPyodide
                 options.lockFileURL = URL.createObjectURL(blob);
-                // no need to use micropip manually here
-                options.packages = packages;
+                // versions are not currently understood by pyodide when
+                // a lockFileURL is used instead of micropip.install(packages)
+                // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
+                options.packages = packages.map(name => name.split('==')[0]);
                 packages = null;
             }
         }
