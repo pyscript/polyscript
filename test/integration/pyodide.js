@@ -33,4 +33,9 @@ export default (playwright, baseURL) => {
     test('Pyodide transform', python.error(playwright, baseURL));
 
     test('Pyodide events ready', python.disabledUntilReady(playwright, baseURL));
+
+    test('Pyodide index_urls', async ({ page }) => {
+        await page.goto(`${baseURL}/index_urls.html`);
+        await page.waitForSelector('html.test_foo');
+    });
 };

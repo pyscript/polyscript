@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="module">
+            import { init } from '../utils.js';
+            init('pyodide');
+        </script>
+    </head>
+    <body>
+        <script type="pyodide" config='{"packages":["test_foo"],"index_urls":["https://test.pypi.org/simple"]}'>
+            import js
+            import test_foo
+            js.document.documentElement.classList.add(test_foo.__name__)
+        </script>
+    </body>
+</html>
