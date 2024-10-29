@@ -78,6 +78,7 @@ const applyOverride = () => {
 };
 
 const progress = createProgress('py');
+const indexURLs = new WeakMap();
 
 export default {
     type,
@@ -88,7 +89,7 @@ export default {
         if (!RUNNING_IN_WORKER && config.experimental_create_proxy === 'auto')
             applyOverride();
         progress('Loading Pyodide');
-        let { packages } = config;
+        let { packages, index_urls } = config;
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
         // each pyodide version shares its own cache
@@ -123,6 +124,7 @@ export default {
             loadPyodide({ stderr, stdout, ...options }),
         );
         const py_imports = importPackages.bind(interpreter);
+        if (index_urls) indexURLs.set(interpreter, index_urls);
         loader.set(interpreter, py_imports);
         await loadProgress(this, progress, interpreter, config, baseURL);
         // if cache wasn't know, import and freeze it for the next time
@@ -176,6 +178,7 @@ async function importPackages(packages, storage, save = false) {
     console.log = _log;
     await this.loadPackage('micropip');
     const micropip = this.pyimport('micropip');
+    if (indexURLs.has(this)) micropip.set_index_urls(indexURLs.get(this));
     await micropip.install(packages, { keep_going: true });
     console.log = log;
     if (save && (storage instanceof IDBMapSync)) {
