@@ -128,7 +128,7 @@ const calculateFilesPaths = files => {
     else {
       const url = parseTemplate(source, map);
       const path = fillName(url, parseTemplate(dest || './', map));
-      if (targets.has(path))
+      if (targets.has(path) && !path.endsWith('/*'))
         throw new SyntaxError(`Duplicated destination: ${path}`);
       targets.add(path);
       sourceDest.push({ url, path });
