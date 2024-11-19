@@ -114,7 +114,8 @@ export default {
                 // versions are not currently understood by pyodide when
                 // a lockFileURL is used instead of micropip.install(packages)
                 // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
-                options.packages = packages.map(name => name.split('==')[0]);
+                // https://github.com/pyscript/pyscript/issues/2245
+                options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
                 packages = null;
             }
         }
