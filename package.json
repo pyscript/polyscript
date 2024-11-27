@@ -31,6 +31,12 @@
         "version:wasmoon": "npm view wasmoon version>versions/wasmoon",
         "version:webr": "npm view webr version>versions/webr"
     },
+    "files": [
+      "esm/",
+      "dist/",
+      "REDME.md",
+      "LICENSE"
+    ],
     "keywords": [
         "polyscript",
         "pyscript",
