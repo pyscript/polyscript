@@ -76,7 +76,7 @@ import("../esm/index.js").then(async polyscript => {
     // all tests
     for (const test of [
         async function versionedRuntime() {
-            document.head.innerHTML = `<script type="pyodide" version="0.26.3">${content}</script>`;
+            document.head.innerHTML = `<script type="pyodide" version="0.26.4">${content}</script>`;
             await tick();
             assert(pyodide.content, dedent(content));
             assert(pyodide.target.tagName, "PYODIDE-SCRIPT");
