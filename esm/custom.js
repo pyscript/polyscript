@@ -70,6 +70,8 @@ export const handleCustomType = async (node) => {
                         cfg = await o;
                         url = u;
                         v = cfg.version || cfg.interpreter;
+                        if (v && /\.m?js$/.test(v))
+                            v = new URL(v, url).href;
                     }
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
