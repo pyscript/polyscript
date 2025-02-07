@@ -8,7 +8,7 @@
         "server": "npx static-handler --coi .",
         "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run ts && npm run rollup:integrations && npm run build:docs",
         "build:3rd-party": "node rollup/3rd-party.cjs",
-        "build:docs": "mv docs/coi.js ./; rm docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
+        "build:docs": "mv docs/coi.js ./; rm -f docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
         "dev": "node dev.cjs",
         "rollup:core": "rollup --config rollup/core.config.js",
         "rollup:integrations": "node rollup/build_integrations.cjs",
@@ -47,17 +47,17 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.49.0",
-        "@rollup/plugin-node-resolve": "^15.3.0",
+        "@playwright/test": "^1.50.1",
+        "@rollup/plugin-node-resolve": "^16.0.0",
         "@rollup/plugin-terser": "^0.4.4",
-        "@zip.js/zip.js": "^2.7.53",
-        "c8": "^10.1.2",
-        "chokidar": "^4.0.1",
-        "eslint": "^9.15.0",
-        "linkedom": "^0.18.5",
-        "rollup": "^4.27.4",
+        "@zip.js/zip.js": "^2.7.57",
+        "c8": "^10.1.3",
+        "chokidar": "^4.0.3",
+        "eslint": "^9.19.0",
+        "linkedom": "^0.18.7",
+        "rollup": "^4.34.4",
         "static-handler": "^0.5.3",
-        "typescript": "^5.7.2"
+        "typescript": "^5.7.3"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -80,7 +80,7 @@
         "./package.json": "./package.json"
     },
     "dependencies": {
-        "@ungap/structured-clone": "^1.2.0",
+        "@ungap/structured-clone": "^1.3.0",
         "@ungap/with-resolvers": "^0.1.0",
         "@webreflection/fetch": "^0.1.5",
         "@webreflection/idb-map": "^0.3.2",
@@ -94,6 +94,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-x6D1Uf/1O2v8l01PSk88G9LjWLDW27N4VcvB2aZggE8="
+        "blob": "sha256-8fBowJU8jE2+YLSqyH9lzS/hMnUhYEQc2wG9arYjz7I="
     }
 }
