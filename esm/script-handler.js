@@ -1,6 +1,9 @@
 import fetch from '@webreflection/fetch';
 import { $ } from 'basic-devtools';
 
+import IDBMap from '@webreflection/idb-map';
+import IDBMapSync from '@webreflection/idb-map/sync';
+
 import { workers, workersHandler } from './workers.js';
 import $xworker from './worker/class.js';
 import workerURL from './worker/url.js';
@@ -57,6 +60,8 @@ const execute = async (currentScript, source, XWorker, isAsync) => {
     try {
         registerJSModules(type, module, interpreter, JSModules);
         module.registerJSModule(interpreter, 'polyscript', {
+            IDBMap,
+            IDBMapSync,
             XWorker,
             currentScript,
             js_modules: JSModules,

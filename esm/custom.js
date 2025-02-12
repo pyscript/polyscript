@@ -1,6 +1,9 @@
 import '@ungap/with-resolvers';
 import { $$ } from 'basic-devtools';
 
+import IDBMap from '@webreflection/idb-map';
+import IDBMapSync from '@webreflection/idb-map/sync';
+
 import { JSModules, isSync, assign, create, createOverload, createResolved, dedent, defineProperty, nodeInfo, registerJSModules } from './utils.js';
 import { getDetails } from './script-handler.js';
 import { registry as defaultRegistry, prefixes, configs } from './interpreters.js';
@@ -129,6 +132,8 @@ export const handleCustomType = async (node) => {
 
             registerJSModules(runtime, module, interpreter, JSModules);
             module.registerJSModule(interpreter, 'polyscript', {
+                IDBMap,
+                IDBMapSync,
                 XWorker,
                 config: resolved.config,
                 currentScript: type.startsWith('_') ? null : node,

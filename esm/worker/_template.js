@@ -4,6 +4,9 @@
 //    Please check via `npm run size` that worker code is not much
 //    bigger than it used to be before any changes is applied to this file.
 
+import IDBMap from '@webreflection/idb-map';
+import IDBMapSync from '@webreflection/idb-map/sync';
+
 import * as JSON from '@ungap/structured-clone/json';
 import coincident from 'coincident/window/worker';
 
@@ -135,6 +138,8 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
 
             registerJSModules(type, details, interpreter, JSModules);
             details.registerJSModule(interpreter, 'polyscript', {
+                IDBMap,
+                IDBMapSync,
                 xworker,
                 currentScript,
                 config: resolved.config,
