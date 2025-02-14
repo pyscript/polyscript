@@ -7,6 +7,8 @@ import { absoluteURL } from '../utils.js';
 import mip from '../python/mip.js';
 import { zip } from '../3rd-party.js';
 
+import { initializeNativeFS } from './_nativefs.js';
+
 const type = 'micropython';
 
 // REQUIRES INTEGRATION TEST
@@ -46,6 +48,8 @@ export default {
             progress('Loaded packages');
         }
         progress('Loaded MicroPython');
+        if (!interpreter.mountNativeFS)
+            interpreter.mountNativeFS = initializeNativeFS(interpreter._module);
         return interpreter;
     },
     registerJSModule,

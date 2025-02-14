@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+  </head>
+  <body>
+    <script type="module">
+        import { define } from '../../dist/index.js';
+        define('mpy', {
+            interpreter: 'micropython',
+            hooks: {
+                main: {
+                    onReady(wrap, element) {
+                        const { interpreter: micropython } = wrap;
+                        mount.onclick = async () => {
+                            const options = { mode: "readwrite" };
+                            const dirHandle = await showDirectoryPicker(options);
+                            const permissionStatus = await dirHandle.requestPermission(options);
+                            if (permissionStatus !== "granted") {
+                                throw new Error("readwrite access to directory not granted");
+                            }
+
+                            const nativefs = await micropython.mountNativeFS("/mount_dir", dirHandle);
+                            micropython.runPython(`
+                                import os
+                                print(os.listdir('/mount_dir'))
+                            `);
+                        };
+                    }
+                }
+            }
+        });
+    </script>
+    <script type="mpy"></script>
+    <button id="mount">mount fs</button>
+  </body>
+</html>

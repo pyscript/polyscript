@@ -32,7 +32,7 @@ const dirname = (path) => {
     return tree.join('/');
 };
 
-const mkdirTree = (FS, path) => {
+export const mkdirTree = (FS, path) => {
     const current = [];
     for (const branch of path.split('/')) {
         if (branch === '.' || branch === '..') continue;
