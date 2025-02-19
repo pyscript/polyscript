@@ -1,5 +1,14 @@
 import { mkdirTree } from './_utils.js';
 
+async function syncfs(FS, direction) {
+    return new Promise((resolve, reject) => {
+        FS.syncfs(direction, err => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+}
+
 // (C) Pyodide  https://github.com/pyodide/pyodide - Mozilla Public License Version 2.0
 // JS port of https://github.com/pyodide/pyodide/blob/34fcd02172895d75db369994011409324f9e3cce/src/js/nativefs.ts
 export function initializeNativeFS(module) {
@@ -265,13 +274,13 @@ export function initializeNativeFS(module) {
             { fileSystemHandle },
             path,
         );
-      
+
         // sync native ==> browser
-        await new Promise($ => FS.syncfs(true, $));
-      
+        await syncfs(FS, true);
+
         return {
             // sync browser ==> native
-            syncfs: () => new Promise($ => FS.syncfs(false, $)),
+            syncfs: async () => await syncfs(FS, false),
         };
     };
 }
