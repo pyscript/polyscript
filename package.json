@@ -53,9 +53,9 @@
         "@zip.js/zip.js": "^2.7.57",
         "c8": "^10.1.3",
         "chokidar": "^4.0.3",
-        "eslint": "^9.19.0",
-        "linkedom": "^0.18.7",
-        "rollup": "^4.34.4",
+        "eslint": "^9.21.0",
+        "linkedom": "^0.18.9",
+        "rollup": "^4.34.8",
         "static-handler": "^0.5.3",
         "typescript": "^5.7.3"
     },
@@ -94,6 +94,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-62NQHNKhtPYl3hwHE08fYFF4F1HihbBJD0y8Xw25frA="
+        "blob": "sha256-fH3KC/dEPpvYJaLteD5BhwHUo3eOXk+xcMrnO0EdlL0="
     }
 }
