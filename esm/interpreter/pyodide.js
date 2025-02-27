@@ -90,6 +90,7 @@ export default {
             applyOverride();
         progress('Loading Pyodide');
         let { packages, index_urls } = config;
+        if (packages) packages = packages.map(fixedRelative, baseURL);
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
         // each pyodide version shares its own cache
@@ -101,7 +102,7 @@ export default {
         if (!save) storage.clear();
         // otherwise check if cache is known
         else if (packages) {
-            packages = packages.map(fixedRelative, baseURL).sort();
+            packages = packages.sort();
             // packages are uniquely stored as JSON key
             const key = stringify(packages);
             if (storage.has(key)) {
