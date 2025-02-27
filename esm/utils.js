@@ -20,6 +20,11 @@ const { all, resolve } = new Proxy(Promise, {
 const absoluteURL = (path, base = location.href) =>
     new URL(path, base.replace(/^blob:/, '')).href;
 
+function fixedRelative(path) {
+    'use strict';
+    return path.startsWith('.') ? absoluteURL(path, this) : path;
+}
+
 /* c8 ignore start */
 let id = 0;
 const nodeInfo = (node, type) => ({
@@ -144,5 +149,6 @@ export {
     all,
     resolve,
     absoluteURL,
+    fixedRelative,
     nodeInfo,
 };

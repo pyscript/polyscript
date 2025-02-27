@@ -3,7 +3,7 @@ import fetch from '@webreflection/fetch';
 import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio, buffered } from './_io.js';
-import { absoluteURL } from '../utils.js';
+import { absoluteURL, fixedRelative } from '../utils.js';
 import mip from '../python/mip.js';
 import { zip } from '../3rd-party.js';
 
@@ -44,7 +44,7 @@ export default {
         this.writeFile(interpreter, './mip.py', mip);
         if (config.packages) {
             progress('Loading packages');
-            await py_imports(config.packages);
+            await py_imports(config.packages.map(fixedRelative, baseURL));
             progress('Loaded packages');
         }
         progress('Loaded MicroPython');

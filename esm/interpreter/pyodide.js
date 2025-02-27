@@ -3,7 +3,7 @@ import { create } from 'gc-hook';
 import { RUNNING_IN_WORKER, createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
-import { IDBMapSync, isArray } from '../utils.js';
+import { IDBMapSync, isArray, fixedRelative } from '../utils.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -101,7 +101,7 @@ export default {
         if (!save) storage.clear();
         // otherwise check if cache is known
         else if (packages) {
-            packages = packages.slice(0).sort();
+            packages = packages.map(fixedRelative, baseURL).sort();
             // packages are uniquely stored as JSON key
             const key = stringify(packages);
             if (storage.has(key)) {
