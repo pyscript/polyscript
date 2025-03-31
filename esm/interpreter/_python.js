@@ -1,4 +1,6 @@
-import * as JSON from '@ungap/structured-clone/json';
+import * as FLATTED from '@webreflection/coincident/flatted';
+const JSON = { parse: FLATTED.decode, stringify: FLATTED.encode };
+
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
 import { IDBMapSync, dedent } from '../utils.js';
 import { io } from './_io.js';
