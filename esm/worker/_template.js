@@ -7,8 +7,8 @@
 import IDBMap from '@webreflection/idb-map';
 import IDBMapSync from '@webreflection/idb-map/sync';
 
-import * as JSON from '@ungap/structured-clone/json';
-import coincident from 'coincident/window/worker';
+import { decoder } from '@webreflection/coincident/flatted/decoder';
+import coincident from '@webreflection/coincident/window/worker';
 
 import { assign, create, createFunction, createOverload, createResolved, dispatch, registerJSModules } from '../utils.js';
 import createJSModules from './js_modules.js';
@@ -33,21 +33,23 @@ const add = (type, fn) => {
     );
 };
 
-const { parse, stringify } = JSON;
-
-const { proxy: sync, sync: syncMainAndWorker, polyfill, window, isWindowProxy } = await coincident({
-    parse,
-    stringify,
+const {
+    proxy: sync,
+    native,
+    window,
+    isWindowProxy
+} = await coincident({
+    decoder,
     transform: value => transform ? transform(value) : value
 });
 
 const xworker = {
     // propagate the fact SharedArrayBuffer is polyfilled
-    polyfill,
+    polyfill: !native,
     // allows synchronous utilities between this worker and the main thread
     sync,
     // allow access to the main thread world whenever it's possible
-    window: syncMainAndWorker ? window : null,
+    window: native ? window : null,
     // allow introspection for foreign (main thread) refrences
     isWindowProxy,
     // standard worker related events / features
@@ -126,7 +128,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             // there's no way to query the DOM, use foreign CustomEvent and so on
             // in case there's no SharedArrayBuffer around.
             let CustomEvent, document, notify, currentScript = null, target = '';
-            if (syncMainAndWorker) {
+            if (native) {
                 ({ CustomEvent, document } = window);
                 currentScript = id && document.getElementById(id) || null;
                 notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
@@ -216,7 +218,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
     add('error');
     add('message');
     add('messageerror');
-    if (syncMainAndWorker) {
+    if (native) {
         addEventListener('py:progress', ({ type, detail }) => {
             window.dispatchEvent(new window.CustomEvent(type, { detail }));
         });

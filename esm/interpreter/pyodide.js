@@ -82,7 +82,7 @@ const indexURLs = new WeakMap();
 
 export default {
     type,
-    module: (version = '0.27.4') =>
+    module: (version = '0.27.5') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url, baseURL) {
         // apply override ASAP then load foreign code
