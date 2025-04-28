@@ -7,8 +7,8 @@
 import IDBMap from '@webreflection/idb-map';
 import IDBMapSync from '@webreflection/idb-map/sync';
 
-import { decoder } from '@webreflection/coincident/flatted/decoder';
-import coincident from '@webreflection/coincident/window/worker';
+import { decoder } from 'coincident/flatted/decoder';
+import coincident from 'coincident/window/worker';
 
 import { assign, create, createFunction, createOverload, createResolved, dispatch, registerJSModules } from '../utils.js';
 import createJSModules from './js_modules.js';
@@ -40,6 +40,7 @@ const {
     isWindowProxy
 } = await coincident({
     decoder,
+    transfer: false,
     transform: value => transform ? transform(value) : value
 });
 

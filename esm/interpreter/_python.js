@@ -1,4 +1,4 @@
-import * as FLATTED from '@webreflection/coincident/flatted';
+import * as FLATTED from 'coincident/flatted';
 const JSON = { parse: FLATTED.decode, stringify: FLATTED.encode };
 
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
