@@ -6,13 +6,14 @@
         <title>python</title>
         <link rel="stylesheet" href="style.css" />
         <script defer src="./counter.js"></script>
+        <script type="module" src="../dist/service-worker.js"></script>
         <script type="module" src="../dist/index.js"></script>
     </head>
     <body>
-        <script type="pyodide">
-            import sys
-            import js
-            js.document.currentScript.target.textContent = sys.version
+        <script type="pyodide" service-worker="./sw.js" worker>
+            from polyscript import xworker
+            window = xworker.window
+            window.document.body.textContent = 'OK'
         </script>
     </body>
 </html>

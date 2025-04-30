@@ -52,7 +52,7 @@ for (const file of readdirSync(DIST_DIR)) {
                     `const re = ${/import\((['"])([^)]+?\.js)\1\)/}g;`,
                     `const place = ${(_,q,f) => `import(${q}${new URL(f,url).href}${q})`};`,
                     ...coincident,
-                    `export default (...args) => new Worker(URL.createObjectURL(new Blob([${js}.replace(re,place)],{type:'application/javascript'})), ...args)`,
+                    `export default (...args) => new Worker(URL.createObjectURL(new Blob(['/*@*/'+${js}.replace(re,place)],{type:'application/javascript'})), ...args)`,
                     '/* c8 ignore stop */',
                     ''
                 ].join("\n")
