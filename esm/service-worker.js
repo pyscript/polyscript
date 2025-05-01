@@ -2,18 +2,16 @@ import sabayon from 'https://cdn.jsdelivr.net/npm/sabayon/dist/polyfill.js';
 
 // ignore browsers that already support SharedArrayBuffer
 if (!globalThis.crossOriginIsolated) {
-  const { isArray } = Array;
-
   // early patch Blob to inject sabayon polyfill for service-worker
   globalThis.Blob = class extends Blob {
-    constructor(blobParts, ...rest) {
-      if (isArray(blobParts) && typeof blobParts.at(0) === 'string') {
+    constructor(blobParts, options) {
+      if (options.type === 'text/javascript' && typeof blobParts.at(0) === 'string') {
         blobParts[0] = blobParts[0].replace(
           /^\/\*@\*\//,
           'import "https://cdn.jsdelivr.net/npm/sabayon/dist/polyfill.js";'
         );
       }
-      super(blobParts, ...rest);
+      super(blobParts, options);
     }
   };
 

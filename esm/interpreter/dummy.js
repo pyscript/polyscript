@@ -19,7 +19,7 @@ const run = (interpreter, code) => {
 
 export default {
     type,
-    module: () => 'data:application/javascript,',
+    module: () => 'data:text/javascript,',
     engine: module => stdio().get(module),
     registerJSModule(_, name, value) {
         registry.set(name, value);
