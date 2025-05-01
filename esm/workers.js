@@ -1,9 +1,11 @@
+import withResolvers from '@webreflection/utils/with-resolvers';
+
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 export const workers = new Proxy(new Map, {
   get(map, name) {
     if (!map.has(name))
-      map.set(name, Promise.withResolvers());
+      map.set(name, withResolvers());
     return map.get(name);
   },
 });

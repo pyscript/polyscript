@@ -1,3 +1,4 @@
+import withResolvers from '@webreflection/utils/with-resolvers';
 import fetch from '@webreflection/fetch';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
@@ -45,7 +46,7 @@ export default (...args) =>
             { importJS, importCSS },
         );
 
-        const resolver = Promise.withResolvers();
+        const resolver = withResolvers();
 
         let bootstrap = fetch(url)
             .text()

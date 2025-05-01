@@ -1,4 +1,4 @@
-import '@ungap/with-resolvers';
+import withResolvers from '@webreflection/utils/with-resolvers';
 import { $$ } from 'basic-devtools';
 
 import IDBMap from '@webreflection/idb-map';
@@ -279,7 +279,7 @@ export const define = (type, options) => {
  * @returns {Promise<object>}
  */
 export const whenDefined = (type) => {
-    if (!waitList.has(type)) waitList.set(type, Promise.withResolvers());
+    if (!waitList.has(type)) waitList.set(type, withResolvers());
     return waitList.get(type).promise;
 };
 /* c8 ignore stop */

@@ -381,7 +381,7 @@ The module is registered within the interpreter as *JS* module and it offers var
 | js_modules      | `from polyscript import js_modules`      | described in the [Extra config Features](#extra-config-features) part. |
 | lazy_py_modules | `from polyscript import lazy_py_modules` | allows, only in *Python* related interpreters, and without needing static config entries, to import lazily any available module.
 | storage         | `from polyscript import storage`         | a utility to instantiate a named [idb-map](https://github.com/WebReflection/idb-map/#readme) that can be consumed synchronously.
-| JSON            | `from polyscript import JSON`            | a utility to stringify/parse more complex or recursive data via [@ungap/structured-clone/json](https://github.com/ungap/structured-clone/#readme).
+| JSON            | `from polyscript import JSON`            | a utility to stringify/parse more complex or recursive data.
 
 
 #### lazy_py_modules

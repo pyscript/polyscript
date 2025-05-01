@@ -1,4 +1,3 @@
-import '@ungap/with-resolvers';
 import fetch from '@webreflection/fetch';
 
 import { absoluteURL, all, entries, importCSS, importJS, isArray, isCSS } from '../utils.js';
