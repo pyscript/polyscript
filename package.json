@@ -88,7 +88,7 @@
         "@webreflection/utils": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^3.0.4",
+        "coincident": "^3.0.5",
         "gc-hook": "^0.4.1",
         "html-escaper": "^3.0.3",
         "proxy-target": "^3.0.2",
@@ -96,6 +96,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-xlgyKcR1rQj2E2TB4Pp07IZjwgkIyN9uf8HfcuUXwro="
+        "blob": "sha256-TEG6VWo/1VOANazuGFtvkjaU4X0ewGwPzvEbTX/6xA0="
     }
 }
