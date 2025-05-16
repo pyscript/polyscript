@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.17.16",
+    "version": "0.17.17",
     "description": "PyScript single core to rule them all",
     "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
