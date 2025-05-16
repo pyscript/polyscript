@@ -8,9 +8,8 @@ const toJsOptions = { dict_converter: Object.fromEntries };
 
 const { stringify } = JSON;
 
+const { apply } = Reflect;
 const FunctionPrototype = Function.prototype;
-const { call } = FunctionPrototype;
-const apply = call.bind(call, call.apply);
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
