@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module">
+      import { serialize } from 'https://esm.run/@ungap/serialization-registry';
+      import '../converter.js';
+
+      globalThis.test = arg => {
+        console.log(...serialize(arg));
+      };
+
       const base = 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@latest';
       const { loadMicroPython } = await import(`${base}/micropython.mjs`);
       const interpreter = await loadMicroPython({ url: `${base}/micropython.wasm` });
@@ -12,7 +19,7 @@
     </script>
     <script type="micropython" async>
       import js
-      js.document.body.textContent = "MicroPython"
+      js.test([{'a': 123}, {'a': 456}])
     </script>
   </head>
 </html>
