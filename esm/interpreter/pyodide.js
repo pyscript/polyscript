@@ -109,6 +109,7 @@ export default {
         const interpreter = await get(
             loadPyodide({ stderr, stdout, ...options }),
         );
+        if (config.debug) interpreter.setDebug(true);
         const py_imports = importPackages.bind(interpreter);
         if (index_urls) indexURLs.set(interpreter, index_urls);
         loader.set(interpreter, py_imports);
