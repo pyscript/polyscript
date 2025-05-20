@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      mpy-script { display: none; }
+      script-mpy { display: block; }
+    </style>
+    <script type="module">
+        import { define } from '/dist/index.js';
+        define('py', {
+          interpreter: 'pyodide',
+          config: {
+            debug: true
+          }
+        });
+    </script>
+</head>
+<body>
+  <script type="py" worker>
+    from polyscript import xworker, target
+    await xworker.window
+  </script>
+</body>
+</html>
