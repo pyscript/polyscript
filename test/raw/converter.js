@@ -1,4 +1,5 @@
-import { symbol } from 'https://esm.run/@ungap/serialization-registry';
+import { symbol } from 'https://esm.run/@ungap/serialization-registry@0.2.1';
+
 
 const { construct } = Reflect;
 const { defineProperty, fromEntries } = Object;

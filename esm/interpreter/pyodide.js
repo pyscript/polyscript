@@ -7,61 +7,12 @@ const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
 
 const { stringify } = JSON;
-
 const { apply } = Reflect;
-const FunctionPrototype = Function.prototype;
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
 const overrideMethod = method => function (...args) {
     return apply(method, this, args);
-};
-
-let pyproxy, to_js;
-const override = intercept => {
-
-    const proxies = new WeakMap;
-
-    const patch = args => {
-        for (let arg, i = 0; i < args.length; i++) {
-            switch (typeof(arg = args[i])) {
-                case 'object':
-                    if (arg === null) break;
-                    // falls through
-                case 'function': {
-                    if (pyproxy in arg && !arg[pyproxy].shared?.gcRegistered) {
-                        intercept = false;
-                        let proxy = proxies.get(arg)?.deref();
-                        if (!proxy) {
-                            proxy = to_js(arg);
-                            const wr = new WeakRef(proxy);
-                            proxies.set(arg, wr);
-                            proxies.set(proxy, wr);
-                        }
-                        args[i] = proxy;
-                        intercept = true;
-                    }
-                    break;
-                }
-            }
-        }
-    };
-
-    // the patch
-    Object.defineProperties(FunctionPrototype, {
-        apply: {
-            value(context, args) {
-                if (intercept) patch(args);
-                return apply(this, context, args);
-            }
-        },
-        call: {
-            value(context, ...args) {
-                if (intercept) patch(args);
-                return apply(this, context, args);
-            }
-        }
-    });
 };
 
 const progress = createProgress('py');
@@ -72,6 +23,9 @@ export default {
     module: (version = '0.27.6') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide }, config, url, baseURL) {
+        if (config.experimental_create_proxy === 'auto') {
+            this.transform = (_, value) => value;
+        }
         progress('Loading Pyodide');
         let { packages, index_urls } = config;
         if (packages) packages = packages.map(fixedRelative, baseURL);
@@ -119,23 +73,6 @@ export default {
         await storage.close();
         if (options.lockFileURL) URL.revokeObjectURL(options.lockFileURL);
         progress('Loaded Pyodide');
-        if (config.experimental_create_proxy === 'auto') {
-            interpreter.runPython([
-                'import js',
-                'from pyodide.ffi import to_js',
-                'o=js.Object.fromEntries',
-                'js.experimental_create_proxy=lambda r:to_js(r,dict_converter=o)'
-            ].join(';'), { globals: interpreter.toPy({}) });
-            to_js = globalThis.experimental_create_proxy;
-            delete globalThis.experimental_create_proxy;
-            [pyproxy] = Reflect.ownKeys(to_js).filter(
-                k => (
-                    typeof k === 'symbol' &&
-                    String(k) === 'Symbol(pyproxy.attrs)'
-                )
-            );
-            override(true);
-        }
         return interpreter;
     },
     registerJSModule,

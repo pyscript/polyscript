@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module">
-      import { serialize } from 'https://esm.run/@ungap/serialization-registry';
+      import { serialize } from 'https://esm.run/@ungap/serialization-registry@0.2.1';
       import '../converter.js';
 
       globalThis.test = arg => {
-        console.log(...serialize(arg));
+        document.body.textContent = 'test';
+        document.body.addEventListener('click', serialize(arg));
+        console.log(serialize(arg) === arg);
       };
 
       const base = 'https://cdn.jsdelivr.net/npm/pyodide@latest';
       const { loadPyodide } = await import(`${base}/pyodide.mjs`);
       const interpreter = await loadPyodide();
-      const { textContent } = document.querySelector('script[type=pyodide]');
-      interpreter.runPythonAsync(textContent);
+      const { src } = document.querySelector('script[type=pyodide]');
+      interpreter.runPythonAsync(await fetch(src).then(r => r.text()));
     </script>
-    <script type="pyodide" async>
-      import js
-      js.test([{'a': 123}, {'a': 456}])
-    </script>
+    <script type="pyodide" src="../test.py"></script>
   </head>
 </html>

@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module">
-      import { serialize } from 'https://esm.run/@ungap/serialization-registry';
+      import { serialize } from 'https://esm.run/@ungap/serialization-registry@0.2.1';
       import '../converter.js';
 
       globalThis.test = arg => {
-        console.log(...serialize(arg));
+        document.body.textContent = 'test';
+        document.body.addEventListener('click', serialize(arg));
+        console.log(serialize(arg) === arg);
       };
 
       const base = 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@latest';
       const { loadMicroPython } = await import(`${base}/micropython.mjs`);
       const interpreter = await loadMicroPython({ url: `${base}/micropython.wasm` });
-      const { textContent } = document.querySelector('script[type=micropython]');
-      interpreter.runPythonAsync(textContent);
+      const { src } = document.querySelector('script[type=micropython]');
+      interpreter.runPythonAsync(await fetch(src).then(r => r.text()));
     </script>
-    <script type="micropython" async>
-      import js
-      js.test([{'a': 123}, {'a': 456}])
-    </script>
+    <script type="micropython" src="../test.py"></script>
   </head>
 </html>

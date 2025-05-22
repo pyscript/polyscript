@@ -2,6 +2,8 @@
 //    The :RUNTIMES comment is a delimiter and no code should be written/changed after
 //    See rollup/build_interpreters.cjs to know more
 
+import patch from './interpreter/pyodide-patch.js';
+
 /** @type {Map<string, object>} */
 export const registry = new Map();
 
@@ -25,16 +27,20 @@ export const interpreter = new Proxy(new Map(), {
                 : interpreter.module(...rest);
             map.set(id, {
                 url,
-                module: import(/* webpackIgnore: true */url),
+                module: () => import(/* webpackIgnore: true */url),
                 engine: interpreter.engine.bind(interpreter),
             });
         }
         const { url, module, engine } = map.get(id);
-        return (config, baseURL) =>
-            module.then((module) => {
+        return async (config, baseURL) => {
+            if (config.experimental_create_proxy === 'auto') {
+                patch();
+            }
+            return module().then((module) => {
                 configs.set(id, config);
                 return engine(module, config, url, baseURL);
             });
+        };
     },
 });
 /* c8 ignore stop */
@@ -50,9 +56,10 @@ const register = (interpreter) => {
 //:RUNTIMES
 import dummy from './interpreter/dummy.js';
 import micropython from './interpreter/micropython.js';
+import pyodide_patch from './interpreter/pyodide-patch.js';
 import pyodide from './interpreter/pyodide.js';
 import ruby_wasm_wasi from './interpreter/ruby-wasm-wasi.js';
 import wasmoon from './interpreter/wasmoon.js';
 import webr from './interpreter/webr.js';
-for (const interpreter of [dummy, micropython, pyodide, ruby_wasm_wasi, wasmoon, webr])
+for (const interpreter of [dummy, micropython, pyodide_patch, pyodide, ruby_wasm_wasi, wasmoon, webr])
     register(interpreter);
