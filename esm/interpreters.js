@@ -2,8 +2,6 @@
 //    The :RUNTIMES comment is a delimiter and no code should be written/changed after
 //    See rollup/build_interpreters.cjs to know more
 
-import patch from './interpreter/pyodide-patch.js';
-
 /** @type {Map<string, object>} */
 export const registry = new Map();
 
@@ -27,20 +25,16 @@ export const interpreter = new Proxy(new Map(), {
                 : interpreter.module(...rest);
             map.set(id, {
                 url,
-                module: () => import(/* webpackIgnore: true */url),
+                module: import(/* webpackIgnore: true */url),
                 engine: interpreter.engine.bind(interpreter),
             });
         }
         const { url, module, engine } = map.get(id);
-        return async (config, baseURL) => {
-            if (config.experimental_create_proxy === 'auto') {
-                patch();
-            }
-            return module().then((module) => {
+        return (config, baseURL) =>
+            module.then((module) => {
                 configs.set(id, config);
                 return engine(module, config, url, baseURL);
             });
-        };
     },
 });
 /* c8 ignore stop */

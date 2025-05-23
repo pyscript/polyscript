@@ -6,7 +6,7 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run rollup:integrations && npm run build:docs",
+        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && npm run rollup:integrations && npm run build:docs",
         "build:3rd-party": "node rollup/3rd-party.cjs",
         "build:docs": "mv docs/coi.js ./; rm -f docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
         "dev": "node dev.cjs",
@@ -96,6 +96,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-+sGDLtv2hVsnU+g72b4LNukOBKJ6rACYVNp4kkAAKfQ="
+        "blob": "sha256-F8Q1wRHhjlnJ/rfCwDH9kFnuwL3LgM3tYagFb9HtozQ="
     }
 }

@@ -2,6 +2,7 @@ import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 import { IDBMapSync, isArray, fixedRelative } from '../utils.js';
+import patch from './pyodide-patch.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -25,6 +26,7 @@ export default {
     async engine({ loadPyodide }, config, url, baseURL) {
         if (config.experimental_create_proxy === 'auto') {
             this.transform = (_, value) => value;
+            patch();
         }
         progress('Loading Pyodide');
         let { packages, index_urls } = config;

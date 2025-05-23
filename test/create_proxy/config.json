@@ -1,0 +1,10 @@
+{
+  "experimental_create_proxy": "auto",
+  "js_modules": {
+      "main": {
+          "https://unpkg.com/d3?module" : "d3",
+          "https://unpkg.com/dc?module" : "dc",
+          "https://unpkg.com/crossfilter2?module" : "crossfilter"
+      }
+  }
+}

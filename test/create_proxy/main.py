@@ -1,4 +1,9 @@
-import js as window
+try:
+    from polyscript import xworker
+    window = xworker.window
+except:
+    import js as window
+
 from polyscript.js_modules import d3, dc
 from polyscript.js_modules.crossfilter import default as crossfilter
 

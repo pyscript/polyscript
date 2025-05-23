@@ -1,62 +1,52 @@
 export default () => {
-  const { prototype } = Function;
   const { apply, construct, defineProperty } = Reflect;
 
   const notRegistered = value => value?.shared?.gcRegistered === false;
 
-  const patch = args => {
-    if (known) {
-      for (let i = 0; i < args.length; i++)
-        args[i] = toJS(args[i]);
-    }
-  };
-
-  const toJS = current => {
-    if (known) {
-      switch (typeof current) {
-        case 'object':
-          if (current === null) break;
-          // falls through
-        case 'function':
-          if (notRegistered(current[pyproxy])) {
-            return current.toJs(options);
-          }
-      }
-    }
-    return current;
-  };
-
-  const options = { dict_converter: Object.fromEntries };
-
   const descriptor = {
     configurable: true,
     set(value) {
-      delete this[pyproxy];
-      this[pyproxy] = value;
+      defineProperty(this, pyproxy, { value });
       if (notRegistered(value)) {
         const copy = this.copy();
         queueMicrotask(() => {
-          this[pyproxy] = copy[pyproxy];
+          defineProperty(this, pyproxy, { value: copy[pyproxy] });
         });
       }
     },
   };
 
+  const intercept = (handler, name) => {
+    const method = handler[name];
+    defineProperty(handler, name, {
+      value(target, key) {
+        if (known) {
+          if (key === pyproxy) {
+            if (
+              typeof target === 'function' &&
+              notRegistered(target[pyproxy])
+            ) return target.toJs()[key];
+          }
+          else if (
+            pyproxy in target &&
+            name in target &&
+            !(key in target) &&
+            notRegistered(target[pyproxy]) &&
+            typeof target === 'object'
+          ) return target[name](key);
+        }
+        return apply(method, this, arguments);
+      }
+    });
+  };
+
+  const pyodidePatch = Symbol.for('pyodide-patch');
+  const patched = new WeakSet;
+
   let pyproxy, known = false;
-
-  defineProperty(prototype, 'apply', {
-    value(context, args) {
-      patch(args);
-      return apply(this, toJS(context), args);
-    }
-  });
-
-  defineProperty(prototype, 'call', {
-    value(context, ...args) {
-      patch(args);
-      return apply(this, toJS(context), args);
-    }
-  });
+  
+  if (pyodidePatch in globalThis) return;
+  globalThis[pyodidePatch] = true;
 
   // minimalistic Symbol override that
   // won't affect performance or break expectations
@@ -78,11 +68,18 @@ export default () => {
   defineProperty(globalThis, 'Proxy', {
     value: new Proxy(Proxy, {
       construct(target, args, New) {
-        const proxy = construct(target, args, New);
-        if (known && typeof args[0] === 'function') {
-          defineProperty(args[0], pyproxy, descriptor);
+        if (known) {
+          if (typeof args[0] === 'function')
+            defineProperty(args[0], pyproxy, descriptor);
+          const handler = args[1];
+          if (handler?.get && !patched.has(handler)) {
+            patched.add(handler);
+            intercept(handler, 'get');
+            // this is actually not used out there
+            // override(handler, 'has');
+          }
         }
-        return proxy;
+        return construct(target, args, New);
       },
     })
   });
