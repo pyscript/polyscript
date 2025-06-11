@@ -16,7 +16,7 @@ if (!globalThis.crossOriginIsolated) {
       ) {
         blobParts[0] = blobParts[0].replace(
           /^\/\*@\*\//,
-          'import "https://cdn.jsdelivr.net/npm/sabayon/dist/polyfill.js";'
+          'await(await import("https://cdn.jsdelivr.net/npm/sabayon/dist/polyfill.js")).default();'
         );
       }
       super(blobParts, ...args);
