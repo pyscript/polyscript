@@ -1,10 +1,10 @@
-import { create } from 'gc-hook';
 import { dedent } from '../utils.js';
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
 import { io, stdio } from './_io.js';
 
 const type = 'webr';
 const r = new WeakMap();
+const fr = new FinalizationRegistry(fn => fn());
 
 // REQUIRES INTEGRATION TEST
 /* c8 ignore start */
@@ -12,10 +12,8 @@ const run = async (interpreter, code) => {
   const { shelter, destroy, io } = r.get(interpreter);
   const { output, result } = await shelter.captureR(dedent(code));
   for (const { type, data } of output) io[type](data);
-  // this is a double proxy but it's OK as the consumer
-  // of the result here needs to invoke explicitly a conversion
-  // or trust the `(await p.toJs()).values` returns what's expected.
-  return create(result, destroy, { token: false });
+  fr.register(result, destroy);
+  return result;
 };
 
 export default {

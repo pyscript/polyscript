@@ -53,7 +53,7 @@
         "@zip.js/zip.js": "^2.7.62",
         "c8": "^10.1.3",
         "chokidar": "^4.0.3",
-        "eslint": "^9.28.0",
+        "eslint": "^9.29.0",
         "linkedom": "^0.18.11",
         "rollup": "^4.43.0",
         "static-handler": "^0.5.3",
@@ -88,14 +88,13 @@
         "@webreflection/utils": "^0.1.0",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^3.0.5",
-        "gc-hook": "^0.4.1",
+        "coincident": "^4.0.2",
         "html-escaper": "^3.0.3",
-        "proxy-target": "^3.0.2",
+        "reflected-ffi": "^0.4.4",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-r0U/VtJygY6fg+fxA5EmlTuuuexl0VKM0jF7BPE7XXg="
+        "blob": "sha256-ECxGYRAlWEn3lACwZTBKGjOO8NIyJ+XojyTUmr0bubg="
     }
 }
