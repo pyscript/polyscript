@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.17.23",
+    "version": "0.17.24",
     "description": "PyScript single core to rule them all",
     "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
@@ -47,7 +47,7 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.53.0",
+        "@playwright/test": "^1.53.1",
         "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.62",
@@ -55,7 +55,7 @@
         "chokidar": "^4.0.3",
         "eslint": "^9.29.0",
         "linkedom": "^0.18.11",
-        "rollup": "^4.43.0",
+        "rollup": "^4.44.0",
         "static-handler": "^0.5.3",
         "typescript": "^5.8.3"
     },
@@ -85,16 +85,16 @@
     "dependencies": {
         "@webreflection/fetch": "^0.1.5",
         "@webreflection/idb-map": "^0.3.2",
-        "@webreflection/utils": "^0.1.0",
+        "@webreflection/utils": "^0.1.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^4.0.2",
+        "coincident": "^4.0.7",
         "html-escaper": "^3.0.3",
-        "reflected-ffi": "^0.4.4",
+        "reflected-ffi": "^0.4.11",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-ECxGYRAlWEn3lACwZTBKGjOO8NIyJ+XojyTUmr0bubg="
+        "blob": "sha256-X18b6LNOxZ+Xml6rhyQ28SV2dFWlYiZbCUvwAbrRjP0="
     }
 }
