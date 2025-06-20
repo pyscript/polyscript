@@ -88,13 +88,13 @@
         "@webreflection/utils": "^0.1.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^4.0.10",
+        "coincident": "^4.0.12",
         "html-escaper": "^3.0.3",
-        "reflected-ffi": "^0.4.11",
+        "reflected-ffi": "^0.5.0",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-ljD5WPIGYrYWSQE5qq6GeHT8HgFbV59oSCQXrz1VsvU="
+        "blob": "sha256-/cJsaebssHs2Bq9OfivO9Fa6Zno8CqJEmkDJBU+Fu1E="
     }
 }

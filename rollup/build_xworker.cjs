@@ -14,7 +14,7 @@ const PACKAGE_JSON = resolve(join(__dirname, "..", "package.json"));
 
 const coincident = [
     "import coincident from 'coincident/window/main';",
-    'const { Worker } = coincident({ transfer: false });',
+    'const { Worker } = coincident({ timeout: 0, transfer: false });',
 ];
 
 for (const file of readdirSync(DIST_DIR)) {

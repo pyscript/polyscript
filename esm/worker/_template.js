@@ -40,6 +40,7 @@ const {
     isWindowProxy,
     ffi,
 } = await coincident({
+    timeout: 0,
     transfer: false,
     transform: value => transform ? transform(value) : value
 });
