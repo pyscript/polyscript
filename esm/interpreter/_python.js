@@ -1,5 +1,5 @@
-import * as FLATTED from 'coincident/flatted';
-const JSON = { parse: FLATTED.decode, stringify: FLATTED.encode };
+import * as DIRECT from 'reflected-ffi/direct';
+const JSON = { parse: DIRECT.decode, stringify: DIRECT.encode };
 
 import { fetchFiles, fetchJSModules, fetchPaths } from './_utils.js';
 import { IDBMapSync, dedent } from '../utils.js';

@@ -7,7 +7,6 @@
 import IDBMap from '@webreflection/idb-map';
 import IDBMapSync from '@webreflection/idb-map/sync';
 
-import { decoder } from 'coincident/flatted/decoder';
 import coincident from 'coincident/window/worker';
 
 import { assign, create, createFunction, createOverload, createResolved, dispatch, registerJSModules } from '../utils.js';
@@ -35,22 +34,23 @@ const add = (type, fn) => {
 
 const {
     proxy: sync,
+    sync: polyfill,
     native,
     window,
-    isWindowProxy
+    isWindowProxy,
+    ffi,
 } = await coincident({
-    decoder,
     transfer: false,
     transform: value => transform ? transform(value) : value
 });
 
 const xworker = {
     // propagate the fact SharedArrayBuffer is polyfilled
-    polyfill: !native,
+    polyfill,
     // allows synchronous utilities between this worker and the main thread
     sync,
     // allow access to the main thread world whenever it's possible
-    window: native ? window : null,
+    window: (native || polyfill) ? window : null,
     // allow introspection for foreign (main thread) refrences
     isWindowProxy,
     // standard worker related events / features
@@ -129,7 +129,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
             // there's no way to query the DOM, use foreign CustomEvent and so on
             // in case there's no SharedArrayBuffer around.
             let CustomEvent, document, notify, currentScript = null, target = '';
-            if (native) {
+            if (native || polyfill) {
                 ({ CustomEvent, document } = window);
                 currentScript = id && document.getElementById(id) || null;
                 notify = kind => dispatch(currentScript, custom || type, kind, true, CustomEvent);
@@ -147,6 +147,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                 currentScript,
                 config: resolved.config,
                 js_modules: JSModules,
+                ffi,
                 get target() {
                     if (!target && currentScript) {
                         if (tag === 'SCRIPT') {
@@ -219,7 +220,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
     add('error');
     add('message');
     add('messageerror');
-    if (native) {
+    if (native || polyfill) {
         addEventListener('py:progress', ({ type, detail }) => {
             window.dispatchEvent(new window.CustomEvent(type, { detail }));
         });
