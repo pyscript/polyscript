@@ -88,7 +88,7 @@
         "@webreflection/utils": "^0.1.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^4.0.7",
+        "coincident": "^4.0.10",
         "html-escaper": "^3.0.3",
         "reflected-ffi": "^0.4.11",
         "sticky-module": "^0.1.1",
