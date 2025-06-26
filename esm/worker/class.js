@@ -37,7 +37,7 @@ export default (...args) =>
         const [ config ] = getConfigURLAndType(options.config, options.configURL);
 
         const serviceWorker = options?.serviceWorker || options?.service_worker;
-        const worker = xworker({ serviceWorker });
+        const worker = xworker({ serviceWorker, timeout: globalThis.reflected_ffi_timeout ?? -1 });
         const { postMessage } = worker;
         const isHook = this instanceof Hook;
 
