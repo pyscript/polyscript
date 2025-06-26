@@ -55,7 +55,7 @@
         "chokidar": "^4.0.3",
         "eslint": "^9.29.0",
         "linkedom": "^0.18.11",
-        "rollup": "^4.44.0",
+        "rollup": "^4.44.1",
         "static-handler": "^0.5.3",
         "typescript": "^5.8.3"
     },
@@ -88,13 +88,13 @@
         "@webreflection/utils": "^0.1.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^4.0.12",
+        "coincident": "^4.0.15",
         "html-escaper": "^3.0.3",
-        "reflected-ffi": "^0.5.0",
+        "reflected-ffi": "^0.5.2",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-9IfjH3PnlPyjeXyLfaFQD+MOojNGbUQzePXUY0LVMRY="
+        "blob": "sha256-agI65+zD4V0gu4pwiBAt+4YSd4+QNAGwCccf0xZB7lo="
     }
 }
