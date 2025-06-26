@@ -71,14 +71,14 @@ export default {
     type,
     module: (version = '0.27.7') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
-    async engine({ loadPyodide }, config, url, baseURL) {
+    async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
         let { packages, index_urls } = config;
         if (packages) packages = packages.map(fixedRelative, baseURL);
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
         // each pyodide version shares its own cache
-        const storage = new IDBMapSync(indexURL);
+        const storage = new IDBMapSync(`${indexURL}@${version}`);
         const options = { indexURL };
         const save = config.packages_cache !== 'never';
         await storage.sync();
@@ -86,22 +86,30 @@ export default {
         if (!save) storage.clear();
         // otherwise check if cache is known
         else if (packages) {
-            packages = packages.sort();
-            // packages are uniquely stored as JSON key
-            const key = stringify(packages);
-            if (storage.has(key)) {
-                const blob = new Blob(
-                    [storage.get(key)],
-                    { type: 'application/json' },
-                );
-                // this should be used to bootstrap loadPyodide
-                options.lockFileURL = URL.createObjectURL(blob);
-                // versions are not currently understood by pyodide when
-                // a lockFileURL is used instead of micropip.install(packages)
-                // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
-                // https://github.com/pyscript/pyscript/issues/2245
-                options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
+            // packages_cache = 'passthrough' means: do not use micropip.install
+            if (config.packages_cache === 'passthrough') {
+                options.packages = packages;
                 packages = null;
+                storage.clear();
+            }
+            else {
+                packages = packages.sort();
+                // packages are uniquely stored as JSON key
+                const key = stringify(packages);
+                if (storage.has(key)) {
+                    const blob = new Blob(
+                        [storage.get(key)],
+                        { type: 'application/json' },
+                    );
+                    // this should be used to bootstrap loadPyodide
+                    options.lockFileURL = URL.createObjectURL(blob);
+                    // versions are not currently understood by pyodide when
+                    // a lockFileURL is used instead of micropip.install(packages)
+                    // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
+                    // https://github.com/pyscript/pyscript/issues/2245
+                    options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
+                    packages = null;
+                }
             }
         }
         progress('Loaded Storage');

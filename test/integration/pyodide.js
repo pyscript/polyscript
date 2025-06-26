@@ -13,6 +13,16 @@ export default (playwright, baseURL) => {
 
     test('Pyodide config as JSON', python.configAsJSON(playwright, baseURL));
 
+    test('Pyodide config with passthrough', async ({ page }) => {
+        // Test that a config passed as object works out of the box.
+        const logs = [];
+        page.on('console', msg => logs.push(msg.text()));
+        await page.goto(`${baseURL}/config-passthrough.html`);
+        await page.waitForSelector('html.cleared');
+        await page.waitForSelector('html.ready');
+        await expect(logs.at(-1)).toBe('hello from A');
+    });
+
     test('Pyodide sync (time)', async ({ page }) => {
         const logs = [];
         page.on('console', msg => logs.push({text: msg.text(), time: new Date}));

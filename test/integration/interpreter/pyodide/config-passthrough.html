@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <script type="module">
+      import '/dist/index.js';
+
+      const { clear } = Map.prototype;
+      Map.prototype.clear = function () {
+        // intercept IDBMapSync calls
+        if ('sync' in this && 'close' in this)
+          document.documentElement.classList.add('cleared');
+        return clear.call(this);
+      };
+
+      addEventListener('py:progress', ({ detail }) => {
+        const [action, what] = detail.split(/\s+/);
+        if (action === 'Loading') console.time(what);
+        else console.timeEnd(what);
+      });
+
+      const script = Object.assign(document.createElement('script'), {
+        type: 'pyodide',
+        textContent: `
+            import numpy, js
+            print('hello from A')
+            js.document.documentElement.classList.add("ready")
+        `
+      });
+
+      script.setAttribute('config', JSON.stringify({
+        packages: ['numpy'],
+        packages_cache: 'passthrough',
+      }));
+
+      document.body.append(script);
+    </script>
+</body>
+</html>
