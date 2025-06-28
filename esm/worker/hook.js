@@ -1,4 +1,4 @@
-import toJSONCallback from 'to-json-callback';
+import toJSONCallback from 'reflected-ffi/to-json-callback';
 
 import { dedent } from '../utils.js';
 import { js as jsHooks, code as codeHooks } from '../hooks.js';
