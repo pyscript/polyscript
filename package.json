@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.17.31",
+    "version": "0.17.32",
     "description": "PyScript single core to rule them all",
     "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
@@ -95,6 +95,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-0iNYLCULhuZ1/9hfRtU2P1sy8ROVPHtopwnp0+qn/a4="
+        "blob": "sha256-8QhxMuSDadSIcmEC3hl5kz2JvOET2oQF3G/GQQ3NWX4="
     }
 }

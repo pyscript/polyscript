@@ -65,9 +65,6 @@ export default (...args) =>
         defineProperties(worker, {
             sync: { value: sync },
             ready: { value: resolver.promise },
-            ffi: {
-                direct: worker.direct,
-            },
             postMessage: {
                 value: (data, ...rest) => bootstrap.then(
                     () => postMessage.call(worker, data, ...rest),
