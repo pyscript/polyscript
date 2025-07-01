@@ -47,7 +47,7 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.53.1",
+        "@playwright/test": "^1.53.2",
         "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.62",
@@ -95,6 +95,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-0iNYLCULhuZ1/9hfRtU2P1sy8ROVPHtopwnp0+qn/a4="
+        "blob": "sha256-8QhxMuSDadSIcmEC3hl5kz2JvOET2oQF3G/GQQ3NWX4="
     }
 }

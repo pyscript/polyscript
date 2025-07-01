@@ -56,10 +56,7 @@ export default {
           env: { event: { type: [ event.type ] } }
         });
     },
-    transform: (_, value) => {
-        console.log('transforming', value);
-        return value;
-    },
+    transform: (_, value) => value,
     writeFile: () => {
         // MAYBE ???
     },
