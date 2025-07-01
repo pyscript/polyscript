@@ -13,9 +13,8 @@ const WORKERS_DIR = resolve(join(__dirname, "..", "esm", "worker"));
 const PACKAGE_JSON = resolve(join(__dirname, "..", "package.json"));
 
 const coincident = [
-    "import { encoder } from 'coincident/flatted/encoder';",
     "import coincident from 'coincident/window/main';",
-    'const { Worker } = coincident({ encoder, transfer: false });',
+    'const { Worker } = coincident({ transfer: false });',
 ];
 
 for (const file of readdirSync(DIST_DIR)) {
