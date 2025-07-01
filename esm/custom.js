@@ -76,6 +76,10 @@ export const handleCustomType = async (node) => {
                         if (v && /\.m?js$/.test(v))
                             v = new URL(v, url).href;
                     }
+
+                    if (Number.isSafeInteger(cfg?.experimental_ffi_timeout))
+                        globalThis.reflected_ffi_timeout = cfg.experimental_ffi_timeout;
+
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
                         configURL: url,
