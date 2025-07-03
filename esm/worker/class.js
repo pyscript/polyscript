@@ -39,6 +39,7 @@ export default (...args) =>
         const serviceWorker = options?.serviceWorker || options?.service_worker;
         const worker = xworker({
             serviceWorker,
+            reflected_ffi_no_symbol: !!globalThis.reflected_ffi_no_symbol,
             reflected_ffi_timeout: globalThis.reflected_ffi_timeout ?? -1,
         });
         const { postMessage } = worker;
