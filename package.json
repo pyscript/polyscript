@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.18.0",
+    "version": "0.18.3",
     "description": "PyScript single core to rule them all",
     "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
@@ -47,7 +47,7 @@
     "license": "APACHE-2.0",
     "devDependencies": {
         "@node-loader/import-maps": "^1.1.0",
-        "@playwright/test": "^1.53.2",
+        "@playwright/test": "^1.54.0",
         "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-terser": "^0.4.4",
         "@zip.js/zip.js": "^2.7.63",
@@ -88,13 +88,13 @@
         "@webreflection/utils": "^0.1.1",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
-        "coincident": "^4.0.18",
+        "coincident": "^4.0.21",
         "html-escaper": "^3.0.3",
-        "reflected-ffi": "^0.5.6",
+        "reflected-ffi": "^0.5.8",
         "sticky-module": "^0.1.1",
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-9Fp7NLkxIKNB3e4ySM0BG0DMEkqn8QdheH2ABgfxRsc="
+        "blob": "sha256-dq34MgxiBMMlRoz9TM/YS6bAZ+rk4NUBAQ/6dJOiKJ4="
     }
 }
