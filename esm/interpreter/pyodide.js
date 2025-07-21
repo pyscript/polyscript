@@ -80,7 +80,9 @@ export default {
         // each pyodide version shares its own cache
         const storage = new IDBMapSync(`${indexURL}@${version}`);
         const options = { indexURL };
-        const save = config.packages_cache !== 'never';
+        // 0.28.0 has a bug where lockFileURL cannot be used directly
+        // https://github.com/pyodide/pyodide/issues/5736
+        const save = config.packages_cache !== 'never' && version !== '0.28.0';
         await storage.sync();
         // packages_cache = 'never' means: erase the whole DB
         if (!save) storage.clear();
