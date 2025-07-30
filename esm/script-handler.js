@@ -1,4 +1,3 @@
-import fetch from '@webreflection/fetch';
 import { $ } from 'basic-devtools';
 
 import IDBMap from '@webreflection/idb-map';
@@ -181,7 +180,7 @@ export const handle = async (script) => {
         if (targetValue) targets.set(script, queryTarget(script, targetValue));
 
         // start fetching external resources ASAP
-        const source = src ? fetch(src).text() : script.textContent;
+        const source = src ? fetch(src).then(r => r.ok ? r.text() : Promise.reject(new Error(`Unable to fetch ${src}`))) : script.textContent;
         details.queue = details.queue.then(() =>
             execute(script, source, details.XWorker, isAsync),
         );

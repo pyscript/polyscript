@@ -1,5 +1,3 @@
-import fetch from '@webreflection/fetch';
-
 import { interpreter } from './interpreters.js';
 import { absoluteURL, resolve } from './utils.js';
 import { toml } from './3rd-party.js';
@@ -17,12 +15,23 @@ export const getConfigURLAndType = (config, configURL = './config.txt') => {
     return [absoluteURL(config), type];
 };
 
+const onFetchError = absolute => () => {
+    throw new Error(`Unable to fetch cofig ${absolute}`);
+};
+
 export const resolveConfig = (config, configURL, options = {}) => {
     const [absolute, type] = getConfigURLAndType(config, configURL);
+    const onError = onFetchError(absolute);
     if (type === 'json') {
-        options = fetch(absolute).json();
+        options = fetch(absolute).then(
+            r => r.ok ? r.json() : onError(),
+            onError
+        );
     } else if (type === 'toml') {
-        options = fetch(absolute).text().then(toml);
+        options = fetch(absolute).then(
+            r => r.ok ? r.text().then(toml) : onError(),
+            onError
+        );
     } else if (type === 'string') {
         options = parseString(config);
     } else if (type === 'object' && config) {
@@ -38,8 +47,7 @@ const parseString = config => {
     try {
         return parse(config);
     }
-    // eslint-disable-next-line no-unused-vars
-    catch (_) {
+    catch {
         return toml(config);
     }
 };

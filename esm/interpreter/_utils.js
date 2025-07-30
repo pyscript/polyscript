@@ -1,5 +1,3 @@
-import fetch from '@webreflection/fetch';
-
 import { absoluteURL, all, entries, importCSS, importJS, isArray, isCSS } from '../utils.js';
 
 export const RUNNING_IN_WORKER = !globalThis.window;
@@ -91,8 +89,10 @@ const joinPaths = (parts) => {
     return parts[0].startsWith('/') ? `/${res}` : res;
 };
 
-const fetchBuffer = (url, baseURL) =>
-    fetch(absoluteURL(url, baseURL)).arrayBuffer();
+const fetchBuffer = (url, baseURL) => {
+    const absolute = absoluteURL(url, baseURL);
+    return fetch(absolute).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error(`Unable to fetch ${absolute}`)));
+};
 
 export const fetchPaths = (module, interpreter, config_fetch, baseURL) =>
     all(

@@ -1,5 +1,4 @@
 import withResolvers from '@webreflection/utils/with-resolvers';
-import fetch from '@webreflection/fetch';
 import xworker from './xworker.js';
 import { getConfigURLAndType } from '../loader.js';
 import { assign, create, defineProperties, importCSS, importJS } from '../utils.js';
@@ -51,16 +50,17 @@ export default (...args) =>
 
         const resolver = withResolvers();
 
-        let bootstrap = fetch(url)
-            .text()
-            .then(code => {
+        let bootstrap = fetch(url).then(
+            async r => {
+                if (!r.ok) throw new Error(`Unable to fetch ${url}`);
+                const code = await r.text();
                 const hooks = isHook ? this.toJSON() : void 0;
                 postMessage.call(worker, { options, config, code, hooks });
-            })
-            .then(() => {
-                // boost postMessage performance
-                bootstrap = { then: fn => fn() };
-            });
+            },
+        ).then(() => {
+            // boost postMessage performance
+            bootstrap = { then: fn => fn() };
+        });
 
         defineProperties(worker, {
             sync: { value: sync },

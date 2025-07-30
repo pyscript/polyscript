@@ -1,5 +1,3 @@
-import fetch from '@webreflection/fetch';
-
 import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio, buffered } from './_io.js';
@@ -122,7 +120,7 @@ async function importPackages(interpreter, baseURL, packages) {
     for (const mpyPackage of packages) {
         if (mpyPackage.endsWith('.whl')) {
             const url = absoluteURL(mpyPackage, baseURL);
-            const buffer = await fetch(url).arrayBuffer();
+            const buffer = await fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error(`Unable to fetch ${url}`)));
             await this.writeFile(interpreter, './*', buffer, url);
         }
         else {
