@@ -69,7 +69,7 @@ const indexURLs = new WeakMap();
 
 export default {
     type,
-    module: (version = '0.27.7') =>
+    module: (version = '0.28.1') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
@@ -99,17 +99,22 @@ export default {
                 // packages are uniquely stored as JSON key
                 const key = stringify(packages);
                 if (storage.has(key)) {
-                    const blob = new Blob(
-                        [storage.get(key)],
-                        { type: 'application/json' },
-                    );
-                    // this should be used to bootstrap loadPyodide
-                    options.lockFileURL = URL.createObjectURL(blob);
+                    const value = storage.get(key);
+
                     // versions are not currently understood by pyodide when
                     // a lockFileURL is used instead of micropip.install(packages)
                     // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
                     // https://github.com/pyscript/pyscript/issues/2245
                     options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
+
+                    if (version.startsWith('0.27')) {
+                        const blob = new Blob([value], { type: 'application/json' });
+                        options.lockFileURL = URL.createObjectURL(blob);
+                    }
+                    else {
+                      options.lockFileContents = value;
+                    }
+
                     packages = null;
                 }
             }
