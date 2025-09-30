@@ -14,7 +14,9 @@ const PACKAGE_JSON = resolve(join(__dirname, "..", "package.json"));
 
 const coincident = [
     "import coincident from 'coincident/window/main';",
-    'const { Worker } = coincident({ transfer: false });',
+    "const js_modules = Symbol.for('polyscript.js_modules');",
+    "let transform;",
+    'const { Worker } = coincident({ transfer: false, transform: value => (transform || (transform = globalThis[js_modules]?.get("-T-")))?.(value) ?? value });',
 ];
 
 for (const file of readdirSync(DIST_DIR)) {

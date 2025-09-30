@@ -1,7 +1,7 @@
 import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
-import { IDBMapSync, isArray, fixedRelative } from '../utils.js';
+import { IDBMapSync, isArray, fixedRelative, js_modules } from '../utils.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -124,6 +124,7 @@ export default {
         const interpreter = await get(
             loadPyodide({ stderr, stdout, ...options }),
         );
+        globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
         if (config.debug) interpreter.setDebug(true);
         const py_imports = importPackages.bind(interpreter);
         if (index_urls) indexURLs.set(interpreter, index_urls);
