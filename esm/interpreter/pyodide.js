@@ -2,6 +2,7 @@ import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 import { IDBMapSync, isArray, fixedRelative, js_modules } from '../utils.js';
+import _remote_package from './_remote_package.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -88,6 +89,7 @@ export default {
         if (!save) storage.clear();
         // otherwise check if cache is known
         else if (packages) {
+            config.packages = packages = await _remote_package(config, packages);
             // packages_cache = 'passthrough' means: do not use micropip.install
             if (config.packages_cache === 'passthrough') {
                 options.packages = packages;
