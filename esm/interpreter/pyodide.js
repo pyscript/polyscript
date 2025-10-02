@@ -69,7 +69,7 @@ const indexURLs = new WeakMap();
 
 export default {
     type,
-    module: (version = '0.28.1') =>
+    module: (version = '0.28.2') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
