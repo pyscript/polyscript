@@ -8,6 +8,7 @@ import mip from '../python/mip.js';
 import { zip } from '../3rd-party.js';
 
 import { initializeNativeFS } from './_nativefs.js';
+import _remote_package from './_remote_package.js';
 
 const type = 'micropython';
 
@@ -44,6 +45,11 @@ export default {
         // Install Micropython Package
         this.writeFile(interpreter, './mip.py', mip);
         if (config.packages) {
+            if (config.experimental_remote_packages) {
+                progress('Loading remote packages');
+                config.packages = await _remote_package(config);
+                progress('Loaded remote packages');
+            }
             progress('Loading packages');
             await py_imports(config.packages.map(fixedRelative, baseURL));
             progress('Loaded packages');
