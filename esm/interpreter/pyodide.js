@@ -2,6 +2,7 @@ import { createProgress, writeFile } from './_utils.js';
 import { getFormat, loader, loadProgress, registerJSModule, run, runAsync, runEvent } from './_python.js';
 import { stdio } from './_io.js';
 import { IDBMapSync, isArray, fixedRelative, js_modules } from '../utils.js';
+import _remote_package from './_remote_package.js';
 
 const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
@@ -84,46 +85,55 @@ export default {
         // https://github.com/pyodide/pyodide/issues/5736
         const save = config.packages_cache !== 'never' && version !== '0.28.0';
         await storage.sync();
+        progress('Loaded Storage');
         // packages_cache = 'never' means: erase the whole DB
         if (!save) storage.clear();
         // otherwise check if cache is known
-        else if (packages) {
-            // packages_cache = 'passthrough' means: do not use micropip.install
-            if (config.packages_cache === 'passthrough') {
-                options.packages = packages;
-                packages = null;
-                storage.clear();
+        if (packages) {
+            if (config.experimental_remote_packages) {
+                progress('Loading remote packages');
+                config.packages = (packages = await _remote_package(config, packages));
+                progress('Loaded remote packages');
             }
-            else {
-                packages = packages.sort();
-                // packages are uniquely stored as JSON key
-                const key = stringify(packages);
-                if (storage.has(key)) {
-                    const value = storage.get(key);
-
-                    // versions are not currently understood by pyodide when
-                    // a lockFileURL is used instead of micropip.install(packages)
-                    // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
-                    // https://github.com/pyscript/pyscript/issues/2245
-                    options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
-
-                    if (version.startsWith('0.27')) {
-                        const blob = new Blob([value], { type: 'application/json' });
-                        options.lockFileURL = URL.createObjectURL(blob);
-                    }
-                    else {
-                      options.lockFileContents = value;
-                    }
-
+            if (save) {
+                // packages_cache = 'passthrough' means: do not use micropip.install
+                if (config.packages_cache === 'passthrough') {
+                    options.packages = packages;
                     packages = null;
+                    storage.clear();
+                }
+                else {
+                    packages = packages.sort();
+                    // packages are uniquely stored as JSON key
+                    const key = stringify(packages);
+                    if (storage.has(key)) {
+                        const value = storage.get(key);
+
+                        // versions are not currently understood by pyodide when
+                        // a lockFileURL is used instead of micropip.install(packages)
+                        // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
+                        // https://github.com/pyscript/pyscript/issues/2245
+                        options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
+
+                        if (version.startsWith('0.27')) {
+                            const blob = new Blob([value], { type: 'application/json' });
+                            options.lockFileURL = URL.createObjectURL(blob);
+                        }
+                        else {
+                        options.lockFileContents = value;
+                        }
+
+                        packages = null;
+                    }
                 }
             }
         }
-        progress('Loaded Storage');
         const { stderr, stdout, get } = stdio();
+        progress('Loading interpreter');
         const interpreter = await get(
             loadPyodide({ stderr, stdout, ...options }),
         );
+        progress('Loaded interpreter');
         globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
         if (config.debug) interpreter.setDebug(true);
         const py_imports = importPackages.bind(interpreter);
