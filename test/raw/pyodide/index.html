@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module">
-      import { serialize } from 'https://esm.run/@ungap/serialization-registry';
-      import '../converter.js';
-
-      globalThis.test = arg => {
-        console.log(...serialize(arg));
-      };
-
+      globalThis.test = () => new Proxy(() => 1, {
+        apply(target, thisArg, argumentsList) {
+          for (const k in thisArg);
+          return target(...argumentsList);
+        }
+      });
       const base = 'https://cdn.jsdelivr.net/npm/pyodide@latest';
       const { loadPyodide } = await import(`${base}/pyodide.mjs`);
       const interpreter = await loadPyodide();
@@ -19,7 +18,7 @@
     </script>
     <script type="pyodide" async>
       import js
-      js.test([{'a': 123}, {'a': 456}])
+      js.test()()
     </script>
   </head>
 </html>

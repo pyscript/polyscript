@@ -1,2 +1,4429 @@
-const e=(e,t=document)=>[...t.querySelectorAll(e)],t=(e,t=document)=>{const n=(new XPathEvaluator).createExpression(e).evaluate(t,XPathResult.ORDERED_NODE_SNAPSHOT_TYPE),r=[];for(let e=0,{snapshotLength:t}=n;e<t;e++)r.push(n.snapshotItem(e));return r},n=Object.getOwnPropertyDescriptors(Response.prototype),r=e=>"function"==typeof e,s={get:(e,t)=>n.hasOwnProperty(t)?((e,t,{get:n,value:s})=>n||!r(s)?e.then(e=>e[t]):(...n)=>e.then(e=>e[t](...n)))(e,t,n[t]):((e,t)=>r(t)?t.bind(e):t)(e,e[t])};var o=(e,...t)=>new Proxy(fetch(e,...t).then(t=>t.ok?t:Promise.reject(new Error(`[${t.status}] Unable to fetch ${e}`))),s);const{assign:a}=Object,i="entries",c="readonly",l="readwrite",u={durability:"default",prefix:"IDBMap"},p=({target:{result:e}})=>e;class f extends EventTarget{#e;#t;#n;async#r(e,t){const n=(await this.#e).transaction(i,t,this.#t);return new Promise((t,r)=>a(e(n.objectStore(i)),{onsuccess:t,onerror:r}))}constructor(e,{durability:t=u.durability,prefix:n=u.prefix}=u){super(),this.#n=n,this.#t={durability:t},this.#e=new Promise((t,n)=>{a(indexedDB.open(`${this.#n}/${e}`),{onupgradeneeded({target:{result:e,transaction:n}}){e.objectStoreNames.length||e.createObjectStore(i),n.oncomplete=()=>t(e)},onsuccess(e){t(p(e))},onerror(e){n(e),this.dispatchEvent(e)}})}).then(e=>{const t=this.dispatchEvent.bind(this);for(const n in e)n.startsWith("on")&&(e[n]=t);return e})}dispatchEvent(e){const{type:t,message:n,isTrusted:r}=e;return super.dispatchEvent(r?a(new Event(t),{message:n}):e)}async close(){(await this.#e).close()}get size(){return this.#r(e=>e.count(),c).then(p)}async clear(){await this.#r(e=>e.clear(),l)}async delete(e){await this.#r(t=>t.delete(e),l)}async entries(){const e=await this.keys();return Promise.all(e.map(e=>this.get(e).then(t=>[e,t])))}async forEach(e,t=this){for(const[n,r]of await this.entries())await e.call(t,r,n,this)}async get(e){return await this.#r(t=>t.get(e),c).then(p)}async has(e){return void 0!==await this.#r(t=>t.getKey(e),c).then(p)}async keys(){return await this.#r(e=>e.getAllKeys(),c).then(p)}async set(e,t){return await this.#r(n=>n.put(t,e),l),this}async values(){const e=await this.keys();return Promise.all(e.map(e=>this.get(e)))}get[Symbol.toStringTag](){return this.#n}}class d extends Map{#s;#o;constructor(...e){super(),this.#s=new f(...e),this.#o=this.#s.entries().then(e=>{for(const[t,n]of e)super.set(t,n)})}async close(){await this.#o,await this.#s.close()}async sync(){await this.#o}clear(){return this.#o=this.#o.then(()=>this.#s.clear()),super.clear()}delete(e){return this.#o=this.#o.then(()=>this.#s.delete(e)),super.delete(e)}set(e,t){return this.#o=this.#o.then(()=>this.#s.set(e,t)),super.set(e,t)}}var h=Promise.withResolvers.bind(Promise);const y=new Proxy(new Map,{get:(e,t)=>(e.has(t)||e.set(t,h()),e.get(t))}),m=new Set(["__dict__","constructor","get","has","includes","next","set","then"]),g=new Proxy(Object.freeze({}),{get:(e,t)=>"string"!=typeof t||m.has(t)?void 0:y[t].promise.then(e=>e.sync)});let w=0;const b=w++,_=w++,A=w++,v=w++,k=w++,E=w++,S=w++,$=w++,x=w++,j=w++,B=w++,M=w++,T=w++,F=w++,R=w++;w++;const P=w++,D=w++;const L=globalThis.ImageData||class{},O=new Map(Reflect.ownKeys(Symbol).map(e=>[Symbol[e],`@${String(e)}`])),C=e=>{switch(e[0]){case"@":return Symbol[e.slice(1)];case"#":return Symbol.for(e.slice(1));case"!":return Symbol(e.slice(1));default:return Symbol()}},W=e=>O.get(e)||((e,t)=>void 0===t?"?":void 0===Symbol.keyFor(e)?`!${t}`:`#${t}`)(e,e.description),I=Object.defineProperty,U=Object.assign,H=Array.from,N=Array.isArray,J=ArrayBuffer.isView,q=(e,t)=>[e,t],z=e=>e,K={},G=e=>(t,n=new Map)=>{for(let r=0,s=t.length;r<s;r++)t[r]=e(t[r],n);return t},V=([e,t])=>0===e?t:C(t),X=e=>"string"==typeof e?q(0,e):q(16,W(e)),Y=(e,t)=>{for(let n=e.push,r=0,s=t.length;r<s;r+=32767)n.apply(e,t.subarray(r,r+32767))},{getPrototypeOf:Z}=Object,{construct:Q}=Reflect,{toStringTag:ee}=Symbol,{toString:te}=K,ne=(e,t=e[ee])=>t in globalThis?t:ne(Q(Z(e.constructor),[0])),re=(e,t)=>[t?e:H(new Uint8Array(e)),e.resizable?e.maxByteLength:0],se=/\[('|")?(.+?)\1\]/g,oe=(e,t)=>e?.[t];var ae=(e,t)=>t.replace(se,".$2").split(".").reduce(oe,e),ie=(e,...t)=>t.map(ce,e);function ce(e){return"string"==typeof e?ae(this,e):this[e]}const le=globalThis.Node||class{},{apply:ue,construct:pe,defineProperty:fe,deleteProperty:de,get:he,getOwnPropertyDescriptor:ye,getPrototypeOf:me,has:ge,isExtensible:we,ownKeys:be,set:_e,setPrototypeOf:Ae}=Reflect;var ve=({reflect:e=z,transform:t=z,remote:n=z,module:r=e=>import(e),buffer:s=!1,timeout:o=-1}=K)=>{const a=(t,r=new Map)=>{if(!N(t))return t;const[s,o]=t;switch(s){case 2:{if(null===o)return globalThis;let e=r.get(t);if(!e){e=o,r.set(t,o);for(const e in o)o[e]=a(o[e],r)}return e}case 4:return r.get(t)||(r.set(t,o),c(o,r));case 8:{let t=g.get(o),r=t?.deref();return r||(t&&O.unregister(t),r=function(...t){n.apply(this,t);for(let e=0,n=t.length;e<n;e++)t[e]=i(t[e]);return e(E,o,i(this),t).then(a)},t=new WeakRef(r),g.set(o,t),O.register(r,o,t)),r}case 16:return C(o);default:return 1&s?d(o):o}},i=e=>{switch(typeof e){case"object":{if(null===e)break;if(e===globalThis)return w;const n=t(e);return H&&I.has(n)||n instanceof L?q(0,n):J(n)?q(68,((e,t)=>{const{BYTES_PER_ELEMENT:n,byteOffset:r,buffer:s,length:o}=e;return[ne(e),re(s,t),r,o!==(s.byteLength-r)/n?o:0]})(n,s)):n instanceof ArrayBuffer?q(64,re(n,s)):q(N(n)?5:3,f(n))}case"function":return q(9,f(t(e)));case"symbol":return q(16,W(e));case"bigint":return q(32,e.toString())}return e},c=G(a),l=G(V),u=G(X),{clear:p,id:f,ref:d,unref:h}=((e=0,t=new Map,n=new Map)=>({clear:()=>{t.clear(),n.clear()},id:r=>{let s=n.get(r);if(void 0===s){for(;t.has(s=e++););t.set(s,r),n.set(r,s)}return s},ref:e=>t.get(e),unref:e=>(n.delete(t.get(e)),t.delete(e))}))(),y=/^(?:[0-9]+|length)$/,m=-1<o,g=new Map,w=q(2,null),O=new FinalizationRegistry(t=>{g.delete(t),e(b,t)});let I,H=!1;return{assign:U,gather:ie,query:ae,direct:e=>(H||(H=!0,I=new WeakSet),I.add(e),e),evaluate:(e,...t)=>ue(e,null,t),reflect(e,t,...n){const s=null===t,o=s?globalThis:d(t);switch(e){case j:{const e=V(n[0]),t=s&&"import"===e,a=t?r:he(o,e),c=i(a);if(!m)return c;let l,u=t,p=o;if(!t&&!(p instanceof le||N(p)&&"string"==typeof e&&y.test(e)))if(e in o){for(;!(l=ye(p,e))&&(p=me(p),p););u=!!l&&"value"in l}else u=!0;return[u,c]}case E:{const e=new Map;return i(ue(o,a(n[0],e),c(n[1],e)))}case P:return _e(o,V(n[0]),a(n[1]));case T:return ge(o,V(n[0]));case R:return u(be(o),g);case S:return i(pe(o,c(n[0])));case B:{const e=ye(o,V(n[0]));if(e)for(const t in e)e[t]=i(e[t]);return e}case $:return fe(o,V(n[0]),a(n[1]));case x:return de(o,V(n[0]));case M:return i(me(o));case D:return Ae(o,a(n[0]));case _:return void U(o,a(n[0]));case A:{const e=a(n[0]),t=Function(`return(${e}).apply(null,arguments)`);return i(ue(t,null,c(n[1])))}case v:for(let e,t=0,r=(n=l(n[0],g)).length;t<r;t++)e=n[t],n[t]=i("string"==typeof e?ae(o,e):o[e]);return n;case k:return i(ae(o,n[0]));case b:return h(t);case F:return we(o)}},terminate(){for(const e of g.values())O.unregister(e);g.clear(),p()}}};const{addEventListener:ke}=EventTarget.prototype,Ee=new WeakMap;Reflect.defineProperty(EventTarget.prototype,"addEventListener",{value(e,t,n){const r=n?.invoke;if(r){let t=Ee.get(this);t||Ee.set(this,t=new Map),t.set(e,[].concat(r)),delete n.invoke}return ke.apply(this,arguments)}});let Se=0;const $e=Se++,xe=Se++,je=Se++,Be=Se++,Me=Se++,Te=Se++,Fe=Se++,Re=Se++,Pe=Se++,De=Se++,Le=Se++,Oe=Se++,Ce=Se++,We=Se++,Ie=Se++,Ue=Se++,He=Se++,Ne=Se++,Je=Se++,qe=Se++,ze=Se++,Ke=Se++,Ge=Se++,Ve=Se++,Xe=Se++,Ye=Se++;class Ze{static push(e,t){e.sync(!1),e._(t,t.length)}constructor(e,t){const n=[];this.l=0,this.o=n,this.v=new Uint8Array(e,t),this.push=n.push.bind(n)}get length(){return this.l+this.o.length}sync(e){const t=this.o,n=t.length;n&&this._(e?t:t.splice(0),n)}_(e,t){const{buffer:n,byteOffset:r}=this.v,s=this.l;this.l+=t,t+=r+s,n.byteLength<t&&n.grow(t),this.v.set(e,s)}}const Qe=new TextDecoder,et=new TextEncoder,tt=new ArrayBuffer(8),nt=new DataView(tt),rt=new Uint8Array(tt),{isNaN:st,isFinite:ot,isInteger:at}=Number,{ownKeys:it}=Reflect,{is:ct}=Object,lt=(e,t,n)=>{const r=n.get(e),s=!r;return s?(nt.setUint32(0,t.length,!0),n.set(e,[rt[0],rt[1],rt[2],rt[3]])):t.push(Ye,r[0],r[1],r[2],r[3]),s},ut=(e,t,n)=>{nt.setUint32(0,n,!0),e.push(t,rt[0],rt[1],rt[2],rt[3])},pt=(e,t,n)=>{switch(typeof e){case"number":e&&ot(e)?at(e)&&e<256&&-1<e?t.push(Te,e):(nt.setFloat64(0,e,!0),t.push(Me,rt[0],rt[1],rt[2],rt[3],rt[4],rt[5],rt[6],rt[7])):st(e)?t.push(Fe):e?t.push(e<0?Pe:Re):t.push(ct(e,0)?De:Le);break;case"object":switch(!0){case null===e:t.push(Be);break;case!lt(e,t,n):break;case N(e):{const r=e.length;ut(t,Ue,r);for(let s=0;s<r;s++)pt(e[s],t,n);break}case J(e):if(t.push(Ve),pt(ne(e),t,n),e=e.buffer,!lt(e,t,n))break;case e instanceof ArrayBuffer:{const n=new Uint8Array(e);ut(t,He,n.length),ft(t,n);break}case e instanceof Date:t.push(Ne),pt(e.getTime(),t,n);break;case e instanceof Map:ut(t,qe,e.size);for(const[r,s]of e)pt(r,t,n),pt(s,t,n);break;case e instanceof Set:ut(t,Ge,e.size);for(const r of e)pt(r,t,n);break;case e instanceof Error:t.push(Je),pt(e.name,t,n),pt(e.message,t,n),pt(e.stack,t,n);break;case e instanceof L:t.push(Xe),pt(e.data,t,n),pt(e.width,t,n),pt(e.height,t,n),pt(e.colorSpace,t,n),pt(e.pixelFormat,t,n);break;case e instanceof RegExp:t.push(Ke),pt(e.source,t,n),pt(e.flags,t,n);break;default:if("toJSON"in e){const r=e.toJSON();pt(r===e?null:r,t,n)}else{const r=it(e),s=r.length;ut(t,ze,s);for(let o=0;o<s;o++){const s=r[o];pt(s,t,n),pt(e[s],t,n)}}}break;case"string":if(lt(e,t,n)){const n=et.encode(e);ut(t,We,n.length),ft(t,n)}break;case"boolean":t.push(e?xe:$e);break;case"symbol":t.push(Ie),pt(W(e),t,n);break;case"bigint":{let n=Oe;9223372036854775807n<e?(nt.setBigUint64(0,e,!0),n=Ce):nt.setBigInt64(0,e,!0),t.push(n,rt[0],rt[1],rt[2],rt[3],rt[4],rt[5],rt[6],rt[7]);break}default:t.push(je)}};let ft=Y;const dt=({byteOffset:e=0,Array:t=Ze}={})=>(n,r)=>{const s=new t(r,e);ft=t.push,pt(n,s,new Map);const o=s.length;return s.sync(!0),o},ht="dbf1617e",yt="="+ht,mt="-"+ht;var gt=(e=e=>e)=>{const t=new Map;let n=0;return[()=>{let r;do{r=e(n++)}while(t.has(r));const s=h();return t.set(r,s),[r,s.promise]},(e,n,r)=>{const s=t.get(e);t.delete(e),r?s?.reject(r):s?.resolve(n)}]};const wt=[],bt=new WeakSet,_t=(...e)=>(bt.add(e),e);let{SharedArrayBuffer:At}=globalThis,vt=!0;try{new At(4,{maxByteLength:8})}catch(e){vt=!1,At=class extends ArrayBuffer{get growable(){return super.resizable}grow(e){super.resize(e)}}}const{assign:kt,create:Et}=Object,St=`coincident-${vt?crypto.randomUUID():Math.random().toString(36).substring(2)}`,$t={byteOffset:2*Int32Array.BYTES_PER_ELEMENT},xt=(e,t,n)=>{const r="then"!==t;return r&&(e[t]=n),r},jt=e=>{e.stopImmediatePropagation(),e.preventDefault()},Bt=(e,t=-1)=>e?.reflected_ffi_timeout??t,{defineProperty:Mt}=Object,[Tt,Ft]=gt();let[Rt,Pt]=Tt(),Dt=()=>Pt,{Atomics:Lt,MessageChannel:Ot,Worker:Ct}=globalThis;if(vt)Ft(Rt);else{const e=new Map,t=(e,...t)=>{e.addEventListener(...t)};if("importScripts"in globalThis){t(globalThis,"message",e=>{jt(e),Ft(Rt,e.data)},{once:!0});const{wait:n}=Lt,{parse:r}=JSON,s=t=>{const n=new XMLHttpRequest;try{if(n.timeout=3e3,n.open("POST",`${i}?sabayon`,!1),n.setRequestHeader("Content-Type","application/json"),n.send(`["${a}",${e.get(t)}]`),200===n.status)return n;throw n}catch{return n.abort(),s(t)}},o=(e,t)=>(e.set(r(t.responseText)),"ok");let a,i;Lt={wait:(t,...r)=>e.has(t)?o(t,s(t)):n(t,...r)},Pt=Pt.then(e=>{[a,i]=e})}else{const n=[St,Math.random()].join("-").replace(/\W/g,"-"),r=new BroadcastChannel("dc78209b-186c-4f83-80e9-406becb7d9f3");r.onmessage=async t=>{const[s,o,a]=t.data;if(o===n)for(const[t,[n,o]]of e)if(n===a){await o.promise;let e=t.length;for(;e--&&!t[e];);r.postMessage([s,t.slice(0,e+1)]);break}};const s=t=>{const[n,r,s]=t.data;e.set(r,[n,h()]),Mt(t,"data",{value:s})};Ot=class extends Ot{constructor(){super(),t(this.port1,"message",s)}},Ct=class extends Ct{constructor(e,t){super(e,t),super.postMessage([n,a])}};const{notify:o}=Lt;Lt={notify(t,...n){const r=e.get(t);return r?(r[1].resolve(),0):o(t,...n)}};let a="",i=null;const c=(e,n)=>{let r,s=!0;e.getRegistration(a).then(t=>t??e.register(a,n)).then(function n(o){const{controller:i}=e;if(s=s&&!!i,r=o.installing||o.waiting||o.active,"activated"===r.state){if(s){if(i.scriptURL===a)return Ft(Rt);o.unregister()}location.reload()}else t(r,"statechange",()=>n(o),{once:!0})})};Dt=(e,t)=>{if(!i){const n=new URL(e,location.href);a=`${n.protocol}//${n.host}${n.pathname}`,c(navigator.serviceWorker,t),i=Pt}return i}}}const Wt="InstallTrigger"in globalThis?St:"",It=e=>e,Ut=e=>e===yt?"main":e===mt?"worker":e;class Ht extends Event{#a;constructor(e){super("message"),this.#a=e}get data(){return this.#a}}var Nt=e=>{const t=e?.transform,n=Bt(e),r=(e?.encoder||dt)($t),s=!1!==e?.transfer;return{Worker:class extends Ct{constructor(e,o){const a=vt?"":o?.serviceWorker||"",{notify:i}=a?Lt:Atomics,{port1:c,port2:l}=new(a?Ot:MessageChannel),[u,p]=gt(It),f=new Map,d=Et(null);a&&Dt(a);let h="";super(e,kt({type:"module"},o)),this.proxy=new Proxy(d,{get:(e,n)=>{if("then"===n)return;let r=f.get(n);return r||f.set(n,r=(...e)=>{const r=((e,t)=>{let n=wt;return e&&bt.has(t.at(-1)||wt)&&(n=t.pop(),bt.delete(n)),n})(s,e),[o,a]=u();return c.postMessage([o,n,t?e.map(t):e],r),((e,t)=>{if(h){const n=setTimeout(console.warn,3e3,`💀🔒 - is proxy.${Ut(h)}() awaiting proxy.${Ut(t)}() ?`);e=e.then(e=>(clearTimeout(n),e),e=>(clearTimeout(n),Promise.reject(e)))}return e})(a,n)}),r},set:xt}),Wt&&(vt||a)&&super.addEventListener("message",e=>{const{data:t}=e;t?.ID===Wt&&(jt(e),c.dispatchEvent(new Ht(t.data)))}),super.postMessage([Wt,a,Bt(o,n)],[l]),c.addEventListener("message",async({data:e})=>{const n=e[0],s=typeof n;if("number"===s)p.apply(null,e);else if(h=e[1],await(async(e,t,n)=>{try{const r=await t[e[1]].apply(null,e[2]);e[1]=n?n(r):r,e[2]=null}catch(t){e[2]=t}})(e,d,t),h="","string"===s)c.postMessage(e);else{const t=e[2]||e[1];n[1]=void 0===t?0:r(t,n.buffer),n[0]=1,i(n,0)}}),c.start()}},native:vt,transfer:_t}};const{url:Jt}=import.meta,qt=/import\((['"])([^)]+?\.js)\1\)/g,zt=(e,t,n)=>`import(${t}${new URL(n,Jt).href}${t})`,Kt=Symbol.for("polyscript.js_modules");let Gt;const{Worker:Vt}=(e=>{const t=e?.import,n=Bt(e),r=Nt({...e,encoder:e?.encoder||dt});class s extends r.Worker{#i;constructor(e,r){const{proxy:s}=super(e,r),o=ve({...r,buffer:!0,reflect:s[mt],timeout:Bt(r,n),remote(e){e instanceof Event&&(e=>{const{currentTarget:t,target:n,type:r}=e,s=Ee.get(t||n)?.get(r);if(s)for(const t of s)e[t]()})(e)},module:r?.import||t||(e=>import(new URL(e,location).href))});this.#i=o.terminate,this.ffi={assign:o.assign,direct:o.direct,evaluate:o.evaluate,gather:o.gather,query:o.query},s[yt]=o.reflect}terminate(){this.#i(),super.terminate()}}return{...r,Worker:s}})({transfer:!1,transform:e=>(Gt||(Gt=globalThis[Kt]?.get("-T-")))?.(e)??e});const Xt=new WeakMap,Yt=e=>{const t=e||console,n={buffered:Qt,stderr:(t.stderr||console.error).bind(t),stdout:(t.stdout||console.log).bind(t)};return{stderr:(...e)=>n.stderr(...e),stdout:(...e)=>n.stdout(...e),async get(e){const t=await e;return Xt.set(t,n),t}}},Zt=new TextDecoder,Qt=(e,t=10)=>{const n=[];return r=>{if(r instanceof Uint8Array)for(const s of r)s===t?e(Zt.decode(new Uint8Array(n.splice(0)))):n.push(s);else e(r)}},en=new Map,tn=e=>en.get(e),nn=(e,t)=>{try{return Function("require",t)(tn)}catch(t){Xt.get(e).stderr(t)}};var rn={type:"dummy",module:()=>"data:text/javascript,",engine:e=>Yt().get(e),registerJSModule(e,t,n){en.set(t,n)},run:nn,runAsync:nn,runEvent:async(e,t,n)=>{try{await Function("require","e",`return ${t}(e)`)(tn,n)}catch(t){Xt.get(e).stderr(t)}},transform:(e,t)=>t,writeFile(){}};const sn={object(...e){return this.string(function(e){for(var t=e[0],n=1,r=arguments.length;n<r;n++)t+=arguments[n]+e[n];return t}(...e))},string(e){for(const t of e.split(/[\r\n]+/))if(t.trim().length){/^(\s+)/.test(t)&&(e=e.replace(new RegExp("^"+RegExp.$1,"gm"),""));break}return e}},{replace:on}="",an=/&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g,cn={"&amp;":"&","&#38;":"&","&lt;":"<","&#60;":"<","&gt;":">","&#62;":">","&apos;":"'","&#39;":"'","&quot;":'"',"&#34;":'"'},ln=e=>cn[e],un=(e,...t)=>sn[typeof e](e,...t),pn=e=>on.call(e,an,ln),{isArray:fn}=Array,{assign:dn,create:hn,defineProperties:yn,defineProperty:mn,entries:gn}=Object,{all:wn,resolve:bn}=new Proxy(Promise,{get:(e,t)=>e[t].bind(e)}),_n=(e,t=location.href)=>new URL(e,t.replace(/^blob:/,"")).href;function An(e){return e.startsWith(".")?_n(e,this):e}let vn=0;const kn=(e,t)=>({id:e.id||(e.id=`${t}-w${vn++}`),tag:e.tagName}),En=(e,t,n,r=!1,s=CustomEvent)=>{e.dispatchEvent(new s(`${t}:${n}`,{bubbles:!0,detail:{worker:r}}))},Sn=(e,t,n,r)=>({type:t,config:n,interpreter:r,io:Xt.get(r),run:(t,...n)=>e.run(r,t,...n),runAsync:(t,...n)=>e.runAsync(r,t,...n),runEvent:(...t)=>e.runEvent(r,...t)}),$n=e=>e.replace(/^(?:\n|\r\n)/,""),xn=(e,t,n,r)=>{const s=e[t].bind(e);e[t]="run"===t?(e,t,...o)=>{n&&s(e,n,...o);const a=s(e,$n(t),...o);return r&&s(e,r,...o),a}:async(e,t,...o)=>{n&&await s(e,n,...o);const a=await s(e,$n(t),...o);return r&&await s(e,r,...o),a}},jn=Symbol.for("polyscript.js_modules"),Bn=new Map;mn(globalThis,jn,{value:Bn});const Mn=new Proxy(Bn,{get:(e,t)=>e.get(t),has:(e,t)=>e.has(t),ownKeys:e=>[...e.keys()]}),Tn=(e,t)=>!t.startsWith("_"),Fn=(e,t)=>new Proxy(e,{has:Tn,get:(e,n)=>e[t][n]}),Rn=(e,t,n,r)=>{if("pyodide"===e)return;const s="polyscript.js_modules";for(const e of Reflect.ownKeys(r))t.registerJSModule(n,`${s}.${e}`,Fn(r,e));t.registerJSModule(n,s,r)},Pn=(e,t)=>import(e).then(e=>{Bn.set(t,{...e})}),Dn=e=>new Promise((t,n)=>{document.querySelector(`link[rel="stylesheet"][href="${e}"]`)?t():document.head.append(dn(document.createElement("link"),{rel:"stylesheet",href:e,onload:t,onerror:n}))}),Ln=e=>/\.css$/i.test(new URL(e).pathname),On=e=>/^(?:false|0|no)$/i.test(e.getAttribute("async")),Cn=!globalThis.window,Wn=({FS:e,PATH:t,PATH_FS:n},r,s)=>{const o=n.resolve(r),a=t.dirname(o);return e.mkdirTree?e.mkdirTree(a):Un(e,a),e.writeFile(o,new Uint8Array(s),{canOwn:!0})},In=e=>{const t=e.split("/");return t.pop(),t.join("/")},Un=(e,t)=>{const n=[];for(const r of t.split("/"))"."!==r&&".."!==r&&(n.push(r),r&&e.mkdir(n.join("/")))},Hn=(e,t)=>{const n=[];for(const e of t.split("/"))switch(e){case"":case".":break;case"..":n.pop();break;default:n.push(e)}return[e.cwd()].concat(n).join("/").replace(/^\/+/,"/")},Nn=e=>{const t=e.map(e=>e.trim().replace(/(^[/]*|[/]*$)/g,"")).filter(e=>""!==e&&"."!==e).join("/");return e[0].startsWith("/")?`/${t}`:t},Jn=(e,t)=>o(_n(e,t)).arrayBuffer(),qn=(e,t,n,r)=>wn((e=>{for(const{files:t,to_file:n,from:r=""}of e){if(void 0!==t&&void 0!==n)throw new Error("Cannot use 'to_file' and 'files' parameters together!");if(void 0===t&&void 0===n&&r.endsWith("/"))throw new Error(`Couldn't determine the filename from the path ${r}, please supply 'to_file' parameter.`)}return e.flatMap(({from:e="",to_folder:t=".",to_file:n,files:r})=>{if(fn(r))return r.map(n=>({url:Nn([e,n]),path:Nn([t,n])}));const s=n||e.slice(1+e.lastIndexOf("/"));return[{url:e,path:Nn([t,s])}]})})(n).map(({url:n,path:s})=>Jn(n,r).then(n=>e.writeFile(t,s,n)))),zn=(e,t)=>t.endsWith("/")?`${t}${e.split("/").pop()}`:t,Kn=(e,t)=>e.replace(/\{.+?\}/g,e=>{if(!t.has(e))throw new SyntaxError(`Invalid template: ${e}`);return t.get(e)}),Gn=(e,t,n,r)=>wn((e=>{const t=new Map,n=new Set,r=[];for(const[s,o]of gn(e))if(/^\{.+\}$/.test(s)){if(t.has(s))throw new SyntaxError(`Duplicated template: ${s}`);t.set(s,Kn(o,t))}else{const e=Kn(s,t),a=zn(e,Kn(o||"./",t));if(n.has(a)&&!a.endsWith("/*"))throw new SyntaxError(`Duplicated destination: ${a}`);n.add(a),r.push({url:e,path:a})}return r})(n).map(({url:n,path:s})=>Jn(n,r).then(r=>e.writeFile(t,s,r,n)))),Vn=({main:e,worker:t},n)=>{const r=[];if(t&&Cn)for(let[e,s]of gn(t))e=_n(e,n),r.push(Pn(e,s));if(e&&!Cn)for(let[t,s]of gn(e))t=_n(t,n),Ln(t)?Dn(t):r.push(Pn(t,s));return wn(r)},Xn=e=>t=>{dispatchEvent(new CustomEvent(`${e}:progress`,{detail:t}))},Yn=(e,t,n)=>(e.set(t,n),n),Zn=e=>{rt[0]=e[tr++],rt[1]=e[tr++],rt[2]=e[tr++],rt[3]=e[tr++],rt[4]=e[tr++],rt[5]=e[tr++],rt[6]=e[tr++],rt[7]=e[tr++]},Qn=e=>(rt[0]=e[tr++],rt[1]=e[tr++],rt[2]=e[tr++],rt[3]=e[tr++],nt.getUint32(0,!0)),er=(e,t)=>{switch(e[tr++]){case Me:return Zn(e),nt.getFloat64(0,!0);case Te:return e[tr++];case ze:{const n=Yn(t,tr-1,{});for(let r=0,s=Qn(e);r<s;r++)n[er(e,t)]=er(e,t);return n}case Ue:{const n=Yn(t,tr-1,[]);for(let r=0,s=Qn(e);r<s;r++)n.push(er(e,t));return n}case Ve:{const n=tr-1,r=er(e,t);return Yn(t,n,new globalThis[r](er(e,t)))}case He:{const n=tr-1,r=Qn(e);return Yn(t,n,e.slice(tr,tr+=r).buffer)}case We:{const n=tr-1,r=Qn(e);return Yn(t,n,Qe.decode(e.slice(tr,tr+=r)))}case Ne:return Yn(t,tr-1,new Date(er(e,t)));case qe:{const n=Yn(t,tr-1,new Map);for(let r=0,s=Qn(e);r<s;r++)n.set(er(e,t),er(e,t));return n}case Ge:{const n=Yn(t,tr-1,new Set);for(let r=0,s=Qn(e);r<s;r++)n.add(er(e,t));return n}case Je:{const n=er(e,t),r=er(e,t),s=er(e,t),o=new(globalThis[n]||Error)(r);return Yn(t,tr-1,I(o,"stack",{value:s}))}case Xe:{const n=er(e,t),r=er(e,t),s=er(e,t),o=er(e,t),a=er(e,t);return Yn(t,tr-1,new L(n,r,s,{colorSpace:o,pixelFormat:a}))}case Ke:{const n=er(e,t),r=er(e,t);return Yn(t,tr-1,new RegExp(n,r))}case $e:return!1;case xe:return!0;case Fe:return NaN;case Re:return 1/0;case Pe:return-1/0;case De:return 0;case Le:return-0;case Be:return null;case Oe:return Zn(e),nt.getBigInt64(0,!0);case Ce:return Zn(e),nt.getBigUint64(0,!0);case Ie:return C(er(e,t));case Ye:return t.get(Qn(e));default:return}};let tr=0;const nr={parse:e=>(tr=0,er(e,new Map)),stringify:e=>{const t=[];return ft=Y,pt(e,t,new Map),t}},rr=new WeakMap,sr=async(e,t,n,r,s)=>{r.files&&(t("Loading files"),await Gn(e,n,r.files,s),t("Loaded files")),r.fetch&&(t("Loading fetch"),await qn(e,n,r.fetch,s),t("Loaded fetch")),r.js_modules&&(t("Loading JS modules"),await Vn(r.js_modules,s),t("Loaded JS modules"))},or=(e,t,n)=>{"polyscript"===t&&(n.lazy_py_modules=async(...t)=>(await rr.get(e)(t),t.map(t=>e.pyimport(t))),n.storage=async e=>{const t=new d(e);return await t.sync(),t},n.JSON=nr),e.registerJsModule(t,n)},ar=(e,t)=>{if(e.endsWith("/*")){if(/\.(zip|whl|tgz|tar(?:\.gz)?)$/.test(t))return RegExp.$1;throw new Error(`Unsupported archive ${t}`)}return""},ir=(e,t,...n)=>{try{return e.runPython(un(t),...n)}catch(t){Xt.get(e).stderr(t)}},cr=async(e,t,...n)=>{try{return await e.runPythonAsync(un(t),...n)}catch(t){Xt.get(e).stderr(t)}},lr=async(e,t,n)=>{const[r,...s]=t.split(".");let o,a=e.globals.get(r);for(const e of s)[o,a]=[a,a[e]];try{await a.call(o,n)}catch(t){Xt.get(e).stderr(t)}};var ur=(new TextEncoder).encode("_F='github:'\n_E='user-agent'\n_D=True\n_C=False\n_B='/'\n_A=None\nfrom uio import StringIO\nimport sys\nclass Response:\n\tdef __init__(A,f):A.raw=f;A.encoding='utf-8';A._cached=_A\n\tdef close(A):\n\t\tif A.raw:A.raw.close();A.raw=_A\n\t\tA._cached=_A\n\t@property\n\tdef content(self):\n\t\tA=self\n\t\tif A._cached is _A:\n\t\t\ttry:A._cached=A.raw.read()\n\t\t\tfinally:A.raw.close();A.raw=_A\n\t\treturn A._cached\n\t@property\n\tdef text(self):return str(self.content,self.encoding)\n\tdef json(A):import ujson;return ujson.loads(A.content)\nHEADERS_TO_IGNORE=_E,\ntry:import js\nexcept Exception as err:raise OSError('This version of urequests can only be used in the browser')\nHEADERS_TO_IGNORE=_E,\ndef request(method,url,data=_A,json=_A,headers={},stream=_A,auth=_A,timeout=_A,parse_headers=_D):\n\tE=timeout;D=method;C=data;from js import XMLHttpRequest as G;A=G.new();A.withCredentials=_C\n\tif auth is not _A:import ubinascii;H,I=auth;A.open(D,url,_C,H,I)\n\telse:A.open(D,url,_C)\n\tfor(F,J)in headers.items():\n\t\tif F.lower()not in HEADERS_TO_IGNORE:A.setRequestHeader(F,J)\n\tif E:A.timeout=int(E*1000)\n\tif json is not _A:assert C is _A;import ujson;C=ujson.dumps(json);A.setRequestHeader('Content-Type','application/json')\n\tA.send(C);B=Response(StringIO(A.responseText));B.status_code=A.status;B.reason=A.statusText;B.headers=A.getAllResponseHeaders();return B\ndef get(url,**A):return request('GET',url,**A)\n_PACKAGE_INDEX=const('https://micropython.org/pi/v2')\n_CHUNK_SIZE=128\ndef _ensure_path_exists(path):\n\timport os;A=path.split(_B)\n\tif not A[0]:A.pop(0);A[0]=_B+A[0]\n\tB=''\n\tfor C in range(len(A)-1):\n\t\tB+=A[C]\n\t\ttry:os.stat(B)\n\t\texcept:os.mkdir(B)\n\t\tB+=_B\ndef _chunk(src,dest):\n\tA=memoryview(bytearray(_CHUNK_SIZE))\n\twhile _D:\n\t\tB=src.readinto(A)\n\t\tif B==0:break\n\t\tdest(A if B==_CHUNK_SIZE else A[:B])\ndef _check_exists(path,short_hash):\n\tA=short_hash;import os\n\ttry:\n\t\timport binascii as C,hashlib as D\n\t\twith open(path,'rb')as E:B=D.sha256();_chunk(E,B.update);F=str(C.hexlify(B.digest())[:len(A)],'utf-8');return F==A\n\texcept:return _C\ndef _rewrite_url(url,branch=_A):\n\tB=branch;A=url\n\tif not B:B='HEAD'\n\tif A.startswith(_F):A=A[7:].split(_B);A='https://raw.githubusercontent.com/'+A[0]+_B+A[1]+_B+B+_B+_B.join(A[2:])\n\treturn A\ndef _download_file(url,dest):\n\tB=dest;A=get(url)\n\ttry:\n\t\tif A.status_code!=200:print('Error',A.status_code,'requesting',url);return _C\n\t\tprint('Copying:',B);_ensure_path_exists(B)\n\t\twith open(B,'wb')as C:_chunk(A.raw,C.write)\n\t\treturn _D\n\tfinally:A.close()\ndef _install_json(package_json_url,index,target,version,mpy):\n\tK='File not found: {} {}';I=version;H=index;G=package_json_url;D=target;E=get(_rewrite_url(G,I))\n\ttry:\n\t\tif E.status_code!=200:print('Package not found:',G);return _C\n\t\tF=E.json()\n\tfinally:E.close()\n\tfor(A,C)in F.get('hashes',()):\n\t\tB=D+_B+A\n\t\tif _check_exists(B,C):print('Exists:',B)\n\t\telse:\n\t\t\tL='{}/file/{}/{}'.format(H,C[:2],C)\n\t\t\tif not _download_file(L,B):print(K.format(A,C));return _C\n\tfor(A,J)in F.get('urls',()):\n\t\tB=D+_B+A\n\t\tif not _download_file(_rewrite_url(J,I),B):print(K.format(A,J));return _C\n\tfor(M,N)in F.get('deps',()):\n\t\tif not _install_package(M,H,D,N,mpy):return _C\n\treturn _D\ndef _install_package(package,index,target,version,mpy):\n\tD=index;C=target;B=version;A=package\n\tif A.startswith('http://')or A.startswith('https://')or A.startswith(_F):\n\t\tif A.endswith('.py')or A.endswith('.mpy'):print('Downloading {} to {}'.format(A,C));return _download_file(_rewrite_url(A,B),C+_B+A.rsplit(_B)[-1])\n\t\telse:\n\t\t\tif not A.endswith('.json'):\n\t\t\t\tif not A.endswith(_B):A+=_B\n\t\t\t\tA+='package.json'\n\t\t\tprint('Installing {} to {}'.format(A,C))\n\telse:\n\t\tif not B:B='latest'\n\t\tprint('Installing {} ({}) from {} to {}'.format(A,B,D,C));E=sys.implementation._mpy&255 if mpy and hasattr(sys.implementation,'_mpy')else'py';A='{}/package/{}/{}/{}.json'.format(D,'py',A,B)\n\treturn _install_json(A,D,C,B,mpy)\ndef install(package,index=_A,target=_A,version=_A,mpy=_D):\n\tB=target;A=index\n\tif not B:\n\t\tfor C in sys.path:\n\t\t\tif C.endswith('/lib'):B=C;break\n\t\telse:print('Unable to find lib dir in sys.path');return\n\tif not A:A=_PACKAGE_INDEX\n\tif _install_package(package,A.rstrip(_B),B,version,mpy):print('Done')\n\telse:print('Package may be partially installed')");const pr=async e=>(await import("./toml-BK2RWy-G.js")).parse(e);async function fr(e,t){return new Promise((n,r)=>{e.syncfs(t,e=>{e?r(e):n()})})}function dr(e){const t=e.FS,n=e.FS.filesystems.MEMFS,r=e.PATH,s={DIR_MODE:16895,FILE_MODE:33279,mount:function(e){if(!e.opts.fileSystemHandle)throw new Error("opts.fileSystemHandle is required");return n.mount.apply(null,arguments)},syncfs:async(e,t,n)=>{try{const r=s.getLocalSet(e),o=await s.getRemoteSet(e),a=t?o:r,i=t?r:o;await s.reconcile(e,a,i),n(null)}catch(e){n(e)}},getLocalSet:e=>{let n=Object.create(null);function s(e){return"."!==e&&".."!==e}function o(e){return t=>r.join2(e,t)}let a=t.readdir(e.mountpoint).filter(s).map(o(e.mountpoint));for(;a.length;){let e=a.pop(),r=t.stat(e);t.isDir(r.mode)&&a.push.apply(a,t.readdir(e).filter(s).map(o(e))),n[e]={timestamp:r.mtime,mode:r.mode}}return{type:"local",entries:n}},getRemoteSet:async e=>{const t=Object.create(null),n=await hr(e.opts.fileSystemHandle);for(const[o,a]of n)"."!==o&&(t[r.join2(e.mountpoint,o)]={timestamp:"file"===a.kind?(await a.getFile()).lastModifiedDate:new Date,mode:"file"===a.kind?s.FILE_MODE:s.DIR_MODE});return{type:"remote",entries:t,handles:n}},loadLocalEntry:e=>{const r=t.lookupPath(e).node,s=t.stat(e);if(t.isDir(s.mode))return{timestamp:s.mtime,mode:s.mode};if(t.isFile(s.mode))return r.contents=n.getFileDataAsTypedArray(r),{timestamp:s.mtime,mode:s.mode,contents:r.contents};throw new Error("node type not supported")},storeLocalEntry:(e,n)=>{if(t.isDir(n.mode))t.mkdirTree(e,n.mode);else{if(!t.isFile(n.mode))throw new Error("node type not supported");t.writeFile(e,n.contents,{canOwn:!0})}t.chmod(e,n.mode),t.utime(e,n.timestamp,n.timestamp)},removeLocalEntry:e=>{var n=t.stat(e);t.isDir(n.mode)?t.rmdir(e):t.isFile(n.mode)&&t.unlink(e)},loadRemoteEntry:async e=>{if("file"===e.kind){const t=await e.getFile();return{contents:new Uint8Array(await t.arrayBuffer()),mode:s.FILE_MODE,timestamp:t.lastModifiedDate}}if("directory"===e.kind)return{mode:s.DIR_MODE,timestamp:new Date};throw new Error("unknown kind: "+e.kind)},storeRemoteEntry:async(e,n,s)=>{const o=e.get(r.dirname(n)),a=t.isFile(s.mode)?await o.getFileHandle(r.basename(n),{create:!0}):await o.getDirectoryHandle(r.basename(n),{create:!0});if("file"===a.kind){const e=await a.createWritable();await e.write(s.contents),await e.close()}e.set(n,a)},removeRemoteEntry:async(e,t)=>{const n=e.get(r.dirname(t));await n.removeEntry(r.basename(t)),e.delete(t)},reconcile:async(e,n,o)=>{let a=0;const i=[];Object.keys(n.entries).forEach(function(e){const r=n.entries[e],s=o.entries[e];(!s||t.isFile(r.mode)&&r.timestamp.getTime()>s.timestamp.getTime())&&(i.push(e),a++)}),i.sort();const c=[];if(Object.keys(o.entries).forEach(function(e){n.entries[e]||(c.push(e),a++)}),c.sort().reverse(),!a)return;const l="remote"===n.type?n.handles:o.handles;for(const t of i){const n=r.normalize(t.replace(e.mountpoint,"/")).substring(1);if("local"===o.type){const e=l.get(n),r=await s.loadRemoteEntry(e);s.storeLocalEntry(t,r)}else{const e=s.loadLocalEntry(t);await s.storeRemoteEntry(l,n,e)}}for(const t of c)if("local"===o.type)s.removeLocalEntry(t);else{const n=r.normalize(t.replace(e.mountpoint,"/")).substring(1);await s.removeRemoteEntry(l,n)}}};return e.FS.filesystems.NATIVEFS_ASYNC=s,async function(e,n){if("FileSystemDirectoryHandle"!==n.constructor.name)throw new TypeError("Expected argument 'fileSystemHandle' to be a FileSystemDirectoryHandle");return function(e){t.mkdirTree?t.mkdirTree(e):Un(t,e);const{node:n}=t.lookupPath(e,{follow_mount:!1});if(t.isMountpoint(n))throw new Error(`path '${e}' is already a file system mount point`);if(!t.isDir(n.mode))throw new Error(`path '${e}' points to a file not a directory`);for(const t in n.contents)throw new Error(`directory '${e}' is not empty`)}(e),t.mount(t.filesystems.NATIVEFS_ASYNC,{fileSystemHandle:n},e),await fr(t,!0),{syncfs:async()=>await fr(t,!1)}}}const hr=async e=>{const t=[];await async function e(n){for await(const r of n.values())t.push(r),"directory"===r.kind&&await e(r)}(e);const n=new Map;n.set(".",e);for(const r of t){const t=(await e.resolve(r)).join("/");n.set(t,r)}return n},{parse:yr}=JSON,mr=(e,t)=>new URL(e,t).href,gr=(e,t,n)=>{if(t in e)throw new Error(`Duplicated path: ${t}`);e[t]=n},wr=(e,t,n)=>{for(const r in t)gr(e,mr(r,n),t[r])},br=(e,t,n,r)=>{const s=t[n];s&&(e[n]??={},wr(e[n],s,r))},_r=async(e,t=e.packages,n=new Set)=>{const r=[];for(const s of t){if(n.has(s))continue;n.add(s);const t=s.endsWith(".toml");if(t||s.endsWith(".json")){const a=await o(s).text(),{name:i,files:c,js_modules:l,packages:u}=t?await pr(a):yr(a);if(n.has(i))throw new Error(`Unable to process ${i} @ ${s}`);n.add(i),u&&r.push(...await _r(e,u,n)),l&&(e.js_modules??={},br(e.js_modules,l,"main",s),br(e.js_modules,l,"worker",s)),c&&(e.files??={},wr(e.files,c,s))}else r.push(s)}return r},Ar=(e,t)=>{try{e.mkdir(t)}catch(e){}},vr=Xn("mpy");var kr={type:"micropython",module:(e="1.27.0-preview-283")=>`https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${e}/micropython.mjs`,async engine({loadMicroPython:e},t,n,r){const{stderr:s,stdout:o,get:a}=Yt({stderr:Qt(console.error),stdout:Qt(console.log)});n=n.replace(/\.m?js$/,".wasm"),vr("Loading MicroPython");const i=await a(e({linebuffer:!1,stderr:s,stdout:o,url:n}));globalThis[jn].set("-T-",this.transform.bind(this,i));const c=Er.bind(this,i,r);return rr.set(i,c),await sr(this,vr,i,t,r),this.writeFile(i,"./mip.py",ur),t.packages&&(t.experimental_remote_packages&&(vr("Loading remote packages"),t.packages=await _r(t),vr("Loaded remote packages")),vr("Loading packages"),await c(t.packages.map(An,r)),vr("Loaded packages")),vr("Loaded MicroPython"),i.mountNativeFS||(i.mountNativeFS=dr(i._module)),i},registerJSModule:or,run:ir,runAsync:cr,runEvent:lr,transform:(e,t)=>e.PyProxy.toJs(t),writeFile:(e,t,n,r)=>{const{FS:s,_module:{PATH:o,PATH_FS:a}}=e,i={FS:s,PATH:o,PATH_FS:a},c=ar(t,r);if(c){const r=t.slice(0,-1);switch("./"!==r&&s.mkdir(r),c){case"whl":case"zip":{const e=new Blob([n],{type:"application/zip"});return import("./zip-D8wJncBv.js").then(async({BlobReader:t,Uint8ArrayWriter:n,ZipReader:a})=>{const i=new a(new t(e));for(const e of await i.getEntries()){const{directory:t,filename:a}=e,i=r+a;if(t)Ar(s,i);else{Ar(s,o.dirname(i));const t=await e.getData(new n);s.writeFile(i,t,{canOwn:!0})}}i.close()})}case"tgz":case"tar.gz":{const t="./_.tar.gz";return Wn(i,t,n),void e.runPython(`\n                        import os, gzip, tarfile\n                        tar = tarfile.TarFile(fileobj=gzip.GzipFile(fileobj=open("${t}", "rb")))\n                        for f in tar:\n                            name = f"${r}{f.name}"\n                            if f.type == tarfile.DIRTYPE:\n                                if f.name != "./":\n                                    os.mkdir(name.strip("/"))\n                            else:\n                                dir = os.path.dirname(name)\n                                if not os.path.exists(dir):\n                                    os.mkdir(dir)\n                                source = tar.extractfile(f)\n                                with open(name, "wb") as dest:\n                                    dest.write(source.read())\n                                    dest.close()\n                        tar.close()\n                        os.remove("${t}")\n                    `)}}}return Wn(i,t,n)}};async function Er(e,t,n){let r;for(const s of n)if(s.endsWith(".whl")){const n=_n(s,t),r=await o(n).arrayBuffer();await this.writeFile(e,"./*",r,n)}else r||(r=e.pyimport("mip")),r.install(s)}const Sr={dict_converter:Object.fromEntries},{stringify:$r}=JSON,{apply:xr}=Reflect,jr=Function.prototype,Br=e=>function(...t){return xr(e,this,t)};let Mr,Tr;const Fr=e=>{const t=new WeakMap,n=n=>{for(let r,s=0;s<n.length;s++)switch(typeof(r=n[s])){case"object":if(null===r)break;case"function":if(Mr in r&&!r[Mr].shared?.gcRegistered){e=!1;let o=t.get(r)?.deref();if(!o){o=Tr(r);const e=new WeakRef(o);t.set(r,e),t.set(o,e)}n[s]=o,e=!0}}};Object.defineProperties(jr,{apply:{value(t,r){return e&&n(r),xr(this,t,r)}},call:{value(t,...r){return e&&n(r),xr(this,t,r)}}})},Rr=Xn("py"),Pr=new WeakMap;var Dr={type:"pyodide",module:(e="0.28.3")=>`https://cdn.jsdelivr.net/pyodide/v${e}/full/pyodide.mjs`,async engine({loadPyodide:e,version:t},n,r,s){Rr("Loading Pyodide");let{packages:o,index_urls:a}=n;o&&(o=o.map(An,s)),Rr("Loading Storage");const i=r.slice(0,r.lastIndexOf("/")),c=new d(`${i}@${t}`),l={indexURL:i},u="never"!==n.packages_cache&&"0.28.0"!==t;if(await c.sync(),Rr("Loaded Storage"),u||c.clear(),o&&(n.experimental_remote_packages&&(Rr("Loading remote packages"),n.packages=o=await _r(n,o),Rr("Loaded remote packages")),u))if("passthrough"===n.packages_cache)l.packages=o,o=null,c.clear();else{o=o.sort();const e=$r(o);if(c.has(e)){const n=c.get(e);if(l.packages=o.map(e=>e.split(/[>=<]=/)[0]),t.startsWith("0.27")){const e=new Blob([n],{type:"application/json"});l.lockFileURL=URL.createObjectURL(e)}else l.lockFileContents=n;o=null}}const{stderr:p,stdout:f,get:h}=Yt();Rr("Loading interpreter");const y=await h(e({stderr:p,stdout:f,...l}));Rr("Loaded interpreter"),globalThis[jn].set("-T-",this.transform.bind(this,y)),n.debug&&y.setDebug(!0);const m=Or.bind(y);return a&&Pr.set(y,a),rr.set(y,m),await sr(this,Rr,y,n,s),o&&await m(o,c,u),await c.close(),l.lockFileURL&&URL.revokeObjectURL(l.lockFileURL),Rr("Loaded Pyodide"),"auto"===n.experimental_create_proxy&&(y.runPython(["import js","from pyodide.ffi import to_js","o=js.Object.fromEntries","js.experimental_create_proxy=lambda r:to_js(r,dict_converter=o)"].join(";"),{globals:y.toPy({})}),Tr=globalThis.experimental_create_proxy,delete globalThis.experimental_create_proxy,[Mr]=Reflect.ownKeys(Tr).filter(e=>"symbol"==typeof e&&"Symbol(pyproxy.attrs)"===String(e)),Fr(!0)),y},registerJSModule:or,run:Br(ir),runAsync:Br(cr),runEvent:Br(lr),transform:(e,t)=>xr(Lr,e,[t]),writeFile:(e,t,n,r)=>{const s=ar(t,r);if(s)return e.unpackArchive(n,s,{extractDir:t.slice(0,-1)});const{FS:o,PATH:a,_module:{PATH_FS:i}}=e;return Wn({FS:o,PATH:a,PATH_FS:i},t,n)}};function Lr(e){const{ffi:{PyProxy:t}}=this;if(e&&"object"==typeof e){if(e instanceof t)return e.toJs(Sr);if(e instanceof Map)return new Map([...e.entries()]);if(fn(e))return e.map(Lr,this)}return e}async function Or(e,t,n=!1){const{log:r}=console,s=(e,...t)=>{r(e,...t),console.log=r,Rr(e),console.log=s};console.log=s,await this.loadPackage("micropip");const o=this.pyimport("micropip");if(Pr.has(this)&&o.set_index_urls(Pr.get(this)),await o.install(e,{keep_going:!0}),console.log=r,n&&t instanceof d){const n=o.freeze();t.set($r(e),n)}o.destroy()}const Cr="ruby-wasm-wasi",Wr=Cr.replace(/\W+/g,"_");var Ir={type:Cr,experimental:!0,module:(e="2.7.2")=>`https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@${e}/dist/browser/+esm`,async engine({DefaultRubyVM:e},t,n,r){n=n.replace(/\/browser\/\+esm$/,"/ruby.wasm");const s=await o(n).arrayBuffer(),a=await WebAssembly.compile(s),{vm:i}=await e(a);return t.files&&await Gn(this,i,t.files,r),t.fetch&&await qn(this,i,t.fetch,r),t.js_modules&&await Vn(t.js_modules,r),i},registerJSModule(e,t,n){t=t.replace(/\W+/g,"__");const r=`__module_${Wr}_${t}`;globalThis[r]=n,this.run(e,`require "js";$${t}=JS.global[:${r}]`),delete globalThis[r]},run:(e,t,...n)=>e.eval(un(t),...n),runAsync:(e,t,...n)=>e.evalAsync(un(t),...n),async runEvent(e,t,n){if(/^xworker\.(on\w+)$/.test(t)){const{$1:t}=RegExp,r=`__module_${Wr}_event`;globalThis[r]=n,this.run(e,`require "js";$xworker.call("${t}",JS.global[:${r}])`),delete globalThis[r]}else{const r=this.run(e,`method(:${t})`);await r.call(t,e.wrap(n))}},transform:(e,t)=>t,writeFile:()=>{throw new Error(`writeFile is not supported in ${Cr}`)}};var Ur={type:"wasmoon",module:(e="1.16.0")=>`https://cdn.jsdelivr.net/npm/wasmoon@${e}/+esm`,async engine({LuaFactory:e,LuaLibraries:t},n,r,s){const{stderr:o,stdout:a,get:i}=Yt(),c=await i((new e).createEngine());return c.global.getTable(t.Base,e=>{c.global.setField(e,"print",a),c.global.setField(e,"printErr",o)}),n.files&&await Gn(this,c,n.files,s),n.fetch&&await qn(this,c,n.fetch,s),n.js_modules&&await Vn(n.js_modules,s),c},registerJSModule:(e,t,n)=>{e.global.set(t,n)},run:(e,t,...n)=>{try{return e.doStringSync(un(t),...n)}catch(t){Xt.get(e).stderr(t)}},runAsync:async(e,t,...n)=>{try{return await e.doString(un(t),...n)}catch(t){Xt.get(e).stderr(t)}},runEvent:async(e,t,n)=>{const[r,...s]=t.split(".");let o,a=e.global.get(r);for(const e of s)[o,a]=[a,a[e]];try{await a.call(o,n)}catch(t){Xt.get(e).stderr(t)}},transform:(e,t)=>t,writeFile:({cmodule:{module:{FS:e}}},t,n)=>((e,t,n)=>(Un(e,In(t)),t=Hn(e,t),e.writeFile(t,new Uint8Array(n),{canOwn:!0})))(e,t,n)};const Hr=new WeakMap,Nr=new FinalizationRegistry(e=>e()),Jr=async(e,t)=>{const{shelter:n,destroy:r,io:s}=Hr.get(e),{output:o,result:a}=await n.captureR(un(t));for(const{type:e,data:t}of o)s[e](t);return Nr.register(a,r),a};var qr={type:"webr",experimental:!0,module:(e="0.5.6")=>`https://cdn.jsdelivr.net/npm/webr@${e}/dist/webr.mjs`,async engine(e,t,n,r){const{get:s}=Yt(),o=new e.WebR;await s(o.init().then(()=>o));const a=await new o.Shelter;return Hr.set(o,{module:e,shelter:a,destroy:a.destroy.bind(a),io:Xt.get(o)}),t.files&&await Gn(this,o,t.files,r),t.fetch&&await qn(this,o,t.fetch,r),t.js_modules&&await Vn(t.js_modules,r),o},registerJSModule(e,t){console.warn(`Experimental interpreter: module ${t} is not supported (yet)`)},run:Jr,runAsync:Jr,async runEvent(e,t,n){await e.evalRVoid(`${t}(event)`,{env:{event:{type:[n.type]}}})},transform:(e,t)=>t,writeFile:()=>{}};const zr=new Map,Kr=new Map,Gr=[],Vr=[],Xr=new Proxy(new Map,{get(e,t){if(!e.has(t)){const[n,...r]=t.split("@"),s=zr.get(n),o=/^(?:\.?\.?\/|[a-z0-9-]+:\/\/)/i.test(r)?r.join("@"):s.module(...r);e.set(t,{url:o,module:import(o),engine:s.engine.bind(s)})}const{url:n,module:r,engine:s}=e.get(t);return(e,o)=>r.then(r=>(Kr.set(t,e),s(r,e,n,o)))}}),Yr=e=>{for(const t of[].concat(e.type))zr.set(t,e),Gr.push(`script[type="${t}"]`),Vr.push(`${t}-`)};for(const e of[rn,kr,Dr,Ir,Ur,qr])Yr(e);const{parse:Zr}=JSON,Qr=(e,t="./config.txt")=>{let n=typeof e;return"string"===n&&/\.(json|toml|txt)$/.test(e)?n=RegExp.$1:e=t,[_n(e),n]},es=(e,t,n={})=>{const[r,s]=Qr(e,t);return"json"===s?n=o(r).json():"toml"===s?n=o(r).text().then(pr):"string"===s?n=ts(e):"object"===s&&e?n=e:"txt"===s&&"string"==typeof n&&(n=ts(n)),[n,e=r]},ts=e=>{try{return Zr(e)}catch(t){return pr(e)}},ns=(e,t,n,r={})=>(t&&([r,t]=es(t,n,r)),bn(r).then(n=>Xr[e](n,t))),rs=(e,t="")=>`${e}@${t}`.replace(/@$/,"");function ss(e=this){return String(e).replace(/^(async\s*)?(\bfunction\b)?(.*?)\(/,(e,t,n,r)=>r&&!n?`${t||""}function ${r}(`:e)}const os="BeforeRun",as="AfterRun",is=[`code${os}`,`code${os}Async`,`code${as}`,`code${as}Async`],cs=["onWorker","onReady",`on${os}`,`on${os}Async`,`on${as}`,`on${as}Async`];function ls(e,t){const{run:n,runAsync:r}=zr.get(this.type);return{...e,run:n.bind(this,t),runAsync:r.bind(this,t)}}const us=(e,t,n,r,s,o)=>{if(s||o){const a=ls.bind(e,t),i=r?"runAsync":"run",c=e[i];e[i]=r?async function(e,t,...r){s&&await s.call(this,a(e),n);const i=await c.call(this,e,t,...r);return o&&await o.call(this,a(e),n),i}:function(e,t,...r){s&&s.call(this,a(e),n);const i=c.call(this,e,t,...r);return o&&o.call(this,a(e),n),i}}};let ps=class{constructor(e,t={}){const{main:n,worker:r}=t;this.interpreter=e,this.onWorker=n?.onWorker;for(const e of cs.slice(1))this[e]=r?.[e];for(const e of is)this[e]=r?.[e]}toJSON(){const e={};for(const t of cs.slice(1))this[t]&&(e[t]=ss(this[t]));for(const t of is)this[t]&&(e[t]=un(this[t]()));return e}};var fs=(...e)=>function(t,n){if(e.length){const[t,r]=e;(n=dn({},n||{type:t,version:r})).type||(n.type=t)}const[r]=Qr(n.config,n.configURL),s=((...e)=>new Vt(URL.createObjectURL(new Blob(["/*@*/"+'const{assign:e}=Object,t="entries",n="readonly",r="readwrite",s={durability:"default",prefix:"IDBMap"},o=({target:{result:e}})=>e;class a extends EventTarget{#e;#t;#n;async#r(n,r){const s=(await this.#e).transaction(t,r,this.#t);return new Promise((r,o)=>e(n(s.objectStore(t)),{onsuccess:r,onerror:o}))}constructor(n,{durability:r=s.durability,prefix:a=s.prefix}=s){super(),this.#n=a,this.#t={durability:r},this.#e=new Promise((r,s)=>{e(indexedDB.open(`${this.#n}/${n}`),{onupgradeneeded({target:{result:e,transaction:n}}){e.objectStoreNames.length||e.createObjectStore(t),n.oncomplete=()=>r(e)},onsuccess(e){r(o(e))},onerror(e){s(e),this.dispatchEvent(e)}})}).then(e=>{const t=this.dispatchEvent.bind(this);for(const n in e)n.startsWith("on")&&(e[n]=t);return e})}dispatchEvent(t){const{type:n,message:r,isTrusted:s}=t;return super.dispatchEvent(s?e(new Event(n),{message:r}):t)}async close(){(await this.#e).close()}get size(){return this.#r(e=>e.count(),n).then(o)}async clear(){await this.#r(e=>e.clear(),r)}async delete(e){await this.#r(t=>t.delete(e),r)}async entries(){const e=await this.keys();return Promise.all(e.map(e=>this.get(e).then(t=>[e,t])))}async forEach(e,t=this){for(const[n,r]of await this.entries())await e.call(t,r,n,this)}async get(e){return await this.#r(t=>t.get(e),n).then(o)}async has(e){return void 0!==await this.#r(t=>t.getKey(e),n).then(o)}async keys(){return await this.#r(e=>e.getAllKeys(),n).then(o)}async set(e,t){return await this.#r(n=>n.put(t,e),r),this}async values(){const e=await this.keys();return Promise.all(e.map(e=>this.get(e)))}get[Symbol.toStringTag](){return this.#n}}class i extends Map{#s;#o;constructor(...e){super(),this.#s=new a(...e),this.#o=this.#s.entries().then(e=>{for(const[t,n]of e)super.set(t,n)})}async close(){await this.#o,await this.#s.close()}async sync(){await this.#o}clear(){return this.#o=this.#o.then(()=>this.#s.clear()),super.clear()}delete(e){return this.#o=this.#o.then(()=>this.#s.delete(e)),super.delete(e)}set(e,t){return this.#o=this.#o.then(()=>this.#s.set(e,t)),super.set(e,t)}}const c="dbf1617e",l="="+c,u="-"+c;let p=0;const d=p++,f=p++,h=p++,y=p++,m=p++,g=p++,w=p++,_=p++,b=p++,A=p++,E=p++,k=p++,v=p++,S=p++,$=p++,x=p++,j=p++,B=p++,M=p++,F=p++,P=p++,T=p++,R=p++,D=p++,L=p++,O=p++;const C=globalThis.ImageData||class{},I=new TextDecoder,U=new TextEncoder,H=new Map(Reflect.ownKeys(Symbol).map(e=>[Symbol[e],`@${String(e)}`])),W=e=>{switch(e[0]){case"@":return Symbol[e.slice(1)];case"#":return Symbol.for(e.slice(1));case"!":return Symbol(e.slice(1));default:return Symbol()}},N=e=>H.get(e)||((e,t)=>void 0===t?"?":void 0===Symbol.keyFor(e)?`!${t}`:`#${t}`)(e,e.description),J=Object.defineProperty,q=Object.assign,z=Array.isArray,K=ArrayBuffer.isView,G=(e,t)=>[e,t],V=e=>e,X=[],Y={},Z=function(){},Q=e=>(t,n=new Map)=>{for(let r=0,s=t.length;r<s;r++)t[r]=e(t[r],n);return t},ee=([e,t])=>0===e?t:W(t),te=e=>"string"==typeof e?G(0,e):G(16,N(e)),ne=(e,t)=>{for(let n=e.push,r=0,s=t.length;r<s;r+=32767)n.apply(e,t.subarray(r,r+32767))},re=new ArrayBuffer(8),se=new DataView(re),oe=new Uint8Array(re),ae=(e,t,n)=>(e.set(t,n),n),ie=e=>{oe[0]=e[ue++],oe[1]=e[ue++],oe[2]=e[ue++],oe[3]=e[ue++],oe[4]=e[ue++],oe[5]=e[ue++],oe[6]=e[ue++],oe[7]=e[ue++]},ce=e=>(oe[0]=e[ue++],oe[1]=e[ue++],oe[2]=e[ue++],oe[3]=e[ue++],se.getUint32(0,!0)),le=(e,t)=>{switch(e[ue++]){case m:return ie(e),se.getFloat64(0,!0);case g:return e[ue++];case P:{const n=ae(t,ue-1,{});for(let r=0,s=ce(e);r<s;r++)n[le(e,t)]=le(e,t);return n}case x:{const n=ae(t,ue-1,[]);for(let r=0,s=ce(e);r<s;r++)n.push(le(e,t));return n}case D:{const n=ue-1,r=le(e,t);return ae(t,n,new globalThis[r](le(e,t)))}case j:{const n=ue-1,r=ce(e);return ae(t,n,e.slice(ue,ue+=r).buffer)}case S:{const n=ue-1,r=ce(e);return ae(t,n,I.decode(e.slice(ue,ue+=r)))}case B:return ae(t,ue-1,new Date(le(e,t)));case F:{const n=ae(t,ue-1,new Map);for(let r=0,s=ce(e);r<s;r++)n.set(le(e,t),le(e,t));return n}case R:{const n=ae(t,ue-1,new Set);for(let r=0,s=ce(e);r<s;r++)n.add(le(e,t));return n}case M:{const n=le(e,t),r=le(e,t),s=le(e,t),o=new(globalThis[n]||Error)(r);return ae(t,ue-1,J(o,"stack",{value:s}))}case L:{const n=le(e,t),r=le(e,t),s=le(e,t),o=le(e,t),a=le(e,t);return ae(t,ue-1,new C(n,r,s,{colorSpace:o,pixelFormat:a}))}case T:{const n=le(e,t),r=le(e,t);return ae(t,ue-1,new RegExp(n,r))}case d:return!1;case f:return!0;case w:return NaN;case _:return 1/0;case b:return-1/0;case A:return 0;case E:return-0;case y:return null;case k:return ie(e),se.getBigInt64(0,!0);case v:return ie(e),se.getBigUint64(0,!0);case $:return W(le(e,t));case O:return t.get(ce(e));default:return}};let ue=0;const pe=e=>(ue=0,le(e,new Map)),de=({byteOffset:e=0}={})=>(t,n)=>pe(new Uint8Array(n,e,t));let fe=0;const he=fe++,ye=fe++,me=fe++,ge=fe++,we=fe++,_e=fe++,be=fe++,Ae=fe++,Ee=fe++,ke=fe++,ve=fe++,Se=fe++,$e=fe++,xe=fe++,je=fe++;fe++;const Be=fe++,Me=fe++,{getPrototypeOf:Fe}=Object,{construct:Pe}=Reflect,{toStringTag:Te}=Symbol,{toString:Re}=Y,De=(e,t=Re.call(e).slice(8,-1))=>t in globalThis?t:De(Fe(e)||Y),Le=(e,t=e[Te])=>t in globalThis?t:Le(Pe(Fe(e.constructor),[0])),Oe=(e,t)=>new ArrayBuffer(e,{maxByteLength:t}),Ce=([e,t],n)=>{const r=n?e.byteLength:e.length;if(n){if(t){const n=Oe(r,t);new Uint8Array(n).set(new Uint8Array(e)),e=n}}else{const n=t?Oe(r,t):new ArrayBuffer(r);new Uint8Array(n).set(e),e=n}return e};const Ie=/\\[(\'|")?(.+?)\\1\\]/g,Ue=(e,t)=>e?.[t];var He=e=>{const t=[],n=e=>{const n=t.splice(e);for(;e<n.length;)n[e++].delete(n[e++])};return class r extends Map{static keys=Symbol();static proto=Symbol();drop(e,t){return e!==r.proto&&super.delete(r.keys),super.delete(e),t}set(r,s){return((r,s)=>{t.push(r,s)<3&&setTimeout(n,e,0)})(super.set(r,s),r),s}}},We=({reflect:e=V,transform:t=V,released:n=V,buffer:r=!1,timeout:s=-1}=Y)=>{const o=Q(ee),a=Q(te),i=e=>{if(!z(e))return e;const[t,n]=e;if(1&t)return u(t,n);switch(t){case 2:return $;case 0:return n;case 16:return W(n);case 32:return BigInt(n);case 68:return(([e,t,n,r],s)=>{const o=Ce(t,s),a=globalThis[e];return r?new a(o,n,r):new a(o,n)})(n,r);case 64:return Ce(n,r)}},c=(e,n=new Map)=>{switch(typeof e){case"object":{if(null===e)break;if(e===globalThis)return S;if(v in e)return g;let r=n.get(e);if(!r){const s=t(e);if(w||!m.has(s)){if(z(s)){const t=[];r=G(4,t),n.set(e,r);for(let e=0,r=s.length;e<r;e++)t[e]=c(s[e],n);return r}if(!(K(s)||s instanceof ArrayBuffer||"Object"!==De(s))){const t={};r=G(2,t),n.set(e,r);try{for(const e in s)break}catch{return r}for(const e in s)t[e]=c(s[e],n);return r}}r=G(0,s),n.set(e,r)}return r}case"function":{if(v in e)return g;let r=n.get(e);if(!r){const s=t(e);r=G(8,b(s)),n.set(e,r)}return r}case"symbol":return G(16,N(e))}return e},l=Q(c),u=(e,t)=>{let n=k.get(t),r=n?.deref();return r||(n&&x.unregister(n),r=9===e?new Proxy(Z,new y(e,t)):new Proxy(3===e?Y:X,new h(e,t)),n=new WeakRef(r),k.set(t,n),x.register(r,t,n)),r},p=e=>{switch(typeof e){case"object":if(null===e)break;case"function":return v in e}return!1},d=-1<s,f=d?He(s):Map;class h{constructor(e,t){this.t=e,this.v=t,d&&(this.$=new f)}get(t,n){if(d&&this.$.has(n))return this.$.get(n);const r=e(ke,this.v,te(n));return d?r[0]?this.$.set(n,i(r[1])):i(r[1]):i(r)}set(t,n,r){const s=e(Be,this.v,te(n),c(r));return d?this.$.drop(n,s):s}has(t,n){return n===v?(g=[this.t,this.v],!0):e($e,this.v,te(n))}_oK(){return o(e(je,this.v),k)}ownKeys(e){return d?this.$.has(f.keys)?this.$.get(f.keys):this.$.set(f.keys,this._oK()):this._oK()}getOwnPropertyDescriptor(t,n){const r=i(e(ve,this.v,te(n)));if(r)for(const e in r)r[e]=i(r[e]);return r}defineProperty(t,n,r){const s=e(Ae,this.v,te(n),c(r));return d?this.$.drop(n,s):s}deleteProperty(t,n){const r=e(Ee,this.v,te(n));return d?this.$.drop(n,r):r}_gPO(){return i(e(Se,this.v))}getPrototypeOf(e){return d?this.$.has(f.proto)?this.$.get(f.proto):this.$.set(f.proto,this._gPO()):this._gPO()}setPrototypeOf(t,n){const r=e(Me,this.v,c(n));return d?this.$.drop(f.proto,r):r}isExtensible(t){return e(xe,this.v)}preventExtensions(e){return!1}}class y extends h{construct(t,n){return i(e(be,this.v,l(n)))}apply(t,n,r){const s=new Map;return i(e(_e,this.v,c(n,s),l(r,s)))}get(e,t){switch(t){case"apply":return(t,n)=>this.apply(e,t,n);case"call":return(t,...n)=>this.apply(e,t,n);default:return super.get(e,t)}}}let m,g,w=!0;const{apply:_}=Reflect,{id:b,ref:A,unref:E}=((e=0,t=new Map,n=new Map)=>({clear:()=>{t.clear(),n.clear()},id:r=>{let s=n.get(r);if(void 0===s){for(;t.has(s=e++););t.set(s,r),n.set(r,s)}return s},ref:e=>t.get(e),unref:e=>(n.delete(t.get(e)),t.delete(e))}))(),k=new Map,v=Symbol("reflected-ffi"),S=G(2,null),$=new Proxy(Y,new h(2,null)),x=new FinalizationRegistry(t=>{k.delete(t),e(he,t)});return{global:$,isProxy:p,assign(t,...n){const r=p(t),s=q(r?{}:t,...n);return r&&e(ye,g[1],c(s)),t},direct:e=>(w&&(w=!1,m=new WeakSet),m.add(e),e),evaluate:(t,...n)=>i(e(me,null,function(e=this){return String(e).replace(/^(async\\s*)?(\\bfunction\\b)?(.*?)\\(/,(e,t,n,r)=>r&&!n?`${t||""}function ${r}(`:e)}(t),l(n))),gather(t,...n){const r=p(t),s=r?i:e=>t[e];r&&(n=e(ge,g[1],a(n,k)));for(let e=0;e<n.length;e++)n[e]=s(n[e]);return n},query:(t,n)=>p(t)?i(e(we,g[1],n)):((e,t)=>t.replace(Ie,".$2").split(".").reduce(Ue,e))(t,n),reflect:async(e,t,...r)=>{switch(e){case _e:{const[e,n]=r;for(let e=0,t=n.length;e<t;e++)n[e]=i(n[e]);return c(await _(A(t),i(e),n))}case he:return n(A(t)),E(t)}}}};var Ne=Promise.withResolvers.bind(Promise),Je=(e=e=>e)=>{const t=new Map;let n=0;return[()=>{let r;do{r=e(n++)}while(t.has(r));const s=Ne();return t.set(r,s),[r,s.promise]},(e,n,r)=>{const s=t.get(e);t.delete(e),r?s?.reject(r):s?.resolve(n)}]};const qe=[],ze=new WeakSet,Ke=(...e)=>(ze.add(e),e);let{SharedArrayBuffer:Ge}=globalThis,Ve=!0;try{new Ge(4,{maxByteLength:8})}catch(e){Ve=!1,Ge=class extends ArrayBuffer{get growable(){return super.resizable}grow(e){super.resize(e)}}}const{create:Xe}=Object,Ye=`coincident-${Ve?crypto.randomUUID():Math.random().toString(36).substring(2)}`,Ze=2*Int32Array.BYTES_PER_ELEMENT,Qe={byteOffset:Ze},et=(e,t,n)=>{const r="then"!==t;return r&&(e[t]=n),r},tt=e=>{e.stopImmediatePropagation(),e.preventDefault()},[nt,rt]=Je();let[st,ot]=nt(),at=()=>ot,it=()=>{},{Atomics:ct,MessagePort:lt,SharedArrayBuffer:ut,postMessage:pt}=globalThis;if(Ve)rt(st);else{ut=Ge;const e=new Map,t=(e,...t)=>{e.addEventListener(...t)};if("importScripts"in globalThis){it=t=>{e.set(t,null)};const n=t=>{const n=t[0],r=p++;return e.set(n,r),[r,n,t]},r=pt;pt=function(e,t){if(u){const s={ID:e.ID,data:n(e.data)};r(s,t)}else ot.then(()=>this.postMessage(e,t))},lt=class extends lt{postMessage(e,t){u?super.postMessage(n(e),t):ot.then(()=>this.postMessage(e,t))}},t(globalThis,"message",e=>{tt(e),rt(st,e.data)},{once:!0});const{wait:s}=ct,{parse:o}=JSON,a=t=>{const n=new XMLHttpRequest;try{if(n.timeout=3e3,n.open("POST",`${l}?sabayon`,!1),n.setRequestHeader("Content-Type","application/json"),n.send(`["${c}",${e.get(t)}]`),200===n.status)return n;throw n}catch{return n.abort(),a(t)}},i=(e,t)=>(e.set(o(t.responseText)),"ok");ct={wait:(t,...n)=>e.has(t)?i(t,a(t)):s(t,...n)};let c,l,u=!1,p=Math.random();ot=ot.then(e=>{[c,l]=e,u=!0})}else{const n=[Ye,Math.random()].join("-").replace(/\\W/g,"-"),r=new BroadcastChannel("dc78209b-186c-4f83-80e9-406becb7d9f3");r.onmessage=async t=>{const[s,o,a]=t.data;if(o===n)for(const[t,[n,o]]of e)if(n===a){await o.promise;let e=t.length;for(;e--&&!t[e];);r.postMessage([s,t.slice(0,e+1)]);break}};const{notify:s}=ct;ct={notify(t,...n){const r=e.get(t);return r?(r[1].resolve(),0):s(t,...n)}};let o="",a=null;const i=(e,n)=>{let r,s=!0;e.getRegistration(o).then(t=>t??e.register(o,n)).then(function n(a){const{controller:i}=e;if(s=s&&!!i,r=a.installing||a.waiting||a.active,"activated"===r.state){if(s){if(i.scriptURL===o)return rt(st);a.unregister()}location.reload()}else t(r,"statechange",()=>n(a),{once:!0})})};at=(e,t)=>{if(!a){const n=new URL(e,location.href);o=`${n.protocol}//${n.host}${n.pathname}`,i(navigator.serviceWorker,t),a=ot}return a}}}const{setPrototypeOf:dt}=Reflect;let{postMessage:ft}=globalThis;const ht=Ne(),yt=lt.prototype;addEventListener("message",e=>{tt(e);const[t,n,r]=e.data,[s]=e.ports;n&&(dt(s,yt),t&&(ft=pt)),ht.resolve([t,n,r,s])},{once:!0});var mt=async e=>{const[t,n,r,s]=await at().then(()=>ht.promise),o=!!t,a=Ve||!!n,i=e?.transform,c=(e?.decoder||de)(Qe),l=!1!==e?.transfer;let u,p,d,f;if(a){const t=new(n?ut:SharedArrayBuffer)(e?.minByteLength||32767,{maxByteLength:e?.maxByteLength||16777216});u=new Int32Array(t),n?(({wait:f}=ct),it(u)):(({load:p,pause:d,wait:f}=Atomics),d&&(f=(e,t)=>{do{d()}while(p(e,t)<1)}))}const[h,y]=Je(String),m=new Map,g=Xe(null),w=new Proxy(g,{get(e,n){if("then"===n)return;let r=m.get(n);return r||m.set(n,r=(...e)=>{const r=((e,t)=>{let n=qe;return e&&ze.has(t.at(-1)||qe)&&(n=t.pop(),ze.delete(n)),n})(l,e),p=[u,n,i?e.map(i):e];if(a){o?ft({ID:t,data:p},r):s.postMessage(p,r),f(u,0),u[0]=0;const e=u[1]?c(u[1],u.buffer):void 0;if(e instanceof Error)throw e;return e}{const[e,t]=h();return p[0]=e,s.postMessage(p,r),t}}),r},set:et});return s.addEventListener("message",async({data:e})=>{"string"==typeof e[0]?y.apply(null,e):(await(async(e,t,n)=>{try{const r=await t[e[1]].apply(null,e[2]);e[1]=n?n(r):r,e[2]=null}catch(t){e[2]=t}})(e,g,i),s.postMessage(e))}),s.start(),{native:Ve,proxy:w,ffi_timeout:r,sync:a,transfer:Ke}};const gt={object(...e){return this.string(function(e){for(var t=e[0],n=1,r=arguments.length;n<r;n++)t+=arguments[n]+e[n];return t}(...e))},string(e){for(const t of e.split(/[\\r\\n]+/))if(t.trim().length){/^(\\s+)/.test(t)&&(e=e.replace(new RegExp("^"+RegExp.$1,"gm"),""));break}return e}},wt=new WeakMap,_t=e=>{const t=e||console,n={buffered:At,stderr:(t.stderr||console.error).bind(t),stdout:(t.stdout||console.log).bind(t)};return{stderr:(...e)=>n.stderr(...e),stdout:(...e)=>n.stdout(...e),async get(e){const t=await e;return wt.set(t,n),t}}},bt=new TextDecoder,At=(e,t=10)=>{const n=[];return r=>{if(r instanceof Uint8Array)for(const s of r)s===t?e(bt.decode(new Uint8Array(n.splice(0)))):n.push(s);else e(r)}},Et=(e,...t)=>gt[typeof e](e,...t),{isArray:kt}=Array,{assign:vt,create:St,defineProperty:$t,entries:xt}=Object,{all:jt,resolve:Bt}=new Proxy(Promise,{get:(e,t)=>e[t].bind(e)}),Mt=(e,t=location.href)=>new URL(e,t.replace(/^blob:/,"")).href;function Ft(e){return e.startsWith(".")?Mt(e,this):e}const Pt=(e,t,n,r=!1,s=CustomEvent)=>{e.dispatchEvent(new s(`${t}:${n}`,{bubbles:!0,detail:{worker:r}}))},Tt=e=>Function(`\'use strict\';return (${e})`)(),Rt=e=>e.replace(/^(?:\\n|\\r\\n)/,""),Dt=Symbol.for("polyscript.js_modules"),Lt=new Map;$t(globalThis,Dt,{value:Lt}),new Proxy(Lt,{get:(e,t)=>e.get(t),has:(e,t)=>e.has(t),ownKeys:e=>[...e.keys()]});const Ot=(e,t)=>!t.startsWith("_"),Ct=(e,t)=>new Proxy(e,{has:Ot,get:(e,n)=>e[t][n]}),It=(e,t)=>import(e).then(e=>{Lt.set(t,{...e})}),Ut=e=>new Promise((t,n)=>{document.querySelector(`link[rel="stylesheet"][href="${e}"]`)?t():document.head.append(vt(document.createElement("link"),{rel:"stylesheet",href:e,onload:t,onerror:n}))}),Ht=e=>/\\.css$/i.test(new URL(e).pathname),Wt=(e,t)=>e.has(t),Nt=e=>[...e.keys()];var Jt=(e,t,n,r)=>{const s=globalThis[Dt];if(n)for(let[e,t]of xt(n)){let n=s.get(t);n&&!kt(n)||(s.set(t,n||(n=[])),n.push(e))}return((e,t,n,r)=>new Proxy(e,{has:Wt,ownKeys:Nt,get:(e,s)=>{let o=e.get(s);if(kt(o)){let a=o;o=null;for(let e of a)e=Mt(e,r),Ht(e)?n.importCSS(e):(n.importJS(e,s),o=t[Dt].get(s));e.set(s,o)}return o}}))(s,e,t,r)};const qt=new Map,zt=e=>qt.get(e),Kt=(e,t)=>{try{return Function("require",t)(zt)}catch(t){wt.get(e).stderr(t)}};var Gt={type:"dummy",module:()=>"data:text/javascript,",engine:e=>_t().get(e),registerJSModule(e,t,n){qt.set(t,n)},run:Kt,runAsync:Kt,runEvent:async(e,t,n)=>{try{await Function("require","e",`return ${t}(e)`)(zt,n)}catch(t){wt.get(e).stderr(t)}},transform:(e,t)=>t,writeFile(){}};const Vt=Object.getOwnPropertyDescriptors(Response.prototype),Xt=e=>"function"==typeof e,Yt={get:(e,t)=>Vt.hasOwnProperty(t)?((e,t,{get:n,value:r})=>n||!Xt(r)?e.then(e=>e[t]):(...n)=>e.then(e=>e[t](...n)))(e,t,Vt[t]):((e,t)=>Xt(t)?t.bind(e):t)(e,e[t])};var Zt=(e,...t)=>new Proxy(fetch(e,...t).then(t=>t.ok?t:Promise.reject(new Error(`[${t.status}] Unable to fetch ${e}`))),Yt);const Qt=!globalThis.window,en=({FS:e,PATH:t,PATH_FS:n},r,s)=>{const o=n.resolve(r),a=t.dirname(o);return e.mkdirTree?e.mkdirTree(a):nn(e,a),e.writeFile(o,new Uint8Array(s),{canOwn:!0})},tn=e=>{const t=e.split("/");return t.pop(),t.join("/")},nn=(e,t)=>{const n=[];for(const r of t.split("/"))"."!==r&&".."!==r&&(n.push(r),r&&e.mkdir(n.join("/")))},rn=(e,t)=>{const n=[];for(const e of t.split("/"))switch(e){case"":case".":break;case"..":n.pop();break;default:n.push(e)}return[e.cwd()].concat(n).join("/").replace(/^\\/+/,"/")},sn=e=>{const t=e.map(e=>e.trim().replace(/(^[/]*|[/]*$)/g,"")).filter(e=>""!==e&&"."!==e).join("/");return e[0].startsWith("/")?`/${t}`:t},on=(e,t)=>Zt(Mt(e,t)).arrayBuffer(),an=(e,t,n,r)=>jt((e=>{for(const{files:t,to_file:n,from:r=""}of e){if(void 0!==t&&void 0!==n)throw new Error("Cannot use \'to_file\' and \'files\' parameters together!");if(void 0===t&&void 0===n&&r.endsWith("/"))throw new Error(`Couldn\'t determine the filename from the path ${r}, please supply \'to_file\' parameter.`)}return e.flatMap(({from:e="",to_folder:t=".",to_file:n,files:r})=>{if(kt(r))return r.map(n=>({url:sn([e,n]),path:sn([t,n])}));const s=n||e.slice(1+e.lastIndexOf("/"));return[{url:e,path:sn([t,s])}]})})(n).map(({url:n,path:s})=>on(n,r).then(n=>e.writeFile(t,s,n)))),cn=(e,t)=>t.endsWith("/")?`${t}${e.split("/").pop()}`:t,ln=(e,t)=>e.replace(/\\{.+?\\}/g,e=>{if(!t.has(e))throw new SyntaxError(`Invalid template: ${e}`);return t.get(e)}),un=(e,t,n,r)=>jt((e=>{const t=new Map,n=new Set,r=[];for(const[s,o]of xt(e))if(/^\\{.+\\}$/.test(s)){if(t.has(s))throw new SyntaxError(`Duplicated template: ${s}`);t.set(s,ln(o,t))}else{const e=ln(s,t),a=cn(e,ln(o||"./",t));if(n.has(a)&&!a.endsWith("/*"))throw new SyntaxError(`Duplicated destination: ${a}`);n.add(a),r.push({url:e,path:a})}return r})(n).map(({url:n,path:s})=>on(n,r).then(r=>e.writeFile(t,s,r,n)))),pn=({main:e,worker:t},n)=>{const r=[];if(t&&Qt)for(let[e,s]of xt(t))e=Mt(e,n),r.push(It(e,s));if(e&&!Qt)for(let[t,s]of xt(e))t=Mt(t,n),Ht(t)?Ut(t):r.push(It(t,s));return jt(r)},dn=e=>t=>{dispatchEvent(new CustomEvent(`${e}:progress`,{detail:t}))},{isNaN:fn,isFinite:hn,isInteger:yn}=Number,{ownKeys:mn}=Reflect,{is:gn}=Object,wn=(e,t,n)=>{const r=n.get(e),s=!r;return s?(se.setUint32(0,t.length,!0),n.set(e,[oe[0],oe[1],oe[2],oe[3]])):t.push(O,r[0],r[1],r[2],r[3]),s},_n=(e,t,n)=>{se.setUint32(0,n,!0),e.push(t,oe[0],oe[1],oe[2],oe[3])},bn=(e,t,n)=>{switch(typeof e){case"number":e&&hn(e)?yn(e)&&e<256&&-1<e?t.push(g,e):(se.setFloat64(0,e,!0),t.push(m,oe[0],oe[1],oe[2],oe[3],oe[4],oe[5],oe[6],oe[7])):fn(e)?t.push(w):e?t.push(e<0?b:_):t.push(gn(e,0)?A:E);break;case"object":switch(!0){case null===e:t.push(y);break;case!wn(e,t,n):break;case z(e):{const r=e.length;_n(t,x,r);for(let s=0;s<r;s++)bn(e[s],t,n);break}case K(e):if(t.push(D),bn(Le(e),t,n),e=e.buffer,!wn(e,t,n))break;case e instanceof ArrayBuffer:{const n=new Uint8Array(e);_n(t,j,n.length),An(t,n);break}case e instanceof Date:t.push(B),bn(e.getTime(),t,n);break;case e instanceof Map:_n(t,F,e.size);for(const[r,s]of e)bn(r,t,n),bn(s,t,n);break;case e instanceof Set:_n(t,R,e.size);for(const r of e)bn(r,t,n);break;case e instanceof Error:t.push(M),bn(e.name,t,n),bn(e.message,t,n),bn(e.stack,t,n);break;case e instanceof C:t.push(L),bn(e.data,t,n),bn(e.width,t,n),bn(e.height,t,n),bn(e.colorSpace,t,n),bn(e.pixelFormat,t,n);break;case e instanceof RegExp:t.push(T),bn(e.source,t,n),bn(e.flags,t,n);break;default:if("toJSON"in e){const r=e.toJSON();bn(r===e?null:r,t,n)}else{const r=mn(e),s=r.length;_n(t,P,s);for(let o=0;o<s;o++){const s=r[o];bn(s,t,n),bn(e[s],t,n)}}}break;case"string":if(wn(e,t,n)){const n=U.encode(e);_n(t,S,n.length),An(t,n)}break;case"boolean":t.push(e?f:d);break;case"symbol":t.push($),bn(N(e),t,n);break;case"bigint":{let n=k;9223372036854775807n<e?(se.setBigUint64(0,e,!0),n=v):se.setBigInt64(0,e,!0),t.push(n,oe[0],oe[1],oe[2],oe[3],oe[4],oe[5],oe[6],oe[7]);break}default:t.push(h)}};let An=ne;const En={parse:pe,stringify:e=>{const t=[];return An=ne,bn(e,t,new Map),t}},kn=new WeakMap,vn=async(e,t,n,r,s)=>{r.files&&(t("Loading files"),await un(e,n,r.files,s),t("Loaded files")),r.fetch&&(t("Loading fetch"),await an(e,n,r.fetch,s),t("Loaded fetch")),r.js_modules&&(t("Loading JS modules"),await pn(r.js_modules,s),t("Loaded JS modules"))},Sn=(e,t,n)=>{"polyscript"===t&&(n.lazy_py_modules=async(...t)=>(await kn.get(e)(t),t.map(t=>e.pyimport(t))),n.storage=async e=>{const t=new i(e);return await t.sync(),t},n.JSON=En),e.registerJsModule(t,n)},$n=(e,t)=>{if(e.endsWith("/*")){if(/\\.(zip|whl|tgz|tar(?:\\.gz)?)$/.test(t))return RegExp.$1;throw new Error(`Unsupported archive ${t}`)}return""},xn=(e,t,...n)=>{try{return e.runPython(Et(t),...n)}catch(t){wt.get(e).stderr(t)}},jn=async(e,t,...n)=>{try{return await e.runPythonAsync(Et(t),...n)}catch(t){wt.get(e).stderr(t)}},Bn=async(e,t,n)=>{const[r,...s]=t.split(".");let o,a=e.globals.get(r);for(const e of s)[o,a]=[a,a[e]];try{await a.call(o,n)}catch(t){wt.get(e).stderr(t)}};var Mn=(new TextEncoder).encode("_F=\'github:\'\\n_E=\'user-agent\'\\n_D=True\\n_C=False\\n_B=\'/\'\\n_A=None\\nfrom uio import StringIO\\nimport sys\\nclass Response:\\n\\tdef __init__(A,f):A.raw=f;A.encoding=\'utf-8\';A._cached=_A\\n\\tdef close(A):\\n\\t\\tif A.raw:A.raw.close();A.raw=_A\\n\\t\\tA._cached=_A\\n\\t@property\\n\\tdef content(self):\\n\\t\\tA=self\\n\\t\\tif A._cached is _A:\\n\\t\\t\\ttry:A._cached=A.raw.read()\\n\\t\\t\\tfinally:A.raw.close();A.raw=_A\\n\\t\\treturn A._cached\\n\\t@property\\n\\tdef text(self):return str(self.content,self.encoding)\\n\\tdef json(A):import ujson;return ujson.loads(A.content)\\nHEADERS_TO_IGNORE=_E,\\ntry:import js\\nexcept Exception as err:raise OSError(\'This version of urequests can only be used in the browser\')\\nHEADERS_TO_IGNORE=_E,\\ndef request(method,url,data=_A,json=_A,headers={},stream=_A,auth=_A,timeout=_A,parse_headers=_D):\\n\\tE=timeout;D=method;C=data;from js import XMLHttpRequest as G;A=G.new();A.withCredentials=_C\\n\\tif auth is not _A:import ubinascii;H,I=auth;A.open(D,url,_C,H,I)\\n\\telse:A.open(D,url,_C)\\n\\tfor(F,J)in headers.items():\\n\\t\\tif F.lower()not in HEADERS_TO_IGNORE:A.setRequestHeader(F,J)\\n\\tif E:A.timeout=int(E*1000)\\n\\tif json is not _A:assert C is _A;import ujson;C=ujson.dumps(json);A.setRequestHeader(\'Content-Type\',\'application/json\')\\n\\tA.send(C);B=Response(StringIO(A.responseText));B.status_code=A.status;B.reason=A.statusText;B.headers=A.getAllResponseHeaders();return B\\ndef get(url,**A):return request(\'GET\',url,**A)\\n_PACKAGE_INDEX=const(\'https://micropython.org/pi/v2\')\\n_CHUNK_SIZE=128\\ndef _ensure_path_exists(path):\\n\\timport os;A=path.split(_B)\\n\\tif not A[0]:A.pop(0);A[0]=_B+A[0]\\n\\tB=\'\'\\n\\tfor C in range(len(A)-1):\\n\\t\\tB+=A[C]\\n\\t\\ttry:os.stat(B)\\n\\t\\texcept:os.mkdir(B)\\n\\t\\tB+=_B\\ndef _chunk(src,dest):\\n\\tA=memoryview(bytearray(_CHUNK_SIZE))\\n\\twhile _D:\\n\\t\\tB=src.readinto(A)\\n\\t\\tif B==0:break\\n\\t\\tdest(A if B==_CHUNK_SIZE else A[:B])\\ndef _check_exists(path,short_hash):\\n\\tA=short_hash;import os\\n\\ttry:\\n\\t\\timport binascii as C,hashlib as D\\n\\t\\twith open(path,\'rb\')as E:B=D.sha256();_chunk(E,B.update);F=str(C.hexlify(B.digest())[:len(A)],\'utf-8\');return F==A\\n\\texcept:return _C\\ndef _rewrite_url(url,branch=_A):\\n\\tB=branch;A=url\\n\\tif not B:B=\'HEAD\'\\n\\tif A.startswith(_F):A=A[7:].split(_B);A=\'https://raw.githubusercontent.com/\'+A[0]+_B+A[1]+_B+B+_B+_B.join(A[2:])\\n\\treturn A\\ndef _download_file(url,dest):\\n\\tB=dest;A=get(url)\\n\\ttry:\\n\\t\\tif A.status_code!=200:print(\'Error\',A.status_code,\'requesting\',url);return _C\\n\\t\\tprint(\'Copying:\',B);_ensure_path_exists(B)\\n\\t\\twith open(B,\'wb\')as C:_chunk(A.raw,C.write)\\n\\t\\treturn _D\\n\\tfinally:A.close()\\ndef _install_json(package_json_url,index,target,version,mpy):\\n\\tK=\'File not found: {} {}\';I=version;H=index;G=package_json_url;D=target;E=get(_rewrite_url(G,I))\\n\\ttry:\\n\\t\\tif E.status_code!=200:print(\'Package not found:\',G);return _C\\n\\t\\tF=E.json()\\n\\tfinally:E.close()\\n\\tfor(A,C)in F.get(\'hashes\',()):\\n\\t\\tB=D+_B+A\\n\\t\\tif _check_exists(B,C):print(\'Exists:\',B)\\n\\t\\telse:\\n\\t\\t\\tL=\'{}/file/{}/{}\'.format(H,C[:2],C)\\n\\t\\t\\tif not _download_file(L,B):print(K.format(A,C));return _C\\n\\tfor(A,J)in F.get(\'urls\',()):\\n\\t\\tB=D+_B+A\\n\\t\\tif not _download_file(_rewrite_url(J,I),B):print(K.format(A,J));return _C\\n\\tfor(M,N)in F.get(\'deps\',()):\\n\\t\\tif not _install_package(M,H,D,N,mpy):return _C\\n\\treturn _D\\ndef _install_package(package,index,target,version,mpy):\\n\\tD=index;C=target;B=version;A=package\\n\\tif A.startswith(\'http://\')or A.startswith(\'https://\')or A.startswith(_F):\\n\\t\\tif A.endswith(\'.py\')or A.endswith(\'.mpy\'):print(\'Downloading {} to {}\'.format(A,C));return _download_file(_rewrite_url(A,B),C+_B+A.rsplit(_B)[-1])\\n\\t\\telse:\\n\\t\\t\\tif not A.endswith(\'.json\'):\\n\\t\\t\\t\\tif not A.endswith(_B):A+=_B\\n\\t\\t\\t\\tA+=\'package.json\'\\n\\t\\t\\tprint(\'Installing {} to {}\'.format(A,C))\\n\\telse:\\n\\t\\tif not B:B=\'latest\'\\n\\t\\tprint(\'Installing {} ({}) from {} to {}\'.format(A,B,D,C));E=sys.implementation._mpy&255 if mpy and hasattr(sys.implementation,\'_mpy\')else\'py\';A=\'{}/package/{}/{}/{}.json\'.format(D,\'py\',A,B)\\n\\treturn _install_json(A,D,C,B,mpy)\\ndef install(package,index=_A,target=_A,version=_A,mpy=_D):\\n\\tB=target;A=index\\n\\tif not B:\\n\\t\\tfor C in sys.path:\\n\\t\\t\\tif C.endswith(\'/lib\'):B=C;break\\n\\t\\telse:print(\'Unable to find lib dir in sys.path\');return\\n\\tif not A:A=_PACKAGE_INDEX\\n\\tif _install_package(package,A.rstrip(_B),B,version,mpy):print(\'Done\')\\n\\telse:print(\'Package may be partially installed\')");const Fn=async e=>(await import("./toml-BK2RWy-G.js")).parse(e);async function Pn(e,t){return new Promise((n,r)=>{e.syncfs(t,e=>{e?r(e):n()})})}function Tn(e){const t=e.FS,n=e.FS.filesystems.MEMFS,r=e.PATH,s={DIR_MODE:16895,FILE_MODE:33279,mount:function(e){if(!e.opts.fileSystemHandle)throw new Error("opts.fileSystemHandle is required");return n.mount.apply(null,arguments)},syncfs:async(e,t,n)=>{try{const r=s.getLocalSet(e),o=await s.getRemoteSet(e),a=t?o:r,i=t?r:o;await s.reconcile(e,a,i),n(null)}catch(e){n(e)}},getLocalSet:e=>{let n=Object.create(null);function s(e){return"."!==e&&".."!==e}function o(e){return t=>r.join2(e,t)}let a=t.readdir(e.mountpoint).filter(s).map(o(e.mountpoint));for(;a.length;){let e=a.pop(),r=t.stat(e);t.isDir(r.mode)&&a.push.apply(a,t.readdir(e).filter(s).map(o(e))),n[e]={timestamp:r.mtime,mode:r.mode}}return{type:"local",entries:n}},getRemoteSet:async e=>{const t=Object.create(null),n=await Rn(e.opts.fileSystemHandle);for(const[o,a]of n)"."!==o&&(t[r.join2(e.mountpoint,o)]={timestamp:"file"===a.kind?(await a.getFile()).lastModifiedDate:new Date,mode:"file"===a.kind?s.FILE_MODE:s.DIR_MODE});return{type:"remote",entries:t,handles:n}},loadLocalEntry:e=>{const r=t.lookupPath(e).node,s=t.stat(e);if(t.isDir(s.mode))return{timestamp:s.mtime,mode:s.mode};if(t.isFile(s.mode))return r.contents=n.getFileDataAsTypedArray(r),{timestamp:s.mtime,mode:s.mode,contents:r.contents};throw new Error("node type not supported")},storeLocalEntry:(e,n)=>{if(t.isDir(n.mode))t.mkdirTree(e,n.mode);else{if(!t.isFile(n.mode))throw new Error("node type not supported");t.writeFile(e,n.contents,{canOwn:!0})}t.chmod(e,n.mode),t.utime(e,n.timestamp,n.timestamp)},removeLocalEntry:e=>{var n=t.stat(e);t.isDir(n.mode)?t.rmdir(e):t.isFile(n.mode)&&t.unlink(e)},loadRemoteEntry:async e=>{if("file"===e.kind){const t=await e.getFile();return{contents:new Uint8Array(await t.arrayBuffer()),mode:s.FILE_MODE,timestamp:t.lastModifiedDate}}if("directory"===e.kind)return{mode:s.DIR_MODE,timestamp:new Date};throw new Error("unknown kind: "+e.kind)},storeRemoteEntry:async(e,n,s)=>{const o=e.get(r.dirname(n)),a=t.isFile(s.mode)?await o.getFileHandle(r.basename(n),{create:!0}):await o.getDirectoryHandle(r.basename(n),{create:!0});if("file"===a.kind){const e=await a.createWritable();await e.write(s.contents),await e.close()}e.set(n,a)},removeRemoteEntry:async(e,t)=>{const n=e.get(r.dirname(t));await n.removeEntry(r.basename(t)),e.delete(t)},reconcile:async(e,n,o)=>{let a=0;const i=[];Object.keys(n.entries).forEach(function(e){const r=n.entries[e],s=o.entries[e];(!s||t.isFile(r.mode)&&r.timestamp.getTime()>s.timestamp.getTime())&&(i.push(e),a++)}),i.sort();const c=[];if(Object.keys(o.entries).forEach(function(e){n.entries[e]||(c.push(e),a++)}),c.sort().reverse(),!a)return;const l="remote"===n.type?n.handles:o.handles;for(const t of i){const n=r.normalize(t.replace(e.mountpoint,"/")).substring(1);if("local"===o.type){const e=l.get(n),r=await s.loadRemoteEntry(e);s.storeLocalEntry(t,r)}else{const e=s.loadLocalEntry(t);await s.storeRemoteEntry(l,n,e)}}for(const t of c)if("local"===o.type)s.removeLocalEntry(t);else{const n=r.normalize(t.replace(e.mountpoint,"/")).substring(1);await s.removeRemoteEntry(l,n)}}};return e.FS.filesystems.NATIVEFS_ASYNC=s,async function(e,n){if("FileSystemDirectoryHandle"!==n.constructor.name)throw new TypeError("Expected argument \'fileSystemHandle\' to be a FileSystemDirectoryHandle");return function(e){t.mkdirTree?t.mkdirTree(e):nn(t,e);const{node:n}=t.lookupPath(e,{follow_mount:!1});if(t.isMountpoint(n))throw new Error(`path \'${e}\' is already a file system mount point`);if(!t.isDir(n.mode))throw new Error(`path \'${e}\' points to a file not a directory`);for(const t in n.contents)throw new Error(`directory \'${e}\' is not empty`)}(e),t.mount(t.filesystems.NATIVEFS_ASYNC,{fileSystemHandle:n},e),await Pn(t,!0),{syncfs:async()=>await Pn(t,!1)}}}const Rn=async e=>{const t=[];await async function e(n){for await(const r of n.values())t.push(r),"directory"===r.kind&&await e(r)}(e);const n=new Map;n.set(".",e);for(const r of t){const t=(await e.resolve(r)).join("/");n.set(t,r)}return n},{parse:Dn}=JSON,Ln=(e,t)=>new URL(e,t).href,On=(e,t,n)=>{if(t in e)throw new Error(`Duplicated path: ${t}`);e[t]=n},Cn=(e,t,n)=>{for(const r in t)On(e,Ln(r,n),t[r])},In=(e,t,n,r)=>{const s=t[n];s&&(e[n]??={},Cn(e[n],s,r))},Un=async(e,t=e.packages,n=new Set)=>{const r=[];for(const s of t){if(n.has(s))continue;n.add(s);const t=s.endsWith(".toml");if(t||s.endsWith(".json")){const o=await Zt(s).text(),{name:a,files:i,js_modules:c,packages:l}=t?await Fn(o):Dn(o);if(n.has(a))throw new Error(`Unable to process ${a} @ ${s}`);n.add(a),l&&r.push(...await Un(e,l,n)),c&&(e.js_modules??={},In(e.js_modules,c,"main",s),In(e.js_modules,c,"worker",s)),i&&(e.files??={},Cn(e.files,i,s))}else r.push(s)}return r},Hn=(e,t)=>{try{e.mkdir(t)}catch(e){}},Wn=dn("mpy");var Nn={type:"micropython",module:(e="1.27.0-preview-283")=>`https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${e}/micropython.mjs`,async engine({loadMicroPython:e},t,n,r){const{stderr:s,stdout:o,get:a}=_t({stderr:At(console.error),stdout:At(console.log)});n=n.replace(/\\.m?js$/,".wasm"),Wn("Loading MicroPython");const i=await a(e({linebuffer:!1,stderr:s,stdout:o,url:n}));globalThis[Dt].set("-T-",this.transform.bind(this,i));const c=Jn.bind(this,i,r);return kn.set(i,c),await vn(this,Wn,i,t,r),this.writeFile(i,"./mip.py",Mn),t.packages&&(t.experimental_remote_packages&&(Wn("Loading remote packages"),t.packages=await Un(t),Wn("Loaded remote packages")),Wn("Loading packages"),await c(t.packages.map(Ft,r)),Wn("Loaded packages")),Wn("Loaded MicroPython"),i.mountNativeFS||(i.mountNativeFS=Tn(i._module)),i},registerJSModule:Sn,run:xn,runAsync:jn,runEvent:Bn,transform:(e,t)=>e.PyProxy.toJs(t),writeFile:(e,t,n,r)=>{const{FS:s,_module:{PATH:o,PATH_FS:a}}=e,i={FS:s,PATH:o,PATH_FS:a},c=$n(t,r);if(c){const r=t.slice(0,-1);switch("./"!==r&&s.mkdir(r),c){case"whl":case"zip":{const e=new Blob([n],{type:"application/zip"});return import("./zip-D8wJncBv.js").then(async({BlobReader:t,Uint8ArrayWriter:n,ZipReader:a})=>{const i=new a(new t(e));for(const e of await i.getEntries()){const{directory:t,filename:a}=e,i=r+a;if(t)Hn(s,i);else{Hn(s,o.dirname(i));const t=await e.getData(new n);s.writeFile(i,t,{canOwn:!0})}}i.close()})}case"tgz":case"tar.gz":{const t="./_.tar.gz";return en(i,t,n),void e.runPython(`\\n                        import os, gzip, tarfile\\n                        tar = tarfile.TarFile(fileobj=gzip.GzipFile(fileobj=open("${t}", "rb")))\\n                        for f in tar:\\n                            name = f"${r}{f.name}"\\n                            if f.type == tarfile.DIRTYPE:\\n                                if f.name != "./":\\n                                    os.mkdir(name.strip("/"))\\n                            else:\\n                                dir = os.path.dirname(name)\\n                                if not os.path.exists(dir):\\n                                    os.mkdir(dir)\\n                                source = tar.extractfile(f)\\n                                with open(name, "wb") as dest:\\n                                    dest.write(source.read())\\n                                    dest.close()\\n                        tar.close()\\n                        os.remove("${t}")\\n                    `)}}}return en(i,t,n)}};async function Jn(e,t,n){let r;for(const s of n)if(s.endsWith(".whl")){const n=Mt(s,t),r=await Zt(n).arrayBuffer();await this.writeFile(e,"./*",r,n)}else r||(r=e.pyimport("mip")),r.install(s)}const qn={dict_converter:Object.fromEntries},{stringify:zn}=JSON,{apply:Kn}=Reflect,Gn=Function.prototype,Vn=e=>function(...t){return Kn(e,this,t)};let Xn,Yn;const Zn=e=>{const t=new WeakMap,n=n=>{for(let r,s=0;s<n.length;s++)switch(typeof(r=n[s])){case"object":if(null===r)break;case"function":if(Xn in r&&!r[Xn].shared?.gcRegistered){e=!1;let o=t.get(r)?.deref();if(!o){o=Yn(r);const e=new WeakRef(o);t.set(r,e),t.set(o,e)}n[s]=o,e=!0}}};Object.defineProperties(Gn,{apply:{value(t,r){return e&&n(r),Kn(this,t,r)}},call:{value(t,...r){return e&&n(r),Kn(this,t,r)}}})},Qn=dn("py"),er=new WeakMap;var tr={type:"pyodide",module:(e="0.28.3")=>`https://cdn.jsdelivr.net/pyodide/v${e}/full/pyodide.mjs`,async engine({loadPyodide:e,version:t},n,r,s){Qn("Loading Pyodide");let{packages:o,index_urls:a}=n;o&&(o=o.map(Ft,s)),Qn("Loading Storage");const c=r.slice(0,r.lastIndexOf("/")),l=new i(`${c}@${t}`),u={indexURL:c},p="never"!==n.packages_cache&&"0.28.0"!==t;if(await l.sync(),Qn("Loaded Storage"),p||l.clear(),o&&(n.experimental_remote_packages&&(Qn("Loading remote packages"),n.packages=o=await Un(n,o),Qn("Loaded remote packages")),p))if("passthrough"===n.packages_cache)u.packages=o,o=null,l.clear();else{o=o.sort();const e=zn(o);if(l.has(e)){const n=l.get(e);if(u.packages=o.map(e=>e.split(/[>=<]=/)[0]),t.startsWith("0.27")){const e=new Blob([n],{type:"application/json"});u.lockFileURL=URL.createObjectURL(e)}else u.lockFileContents=n;o=null}}const{stderr:d,stdout:f,get:h}=_t();Qn("Loading interpreter");const y=await h(e({stderr:d,stdout:f,...u}));Qn("Loaded interpreter"),globalThis[Dt].set("-T-",this.transform.bind(this,y)),n.debug&&y.setDebug(!0);const m=rr.bind(y);return a&&er.set(y,a),kn.set(y,m),await vn(this,Qn,y,n,s),o&&await m(o,l,p),await l.close(),u.lockFileURL&&URL.revokeObjectURL(u.lockFileURL),Qn("Loaded Pyodide"),"auto"===n.experimental_create_proxy&&(y.runPython(["import js","from pyodide.ffi import to_js","o=js.Object.fromEntries","js.experimental_create_proxy=lambda r:to_js(r,dict_converter=o)"].join(";"),{globals:y.toPy({})}),Yn=globalThis.experimental_create_proxy,delete globalThis.experimental_create_proxy,[Xn]=Reflect.ownKeys(Yn).filter(e=>"symbol"==typeof e&&"Symbol(pyproxy.attrs)"===String(e)),Zn(!0)),y},registerJSModule:Sn,run:Vn(xn),runAsync:Vn(jn),runEvent:Vn(Bn),transform:(e,t)=>Kn(nr,e,[t]),writeFile:(e,t,n,r)=>{const s=$n(t,r);if(s)return e.unpackArchive(n,s,{extractDir:t.slice(0,-1)});const{FS:o,PATH:a,_module:{PATH_FS:i}}=e;return en({FS:o,PATH:a,PATH_FS:i},t,n)}};function nr(e){const{ffi:{PyProxy:t}}=this;if(e&&"object"==typeof e){if(e instanceof t)return e.toJs(qn);if(e instanceof Map)return new Map([...e.entries()]);if(kt(e))return e.map(nr,this)}return e}async function rr(e,t,n=!1){const{log:r}=console,s=(e,...t)=>{r(e,...t),console.log=r,Qn(e),console.log=s};console.log=s,await this.loadPackage("micropip");const o=this.pyimport("micropip");if(er.has(this)&&o.set_index_urls(er.get(this)),await o.install(e,{keep_going:!0}),console.log=r,n&&t instanceof i){const n=o.freeze();t.set(zn(e),n)}o.destroy()}const sr="ruby-wasm-wasi",or=sr.replace(/\\W+/g,"_");var ar={type:sr,experimental:!0,module:(e="2.7.2")=>`https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@${e}/dist/browser/+esm`,async engine({DefaultRubyVM:e},t,n,r){n=n.replace(/\\/browser\\/\\+esm$/,"/ruby.wasm");const s=await Zt(n).arrayBuffer(),o=await WebAssembly.compile(s),{vm:a}=await e(o);return t.files&&await un(this,a,t.files,r),t.fetch&&await an(this,a,t.fetch,r),t.js_modules&&await pn(t.js_modules,r),a},registerJSModule(e,t,n){t=t.replace(/\\W+/g,"__");const r=`__module_${or}_${t}`;globalThis[r]=n,this.run(e,`require "js";$${t}=JS.global[:${r}]`),delete globalThis[r]},run:(e,t,...n)=>e.eval(Et(t),...n),runAsync:(e,t,...n)=>e.evalAsync(Et(t),...n),async runEvent(e,t,n){if(/^xworker\\.(on\\w+)$/.test(t)){const{$1:t}=RegExp,r=`__module_${or}_event`;globalThis[r]=n,this.run(e,`require "js";$xworker.call("${t}",JS.global[:${r}])`),delete globalThis[r]}else{const r=this.run(e,`method(:${t})`);await r.call(t,e.wrap(n))}},transform:(e,t)=>t,writeFile:()=>{throw new Error(`writeFile is not supported in ${sr}`)}};var ir={type:"wasmoon",module:(e="1.16.0")=>`https://cdn.jsdelivr.net/npm/wasmoon@${e}/+esm`,async engine({LuaFactory:e,LuaLibraries:t},n,r,s){const{stderr:o,stdout:a,get:i}=_t(),c=await i((new e).createEngine());return c.global.getTable(t.Base,e=>{c.global.setField(e,"print",a),c.global.setField(e,"printErr",o)}),n.files&&await un(this,c,n.files,s),n.fetch&&await an(this,c,n.fetch,s),n.js_modules&&await pn(n.js_modules,s),c},registerJSModule:(e,t,n)=>{e.global.set(t,n)},run:(e,t,...n)=>{try{return e.doStringSync(Et(t),...n)}catch(t){wt.get(e).stderr(t)}},runAsync:async(e,t,...n)=>{try{return await e.doString(Et(t),...n)}catch(t){wt.get(e).stderr(t)}},runEvent:async(e,t,n)=>{const[r,...s]=t.split(".");let o,a=e.global.get(r);for(const e of s)[o,a]=[a,a[e]];try{await a.call(o,n)}catch(t){wt.get(e).stderr(t)}},transform:(e,t)=>t,writeFile:({cmodule:{module:{FS:e}}},t,n)=>((e,t,n)=>(nn(e,tn(t)),t=rn(e,t),e.writeFile(t,new Uint8Array(n),{canOwn:!0})))(e,t,n)};const cr=new WeakMap,lr=new FinalizationRegistry(e=>e()),ur=async(e,t)=>{const{shelter:n,destroy:r,io:s}=cr.get(e),{output:o,result:a}=await n.captureR(Et(t));for(const{type:e,data:t}of o)s[e](t);return lr.register(a,r),a};var pr={type:"webr",experimental:!0,module:(e="0.5.6")=>`https://cdn.jsdelivr.net/npm/webr@${e}/dist/webr.mjs`,async engine(e,t,n,r){const{get:s}=_t(),o=new e.WebR;await s(o.init().then(()=>o));const a=await new o.Shelter;return cr.set(o,{module:e,shelter:a,destroy:a.destroy.bind(a),io:wt.get(o)}),t.files&&await un(this,o,t.files,r),t.fetch&&await an(this,o,t.fetch,r),t.js_modules&&await pn(t.js_modules,r),o},registerJSModule(e,t){console.warn(`Experimental interpreter: module ${t} is not supported (yet)`)},run:ur,runAsync:ur,async runEvent(e,t,n){await e.evalRVoid(`${t}(event)`,{env:{event:{type:[n.type]}}})},transform:(e,t)=>t,writeFile:()=>{}};const dr=new Map,fr=new Map,hr=new Proxy(new Map,{get(e,t){if(!e.has(t)){const[n,...r]=t.split("@"),s=dr.get(n),o=/^(?:\\.?\\.?\\/|[a-z0-9-]+:\\/\\/)/i.test(r)?r.join("@"):s.module(...r);e.set(t,{url:o,module:import(o),engine:s.engine.bind(s)})}const{url:n,module:r,engine:s}=e.get(t);return(e,o)=>r.then(r=>(fr.set(t,e),s(r,e,n,o)))}}),yr=e=>{for(const t of[].concat(e.type))dr.set(t,e)};for(const e of[Gt,Nn,tr,ar,ir,pr])yr(e);const{parse:mr}=JSON,gr=(e,t,n={})=>{const[r,s]=((e,t="./config.txt")=>{let n=typeof e;return"string"===n&&/\\.(json|toml|txt)$/.test(e)?n=RegExp.$1:e=t,[Mt(e),n]})(e,t);return"json"===s?n=Zt(r).json():"toml"===s?n=Zt(r).text().then(Fn):"string"===s?n=wr(e):"object"===s&&e?n=e:"txt"===s&&"string"==typeof n&&(n=wr(n)),[n,e=r]},wr=e=>{try{return mr(e)}catch(t){return Fn(e)}},_r="BeforeRun",br="AfterRun",Ar=[`code${_r}`,`code${_r}Async`,`code${br}`,`code${br}Async`],Er=["onWorker","onReady",`on${_r}`,`on${_r}Async`,`on${br}`,`on${br}Async`];function kr(e,t){const{run:n,runAsync:r}=dr.get(this.type);return{...e,run:n.bind(this,t),runAsync:r.bind(this,t)}}const vr=(e,t,n,r,s,o)=>{if(s||o){const a=kr.bind(e,t),i=r?"runAsync":"run",c=e[i];e[i]=r?async function(e,t,...r){s&&await s.call(this,a(e),n);const i=await c.call(this,e,t,...r);return o&&await o.call(this,a(e),n),i}:function(e,t,...r){s&&s.call(this,a(e),n);const i=c.call(this,e,t,...r);return o&&o.call(this,a(e),n),i}}};let Sr,$r,xr;const jr=(e,t)=>{addEventListener(e,t||(async t=>{try{await Sr,$r(`xworker.on${e}`,t)}catch(e){postMessage(e)}}),!!t&&{once:!0})},{proxy:Br,sync:Mr,native:Fr,window:Pr,isWindowProxy:Tr,ffi:Rr}=await(async e=>{const t=await mt({...e,decoder:e?.decoder||de}),n=We({...e,buffer:!0,reflect:t.proxy[l],timeout:t.ffi_timeout});return t.proxy[u]=n.reflect,{...t,window:n.global,isWindowProxy:n.isProxy,ffi:{assign:n.assign,direct:n.direct,evaluate:n.evaluate,gather:n.gather,query:n.query}}})({transfer:!1,transform:e=>xr?xr(e):e}),Dr={polyfill:Mr,sync:Br,window:Fr||Mr?Pr:null,isWindowProxy:Tr,onmessage:console.info,onerror:console.error,onmessageerror:console.warn,postMessage:postMessage.bind(self)};jr("message",({data:{options:e,config:t,configURL:n,code:r,hooks:s}})=>{Sr=(async()=>{try{const{id:o,tag:c,type:l,custom:u,version:p,config:d,async:f}=e,h=((e,t="")=>`${e}@${t}`.replace(/@$/,""))(l,p),y=await((e,t,n,r={})=>(t&&([r,t]=gr(t,n,r)),Bt(r).then(n=>hr[e](n,t))))(h,t,n,d),{js_modules:m}=fr.get(h),g=m?.main,w=St(dr.get(l)),_=((e,t,n,r)=>({type:t,config:n,interpreter:r,io:wt.get(r),run:(t,...n)=>e.run(r,t,...n),runAsync:(t,...n)=>e.runAsync(r,t,...n),runEvent:(...t)=>e.runEvent(r,...t)}))(w,u||l,d||{},y);let b="run";if(f&&(b+="Async"),s){let e,t,n="",r="";for(const e of Ar){const t=s[e];if(t){const s=e.endsWith("Async");(s&&f||!s&&!f)&&(e.startsWith("codeBefore")?n=t:r=t)}}(n||r)&&((e,t,n,r)=>{const s=e[t].bind(e);e[t]="run"===t?(e,t,...o)=>{n&&s(e,n,...o);const a=s(e,Rt(t),...o);return r&&s(e,r,...o),a}:async(e,t,...o)=>{n&&await s(e,n,...o);const a=await s(e,Rt(t),...o);return r&&await s(e,r,...o),a}})(w,b,n,r);for(const n of Er.slice(2)){const r=s[n];if(r){const s=n.endsWith("Async");if(s&&f||!s&&!f){const s=Tt(r);n.startsWith("onBefore")?e=s:t=s}}}vr(w,_,Dr,f,e,t)}let A,E,k,v=null,S="";(Fr||Mr)&&(({CustomEvent:A,document:E}=Pr),v=o&&E.getElementById(o)||null,k=e=>Pt(v,u||l,e,!0,A));const $=Jt(Pr,Br,g,t);if(((e,t,n,r)=>{if("pyodide"===e)return;const s="polyscript.js_modules";for(const e of Reflect.ownKeys(r))t.registerJSModule(n,`${s}.${e}`,Ct(r,e));t.registerJSModule(n,s,r)})(l,w,y,$),w.registerJSModule(y,"polyscript",{IDBMap:a,IDBMapSync:i,xworker:Dr,currentScript:v,config:_.config,js_modules:$,ffi:Rr,get target(){return!S&&v&&("SCRIPT"===c?v.after(vt(Pr.document.createElement(`script-${u||l}`),{id:S=`${o}-target`})):(S=o,v.replaceChildren(),v.style.display="block")),S}}),$r=w.runEvent.bind(w,y),xr=w.transform.bind(w,y),v&&k("ready"),s?.onReady&&Tt(s?.onReady).call(w,kr.call(w,_,y),Dr),await w[b](y,r),["micropython","pyodide"].includes(w.type)){const e="polyscript",t=`__${e}_workers__`,n="__export__";y.runPython([`import js as ${t}`,`${t}.${t} = "${n}" in locals() and ${n} or []`,`del ${t}`].join("\\n"));const r=[...globalThis[t]];delete globalThis[t],r.length&&y.runPython([`from ${e} import xworker as ${t}`,...r.map(e=>`${t}.sync.${e} = ${e}`),`del ${t}`].join("\\n"))}return v&&k("done"),postMessage("polyscript:done"),y}catch(e){postMessage(e)}})(),jr("error"),jr("message"),jr("messageerror"),(Fr||Mr)&&addEventListener("py:progress",({type:e,detail:t})=>{Pr.dispatchEvent(new Pr.CustomEvent(e,{detail:t}))})});\n'.replace(qt,zt)],{type:"text/javascript"})),...e))({serviceWorker:n?.serviceWorker||n?.service_worker,reflected_ffi_timeout:globalThis.reflected_ffi_timeout??-1}),{postMessage:a}=s,i=this instanceof ps,c=dn(s.proxy,{importJS:Pn,importCSS:Dn}),l=h();let u=o(t).text().then(e=>{const t=i?this.toJSON():void 0;a.call(s,{options:n,config:r,code:e,hooks:t})}).then(()=>{u={then:e=>e()}});return yn(s,{sync:{value:c},ready:{value:l.promise},postMessage:{value:(e,...t)=>u.then(()=>a.call(s,e,...t))},onerror:{writable:!0,configurable:!0,value:console.error}}),s.addEventListener("message",e=>{const{data:t}=e,n=t instanceof Error;(n||"polyscript:done"===t)&&(e.stopImmediatePropagation(),n?(l.reject(t),s.onerror(hn(e,{type:{value:"error"},error:{value:t}}))):l.resolve(s))}),i&&this.onWorker?.(this.interpreter,s),s};const ds="Invalid content",hs="Invalid worker attribute",ys="Invalid worker attribute";var ms=e=>{const{src:t,worker:n}=e.attributes;if(n){let{value:r}=n;if(r)throw new SyntaxError(ys);if(r=t?.value,!r){if(t)throw new SyntaxError(hs);if(e.childElementCount){const{innerHTML:t,localName:n,type:s}=e,o=s||n.replace(/-script$/,"");r=pn(t),console.warn(`Deprecated: use <script type="${o}"> for an always safe content parsing:\n`,r)}else r=e.textContent;return URL.createObjectURL(new Blob([un(r)],{type:"text/plain"}))}return r}if(t&&e.textContent.replace(/\/\*[\s\S]*?\*\//g,"").replace(/^\s*(?:\/\/|#).*/gm,"").trim())throw new SyntaxError(ds)};const gs=(e,t)=>{const n=(e=>{let t=e;for(;t.parentNode;)t=t.parentNode;return t})(e);return n.getElementById(t)||((e,t=document)=>t.querySelector(e))(t,n)},ws=new WeakMap,bs={get(){let e=ws.get(this);return e||(e=document.createElement(`${this.type}-script`),ws.set(this,e),Es(this)),e},set(e){"string"==typeof e?ws.set(this,gs(this,e)):(ws.set(this,e),Es(this))}},_s=new WeakMap,As=new Map,vs=(e,t)=>{const n=e?.value;return n?t+n:""},ks=(e,t,n,r,s,o,a=e)=>{if(!As.has(t)){const i={interpreter:ns(n,s,o),queue:bn(),XWorker:fs(e,r)};As.set(t,i),As.has(e)||As.set(e,i),As.has(a)||As.set(a,i)}return As.get(t)},Es=async e=>{if(_s.has(e)){const{target:t}=e;t&&(e.closest("head")?document.body.append(t):e.after(t))}else{const{attributes:{config:t,env:n,name:r,target:s,version:a,"service-worker":i},src:c,type:l}=e,u=!On(e),p=a?.value,h=rs(l,p);let m=vs(t,"|");const w=vs(n,"")||`${h}${m}`;m=m.slice(1);const b=ms(e);if(b){const t=new(fs(l,p))(b,{...kn(e,l),version:p,async:u,config:m,serviceWorker:i?.value});_s.set(mn(e,"xworker",{value:t}),{xworker:t});const n=r?.value;return void(n&&y[n].resolve(t.ready))}const _=vs(s,""),A=ks(l,w,h,p,m);_s.set(mn(e,"target",bs),A),_&&ws.set(e,gs(e,_));const v=c?o(c).text():e.textContent;A.queue=A.queue.then(()=>(async(e,t,n,r)=>{const{type:s}=e,o=zr.get(s);o.experimental&&console.warn(`The ${s} interpreter is experimental`);const[a,i]=await wn([_s.get(e).interpreter,t]);try{Rn(s,o,a,Mn),o.registerJSModule(a,"polyscript",{IDBMap:f,IDBMapSync:d,XWorker:n,currentScript:e,js_modules:Mn,workers:g}),En(e,s,"ready"),mn(document,"currentScript",{configurable:!0,get:()=>e});const t=En.bind(null,e,s,"done");let c=o[r?"runAsync":"run"](a,i);return r&&(c=await c),t(),c}finally{delete document.currentScript}})(e,v,A.XWorker,u))}},Ss=new Proxy(hn(null),{get:(e,t)=>new Promise(queueMicrotask).then(()=>$s(t))}),$s=async e=>{if(As.has(e)){const{interpreter:t,queue:n}=As.get(e);return(await wn([t,n]))[0]}const t=As.size?`Available interpreters are: ${[...As.keys()].map(e=>`"${e}"`).join(", ")}.`:"There are no interpreters in this page.";throw new Error(`The interpreter "${e}" was not found. ${t}`)},xs=async e=>{const{type:n,currentTarget:r}=e;if(Vr.length)for(let{name:s,value:o,ownerElement:a}of t(`./@*[${Vr.map(e=>`name()="${e}${n}"`).join(" or ")}]`,r)){s=s.slice(0,-(n.length+1));const t=await $s(a.getAttribute(`${s}-env`)||s);zr.get(s).runEvent(t,o,e)}},js=e=>{if(Vr.length)for(let{name:n,ownerElement:r}of t(`.//@*[${Vr.map(e=>`starts-with(name(),"${e}")`).join(" or ")}]`,e)){const e=n.lastIndexOf("-"),t=n.slice(e+1);"env"!==t&&(r.addEventListener(t,xs),"disabled"in r&&!r.disabled&&(r.disabled=!0,Ss[n.slice(0,e)].then(()=>{r.disabled=!1})))}},Bs=fs(),Ms=[],Ts=new Map,Fs=new Map,Rs=new Map,Ps=async e=>{for(const t of Ms)if(e.matches(t)){const n=Fs.get(t),r=Ds.get(n),{resolve:s}=Rs.get(n),{options:o,known:a}=r;if(a.has(e))return;a.add(e);for(const[t,n]of Ts)e.matches(t)&&await n(e);const{interpreter:i,configURL:c,config:l,version:u,env:p,onerror:h,hooks:m}=o;let w;try{const t=ms(e);if(t){let r=u,o=c,a=e.getAttribute("config")||l||{};if(!r||!a){const[e,t]=es(a,c);a=await e,o=t,r=a.version||a.interpreter,r&&/\.m?js$/.test(r)&&(r=new URL(r,o).href)}Number.isSafeInteger(a?.experimental_ffi_timeout)&&(globalThis.reflected_ffi_timeout=a.experimental_ffi_timeout);const p=Bs.call(new ps(null,m),t,{...kn(e,n),configURL:o,version:r,type:i,custom:n,config:a,async:!On(e),serviceWorker:e.getAttribute("service-worker")});mn(e,"xworker",{value:p}),s({type:n,xworker:p});const f=e.getAttribute("name");return void(f&&y[f].resolve(p.ready))}}catch(e){w=e}const b=rs(i,u),_=p||`${b}${l?`|${l}`:""}`,{interpreter:A,XWorker:v}=ks(n,_,b,u,l,c,i),k=await A,E=hn(zr.get(i)),S=new ps(k,m),$=function(...e){return v.apply(S,e)},x={...Sn(E,n,structuredClone(Kr.get(b)),k),XWorker:$};Rn(i,E,k,Mn),E.registerJSModule(k,"polyscript",{IDBMap:f,IDBMapSync:d,XWorker:$,config:x.config,currentScript:n.startsWith("_")?null:e,js_modules:Mn,workers:g});for(const t of["Run","RunAsync"]){let n,r,s="",o="";for(const e of is){const n=m?.main?.[e];n&&e.endsWith(t)&&(e.startsWith("codeBefore")?s=un(n()):o=un(n()))}(s||o)&&xn(E,`r${t.slice(1)}`,s,o);for(let e=2;e<cs.length;e++){const s=cs[e],o=m?.main?.[s];o&&s.endsWith(t)&&(s.startsWith("onBefore")?n=o:r=o)}us(E,x,e,t.endsWith("Async"),n,r)}r.queue=r.queue.then(()=>(s(x),w&&h?.(w,e),m?.main?.onReady?.(x,e)))}},Ds=new Map;let Ls=0;const Os=e=>(Rs.has(e)||Rs.set(e,h()),Rs.get(e).promise),[{customObserver:Cs,define:Ws,whenDefined:Is,env:Us,Hook:Hs,XWorker:Ns},Js]=((e,t,n=globalThis)=>{const r=Symbol.for(e),s=r in n;return[s?n[r]:Object.defineProperty(n,r,{value:t})[r],s]})("polyscript",{customObserver:Ts,define:(t,n)=>{let r=null==t;if(r)t="_ps"+Ls++;else if(zr.has(t)||Ds.has(t))throw new Error(`<script type="${t}"> already registered`);if(!zr.has(n?.interpreter))throw new Error("Unspecified interpreter");zr.set(t,zr.get(n.interpreter));const s=[`script[type="${t}"]`];if(Os(t),r){const{hooks:e}=n,r=e?.main?.onReady;n={...n,hooks:{...e,main:{...e?.main,onReady(e,n){Ms.splice(Ms.indexOf(t),1),zr.delete(t),Ds.delete(t),Rs.delete(t),n.remove(),r?.(e)}}}},document.head.append(dn(document.createElement("script"),{type:t}))}else s.push(`${t}-script`),Vr.push(`${t}-`);for(const e of s)Fs.set(e,t);Ms.push(...s),Ds.set(t,{options:dn({env:t},n),known:new WeakSet,queue:Promise.resolve()}),r||js(document),e(s.join(",")).forEach(Ps)},whenDefined:Os,env:Ss,Hook:ps,XWorker:Bs});if(!Js){const t=new MutationObserver(e=>{const t=Gr.join(",");for(const{type:r,target:s,attributeName:o,addedNodes:a}of e){if("attributes"===r){const e=o.lastIndexOf("-")+1;if(e){const t=o.slice(0,e);for(const n of Vr)if(t===n){const t=o.slice(e);if("env"!==t){const e=s.hasAttribute(o)?"add":"remove";s[`${e}EventListener`](t,xs)}break}}continue}for(const e of a)1===e.nodeType&&(js(e),t&&e.matches(t)?Es(e):n(t,e,!0))}}),n=(t,n,r)=>{t&&e(t,n).forEach(Es),(t=Ms.join(","))&&(r&&Ps(n),e(t,n).forEach(Ps))},r=e=>(t.observe(e,{childList:!0,subtree:!0,attributes:!0}),e),{attachShadow:s}=Element.prototype;dn(Element.prototype,{attachShadow(e){return r(s.call(this,e))}}),queueMicrotask(()=>{js(r(document)),n(Gr.join(","),document,!1)})}export{Hs as Hook,ds as INVALID_CONTENT,hs as INVALID_SRC_ATTR,ys as INVALID_WORKER_ATTR,Ns as XWorker,Cs as customObserver,Ws as define,Us as env,Is as whenDefined};
+/**
+ * Allow leaking a module globally to help avoid conflicting exports
+ * if the module might have been re-bundled in other projects.
+ * @template T
+ * @param {string} name the module name to save or retrieve
+ * @param {T} value the module as value to save if not known
+ * @param {globalThis} [global=globalThis] the reference where modules are saved where `globalThis` is the default
+ * @returns {[T, boolean]} the passed `value` or the previous one as first entry, a boolean indicating if it was known or not
+ */
+const stickyModule = (name, value, global = globalThis) => {
+  const symbol = Symbol.for(name);
+  const known = symbol in global;
+  return [
+    known ?
+      global[symbol] :
+      Object.defineProperty(global, symbol, { value })[symbol],
+    known
+  ];
+};
+
+/**
+ * Given a CSS selector, returns the first matching node, if any.
+ * @param {string} css the CSS selector to query
+ * @param {Document | DocumentFragment | Element} [root] the optional parent node to query
+ * @returns {Element?} the found element, if any
+ */
+const $$1 = (css, root = document) => root.querySelector(css);
+
+/**
+ * Given a CSS selector, returns a list of all matching nodes.
+ * @param {string} css the CSS selector to query
+ * @param {Document | DocumentFragment | Element} [root] the optional parent node to query
+ * @returns {Element[]} a list of found nodes
+ */
+const $$ = (css, root = document) => [...root.querySelectorAll(css)];
+
+/**
+ * Given a XPath selector, returns a list of all matching nodes.
+ * @param {string} path the XPath selector to evaluate
+ * @param {Document | DocumentFragment | Element} [root] the optional parent node to query
+ * @returns {Node[]} a list of found nodes (elements, attributes, text, comments)
+ */
+const $x = (path, root = document) => {
+  const expression = (new XPathEvaluator).createExpression(path);
+  const xpath = expression.evaluate(root, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+  const result = [];
+  for (let i = 0, {snapshotLength} = xpath; i < snapshotLength; i++)
+    result.push(xpath.snapshotItem(i));
+  return result;
+};
+
+// a bit terser code than I usually write but it's 10 LOC within 80 cols
+// if you are struggling to follow the code you can replace 1-char
+// references around with the following one, hoping that helps :-)
+
+// d => descriptors
+// k => key
+// p => promise
+// r => response
+
+const d = Object.getOwnPropertyDescriptors(Response.prototype);
+
+const isFunction = value => typeof value === 'function';
+
+const bypass = (p, k, { get, value }) => get || !isFunction(value) ?
+                p.then(r => r[k]) :
+                (...args) => p.then(r => r[k](...args));
+
+const direct = (p, value) => isFunction(value) ? value.bind(p) : value;
+
+const handler = {
+    get: (p, k) => d.hasOwnProperty(k) ? bypass(p, k, d[k]) : direct(p, p[k])
+};
+
+/**
+ * @param {RequestInfo | URL} input
+ * @param  {...RequestInit} init
+ * @returns {Promise<Response> & Response}
+ */
+var fetch$1 = (input, ...init) => new Proxy(
+    fetch(input, ...init).then(
+        r => r.ok ? r : Promise.reject(
+            new Error(`[${r.status}] Unable to fetch ${input}`)
+        )
+    ),
+    handler
+);
+
+const { assign: assign$3 } = Object;
+
+const STORAGE = 'entries';
+const READONLY = 'readonly';
+const READWRITE = 'readwrite';
+
+/**
+ * @typedef {Object} IDBMapOptions
+ * @prop {'strict' | 'relaxed' | 'default'} [durability]
+ * @prop {string} [prefix]
+ */
+
+/** @typedef {[IDBValidKey, unknown]} IDBMapEntry */
+
+/** @type {IDBMapOptions} */
+const defaultOptions = { durability: 'default', prefix: 'IDBMap' };
+
+/**
+ * @template T
+ * @param {{ target: IDBRequest<T> }} event
+ * @returns {T}
+ */
+const result$1 = ({ target: { result } }) => result;
+
+class IDBMap extends EventTarget {
+  // Privates
+  /** @type {Promise<IDBDatabase>} */ #db;
+  /** @type {IDBMapOptions} */ #options;
+  /** @type {string} */ #prefix;
+
+  /**
+   * @template T
+   * @param {(store: IDBObjectStore) => IDBRequest<T>} what
+   * @param {'readonly' | 'readwrite'} how
+   * @returns {Promise<T>}
+   */
+  async #transaction(what, how) {
+    const db = await this.#db;
+    const t = db.transaction(STORAGE, how, this.#options);
+    return new Promise((onsuccess, onerror) => assign$3(
+      what(t.objectStore(STORAGE)),
+      {
+        onsuccess,
+        onerror,
+      }
+    ));
+  }
+
+  /**
+   * @param {string} name
+   * @param {IDBMapOptions} options
+   */
+  constructor(
+    name,
+    {
+      durability = defaultOptions.durability,
+      prefix = defaultOptions.prefix,
+    } = defaultOptions
+  ) {
+    super();
+    this.#prefix = prefix;
+    this.#options = { durability };
+    this.#db = new Promise((resolve, reject) => {
+      assign$3(
+        indexedDB.open(`${this.#prefix}/${name}`),
+        {
+          onupgradeneeded({ target: { result, transaction } }) {
+            if (!result.objectStoreNames.length)
+              result.createObjectStore(STORAGE);
+            transaction.oncomplete = () => resolve(result);
+          },
+          onsuccess(event) {
+            resolve(result$1(event));
+          },
+          onerror(event) {
+            reject(event);
+            this.dispatchEvent(event);
+          },
+        },
+      );
+    }).then(result => {
+      const boundDispatch = this.dispatchEvent.bind(this);
+      for (const key in result) {
+        if (key.startsWith('on'))
+          result[key] = boundDispatch;
+      }
+      return result;
+    });
+  }
+
+  // EventTarget Forwards
+  /**
+   * @param {Event} event
+   * @returns 
+   */
+  dispatchEvent(event) {
+    const { type, message, isTrusted } = event;
+    return super.dispatchEvent(
+      // avoid re-dispatching of the same event
+      isTrusted ?
+        assign$3(new Event(type), { message }) :
+        event
+    );
+  }
+
+  // IDBDatabase Forwards
+  async close() {
+    (await this.#db).close();
+  }
+
+  // Map async API
+  get size() {
+    return this.#transaction(
+      store => store.count(),
+      READONLY,
+    ).then(result$1);
+  }
+
+  async clear() {
+    await this.#transaction(
+      store => store.clear(),
+      READWRITE,
+    );
+  }
+
+  /**
+   * @param {IDBValidKey} key
+   */
+  async delete(key) {
+    await this.#transaction(
+      store => store.delete(key),
+      READWRITE,
+    );
+  }
+
+  /**
+   * @returns {Promise<IDBMapEntry[]>}
+   */
+  async entries() {
+    const keys = await this.keys();
+    return Promise.all(keys.map(key => this.get(key).then(value => [key, value])));
+  }
+
+  /**
+   * @param {(unknown, IDBValidKey, IDBMap) => void} callback
+   * @param {unknown} [context]
+   */
+  async forEach(callback, context = this) {
+    for (const [key, value] of await this.entries())
+      await callback.call(context, value, key, this);
+  }
+
+  /**
+   * @param {IDBValidKey} key
+   * @returns {Promise<unknown | undefined>}
+   */
+  async get(key) {
+    const value = await this.#transaction(
+      store => store.get(key),
+      READONLY,
+    ).then(result$1);
+    return value;
+  }
+
+  /**
+   * @param {IDBValidKey} key
+   */
+  async has(key) {
+    const k = await this.#transaction(
+      store => store.getKey(key),
+      READONLY,
+    ).then(result$1);
+    return k !== void 0;
+  }
+
+  async keys() {
+    const keys = await this.#transaction(
+      store => store.getAllKeys(),
+      READONLY,
+    ).then(result$1);
+    return keys;
+  }
+
+  /**
+   * @param {IDBValidKey} key
+   * @param {unknown} value
+   */
+  async set(key, value) {
+    await this.#transaction(
+      store => store.put(value, key),
+      READWRITE,
+    );
+    return this;
+  }
+
+  async values() {
+    const keys = await this.keys();
+    return Promise.all(keys.map(key => this.get(key)));
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#prefix;
+  }
+}
+
+class IDBMapSync extends Map {
+  #map;
+  #queue;
+  constructor(...args) {
+    super();
+    this.#map = new IDBMap(...args);
+    this.#queue = this.#map.entries().then(entries => {
+      for (const [key, value] of entries)
+        super.set(key, value);
+    });
+  }
+  async close() {
+    await this.#queue;
+    await this.#map.close();
+  }
+  async sync() {
+    await this.#queue;
+  }
+  clear() {
+    this.#queue = this.#queue.then(() => this.#map.clear());
+    return super.clear();
+  }
+  delete(key) {
+    this.#queue = this.#queue.then(() => this.#map.delete(key));
+    return super.delete(key);
+  }
+  set(key, value) {
+    this.#queue = this.#queue.then(() => this.#map.set(key, value));
+    return super.set(key, value);
+  }
+}
+
+//@ts-check
+
+/**
+ * @template T
+ * @typedef {{promise: Promise<T>, resolve: (value: T) => void, reject: (reason?: any) => void}} Resolvers
+ */
+
+//@ts-ignore
+const withResolvers = Promise.withResolvers;
+
+/**
+ * @template T
+ * @type {() => Resolvers<T>}
+ */
+var withResolvers$1 = withResolvers.bind(Promise);
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const workers = new Proxy(new Map, {
+  get(map, name) {
+    if (!map.has(name))
+      map.set(name, withResolvers$1());
+    return map.get(name);
+  },
+});
+
+// filter out forever pending Promises in Pyodide
+// @issue https://github.com/pyscript/pyscript/issues/2106
+const ignore = new Set(['__dict__', 'constructor', 'get', 'has', 'includes', 'next', 'set', 'then']);
+
+const workersHandler = new Proxy(Object.freeze({}), {
+  // guard against forever pending Promises in Pyodide
+  // @issue https://github.com/pyscript/pyscript/issues/2106
+  get: (_, name) => (typeof name === 'string' && !ignore.has(name)) ?
+    workers[name].promise.then(w => w.sync) :
+    void 0,
+});
+/* c8 ignore stop */
+
+let i$2 = 0;
+
+// extras
+const UNREF = i$2++;
+const ASSIGN = i$2++;
+const EVALUATE = i$2++;
+const GATHER = i$2++;
+const QUERY = i$2++;
+
+// traps
+const APPLY = i$2++;
+const CONSTRUCT = i$2++;
+const DEFINE_PROPERTY = i$2++;
+const DELETE_PROPERTY = i$2++;
+const GET = i$2++;
+const GET_OWN_PROPERTY_DESCRIPTOR = i$2++;
+const GET_PROTOTYPE_OF = i$2++;
+const HAS = i$2++;
+const IS_EXTENSIBLE = i$2++;
+const OWN_KEYS = i$2++;
+i$2++;
+const SET$1 = i$2++;
+const SET_PROTOTYPE_OF = i$2++;
+
+const DIRECT           = 0;
+const REMOTE           = 1 << 0;
+const OBJECT$1           = 1 << 1;
+const ARRAY$1            = 1 << 2;
+const FUNCTION         = 1 << 3;
+const SYMBOL$1           = 1 << 4;
+const BIGINT$1           = 1 << 5;
+const BUFFER$1           = 1 << 6;
+
+const VIEW$1             = BUFFER$1 | ARRAY$1;
+const REMOTE_OBJECT    = REMOTE | OBJECT$1;
+const REMOTE_ARRAY     = REMOTE | ARRAY$1;
+const REMOTE_FUNCTION  = REMOTE | FUNCTION;
+
+class Never {}
+
+const ImageData = globalThis.ImageData || /** @type {typeof ImageData} */(Never);
+
+/** @type {Map<symbol, string>} */
+const symbols = new Map(
+  Reflect.ownKeys(Symbol).map(
+    key => [Symbol[key], `@${String(key)}`]
+  )
+);
+
+/**
+ * @param {symbol} value
+ * @param {string} description
+ * @returns {string}
+ */
+const asSymbol = (value, description) => (
+  description === void 0 ? '?' :
+  (Symbol.keyFor(value) === void 0 ? `!${description}` : `#${description}`)
+);
+
+/**
+ * Extract the value from a pair of type and value.
+ * @param {string} name
+ * @returns {symbol}
+ */
+const fromSymbol = name => {
+  switch (name[0]) {
+    case '@': return Symbol[name.slice(1)];
+    case '#': return Symbol.for(name.slice(1));
+    case '!': return Symbol(name.slice(1));
+    default: return Symbol();
+  }
+};
+
+/**
+ * Create the name of a symbol.
+ * @param {symbol} value
+ * @returns {string}
+ */
+const toSymbol = value => symbols.get(value) || asSymbol(value, value.description);
+
+const defineProperty$3 = Object.defineProperty;
+
+const assign$2 = Object.assign;
+
+const fromArray = Array.from;
+
+const isArray$1 = Array.isArray;
+
+const isView = ArrayBuffer.isView;
+
+/**
+ * A type/value pair.
+ * @typedef {[number, any]} TypeValue
+ */
+
+/**
+ * Create a type/value pair.
+ * @param {number} type
+ * @param {any} value
+ * @returns {TypeValue}
+ */
+const tv = (type, value) => [type, value];
+
+const identity = value => value;
+const object = {};
+/* c8 ignore stop */
+
+/**
+ * Create a function that loops through an array and applies a function to each value.
+ * @param {(value:any, cache?:Map<any, any>) => any} asValue
+ * @returns
+ */
+const loopValues = asValue => (
+  /**
+   * Loop through an array and apply a function to each value.
+   * @param {any[]} arr
+   * @param {Map} [cache]
+   * @returns
+   */
+  (arr, cache = new Map) => {
+    for (let i = 0, length = arr.length; i < length; i++)
+      arr[i] = asValue(arr[i], cache);
+    return arr;
+  }
+);
+
+/**
+ * Extract the value from a pair of type and value.
+ * @param {TypeValue} pair
+ * @returns {string|symbol}
+ */
+const fromKey = ([type, value]) => type === DIRECT ? value : fromSymbol(value);
+
+/**
+ * Associate a key with an optionally transformed value.
+ * @param {string|symbol} value
+ * @returns {TypeValue}
+ */
+const toKey = value => typeof value === 'string' ?
+  tv(DIRECT, value) : tv(SYMBOL$1, toSymbol(value))
+;
+
+const MAX_ARGS = 0x7FFF;
+
+/**
+ * @param {number[]} output
+ * @param {Uint8Array} value 
+ */
+const push = (output, value) => {
+  for (let $ = output.push, i = 0, length = value.length; i < length; i += MAX_ARGS)
+    $.apply(output, value.subarray(i, i + MAX_ARGS));
+};
+
+const { getPrototypeOf: getPrototypeOf$1 } = Object;
+const { construct: construct$1 } = Reflect;
+const { toStringTag } = Symbol;
+const { toString } = object;
+
+const toTag = (ref, name = ref[toStringTag]) =>
+  name in globalThis ? name : toTag(construct$1(getPrototypeOf$1(ref.constructor),[0]));
+
+/**
+ * @param {ArrayBufferLike} value
+ * @param {boolean} direct
+ * @returns {BufferDetails}
+ */
+const toBuffer = (value, direct) => [
+  direct ? value : fromArray(new Uint8Array(value)),
+  //@ts-ignore
+  value.resizable ? value.maxByteLength : 0
+];
+
+/**
+ * @param {ArrayBufferView} value
+ * @param {boolean} direct
+ * @returns {ViewDetails}
+ */
+const toView = (value, direct) => {
+  //@ts-ignore
+  const { BYTES_PER_ELEMENT, byteOffset, buffer, length } = value;
+  return [
+    toTag(value),
+    toBuffer(buffer, direct),
+    byteOffset,
+    length !== ((buffer.byteLength - byteOffset) / BYTES_PER_ELEMENT) ? length : 0,
+  ];
+};
+
+const brackets = /\[('|")?(.+?)\1\]/g;
+
+const keys = (target, key) => target?.[key];
+
+/**
+ * Parses the given path and returns the value at the given target.
+ * @param {any} target
+ * @param {string} path
+ * @returns {any}
+ */
+var query = (target, path) => path.replace(brackets, '.$2').split('.').reduce(keys, target);
+
+/**
+ * Parses each given path and returns each value at the given target.
+ * @param {any} target
+ * @param  {...(string|symbol)[]} keys
+ * @returns {any[]}
+ */
+var gather = (target, ...keys) => keys.map(asResult, target);
+
+function asResult(key) {
+  return typeof key === 'string' ? query(this, key) : this[key];
+}
+
+/**
+ * @template T
+ * @typedef {Object} Heap
+ * @property {() => void} clear
+ * @property {(ref:T) => number} id
+ * @property {(id:number) => T} ref
+ * @property {(id:number) => boolean} unref
+ */
+
+/**
+ * Create a heap-like utility to hold references in memory.
+ * @param {number} [id=0] The initial `id` which is `0` by default.
+ * @param {Map<number, any>} [ids=new Map] The used map of ids to references.
+ * @param {Map<any, number>} [refs=new Map] The used map of references to ids.
+ * @returns {Heap<any>}
+ */
+var heap = (id = 0, ids = new Map, refs = new Map) => ({
+  clear: () => {
+    ids.clear();
+    refs.clear();
+  },
+  id: ref => {
+    let uid = refs.get(ref);
+    if (uid === void 0) {
+      /* c8 ignore next */
+      while (ids.has(uid = id++));
+      ids.set(uid, ref);
+      refs.set(ref, uid);
+    }
+    return uid;
+  },
+  ref: id => ids.get(id),
+  unref: id => {
+    refs.delete(ids.get(id));
+    return ids.delete(id);
+  },
+});
+
+// import DEBUG from './utils/debug.js';
+
+
+const Node = globalThis.Node || class Node {};
+
+const {
+  apply: apply$1,
+  construct,
+  defineProperty: defineProperty$2,
+  deleteProperty,
+  get: get$1,
+  getOwnPropertyDescriptor,
+  getPrototypeOf,
+  has: has$1,
+  isExtensible,
+  ownKeys: ownKeys$1,
+  set: set$3,
+  setPrototypeOf,
+} = Reflect;
+
+/**
+ * @typedef {Object} LocalOptions Optional utilities used to orchestrate local <-> remote communication.
+ * @property {Function} [reflect=identity] The function used to reflect operations via the remote receiver. Currently only `apply` and `unref` are supported.
+ * @property {Function} [transform=identity] The function used to transform local values into simpler references that the remote side can understand.
+ * @property {Function} [remote=identity] The function used to intercept remote invokes *before* these happen. Usable to sync `events` or do other tasks.
+ * @property {Function} [module] The function used to import modules when remote asks to `import(...)` something.
+ * @property {boolean} [buffer=false] Optionally allows direct buffer serialization breaking JSON compatibility.
+ * @property {number} [timeout=-1] Optionally allows remote values to be cached when possible for a `timeout` milliseconds value. `-1` means no timeout.
+ */
+
+/**
+ * @param {LocalOptions} options
+ * @returns
+ */
+var local = ({
+  reflect = identity,
+  transform = identity,
+  remote = identity,
+  module = name => import(name),
+  buffer = false,
+  timeout = -1,
+} = object) => {
+  // received values arrive via postMessage so are compatible
+  // with the structured clone algorithm
+  const fromValue = (value, cache = new Map) => {
+    if (!isArray$1(value)) return value;
+    const [t, v] = value;
+    switch (t) {
+      case OBJECT$1: {
+        if (v === null) return globalThis;
+        let cached = cache.get(value);
+        if (!cached) {
+          cached = v;
+          cache.set(value, v);
+          for (const k in v) v[k] = fromValue(v[k], cache);
+        }
+        return cached;
+      }
+      case ARRAY$1: {
+        return cache.get(value) || (
+          cache.set(value, v),
+          fromValues(v, cache)
+        );
+      }
+      case FUNCTION: {
+        let wr = weakRefs.get(v), fn = wr?.deref();
+        if (!fn) {
+          /* c8 ignore start */
+          if (wr) fr.unregister(wr);
+          /* c8 ignore stop */
+          fn = function (...args) {
+            remote.apply(this, args);
+
+            // values reflected asynchronously are not passed stringified
+            // because it makes no sense to use Atomics and SharedArrayBuffer
+            // to transfer these ... yet these must reflect the current state
+            // on this local side of affairs.
+            for (let i = 0, length = args.length; i < length; i++)
+              args[i] = toValue(args[i]);
+
+            const result = reflect(APPLY, v, toValue(this), args);
+            return result.then(fromValue);
+          };
+          wr = new WeakRef(fn);
+          weakRefs.set(v, wr);
+          fr.register(fn, v, wr);
+        }
+        return fn;
+      }
+      case SYMBOL$1: return fromSymbol(v);
+      default: return (t & REMOTE) ? ref(v) : v;
+    }
+  };
+
+  // OBJECT, DIRECT, VIEW, BUFFER, REMOTE_ARRAY, REMOTE_OBJECT, REMOTE_FUNCTION, SYMBOL, BIGINT
+  /**
+   * Converts values into TypeValue pairs when these
+   * are not JSON compatible (symbol, bigint) or
+   * local (functions, arrays, objects, globalThis).
+   * @param {any} value the current value
+   * @returns {any} the value as is or its TypeValue counterpart
+   */
+  const toValue = value => {
+    switch (typeof value) {
+      case 'object': {
+        if (value === null) break;
+        if (value === globalThis) return globalTarget;
+        const $ = transform(value);
+        return ((hasDirect && direct.has($)) || $ instanceof ImageData) ?
+          tv(DIRECT, $) : (
+          isView($) ?
+            tv(VIEW$1, toView($, buffer)) : (
+              $ instanceof ArrayBuffer ?
+                tv(BUFFER$1, toBuffer($, buffer)) :
+                tv(isArray$1($) ? REMOTE_ARRAY : REMOTE_OBJECT, id($))
+            )
+        );
+      }
+      case 'function': return tv(REMOTE_FUNCTION, id(transform(value)));
+      case 'symbol': return tv(SYMBOL$1, toSymbol(value));
+      case 'bigint': return tv(BIGINT$1, value.toString());
+    }
+    return value;
+  };
+
+  const fromValues = loopValues(fromValue);
+  const fromKeys = loopValues(fromKey);
+  const toKeys = loopValues(toKey);
+
+  const { clear, id, ref, unref } = heap();
+
+  const arrayKey = /^(?:[0-9]+|length)$/;
+  const memoize = -1 < timeout;
+  const weakRefs = new Map;
+  const globalTarget = tv(OBJECT$1, null);
+  const fr = new FinalizationRegistry(v => {
+    weakRefs.delete(v);
+    reflect(UNREF, v);
+  });
+
+  let hasDirect = false, direct;
+
+  return {
+    assign: assign$2,
+    gather,
+    query,
+
+    /**
+     * Alows local references to be passed directly to the remote receiver,
+     * either as copy or serliazied values (it depends on the implementation).
+     * @template {WeakKey} T
+     * @param {T} value
+     * @returns {T}
+     */
+    direct(value) {
+      if (!hasDirect) {
+        // if (DEBUG) console.debug('DIRECT');
+        hasDirect = true;
+        direct = new WeakSet;
+      }
+      direct.add(value);
+      return value;
+    },
+
+    /**
+     * Provide a portable API that just invokes the given callback with the given arguments.
+     * @param {Function} callback
+     * @param  {...any} args
+     * @returns {any}
+     */
+    evaluate: (callback, ...args) => apply$1(callback, null, args),
+
+    /**
+     * This callback reflects locally every remote call.
+     * It accepts TypeValue pairs but it always returns a string
+     * to make it possible to use Atomics and SharedArrayBuffer.
+     * @param {number} method
+     * @param {number?} uid
+     * @param  {...any} args
+     * @returns
+     */
+    reflect(method, uid, ...args) {
+      // if (DEBUG) console.debug(method === UNREF ? 'GC' : 'ROUNDTRIP');
+      const isGlobal = uid === null;
+      const target = isGlobal ? globalThis : ref(uid);
+      // the order is by most common use cases
+      switch (method) {
+        case GET: {
+          const key = fromKey(args[0]);
+          const asModule = isGlobal && key === 'import';
+          const value = asModule ? module : get$1(target, key);
+          const result = toValue(value);
+          if (!memoize) return result;
+          let cache = asModule, t = target, d;
+          if (!asModule && !(
+            // avoid caching DOM related stuff (all accessors)
+            (t instanceof Node) ||
+            // avoid also caching Array length or index accessors
+            (isArray$1(t) && typeof key === 'string' && arrayKey.test(key))
+          )) {
+            // cache unknown properties but ...
+            if (key in target) {
+              // ... avoid caching accessors!
+              while (!(d = getOwnPropertyDescriptor(t, key))) {
+                t = getPrototypeOf(t);
+                /* c8 ignore start */
+                // this is an emergency case for "unknown" values
+                if (!t) break;
+                /* c8 ignore stop */
+              }
+              cache = !!d && 'value' in d;
+            }
+            // accessing non existent properties could be repeated
+            // for no reason whatsoever and it gets removed once
+            // the property is eventually set so ...
+            else cache = true;
+          }
+          return [cache, result];
+        }
+        case APPLY: {
+          const map = new Map;
+          return toValue(apply$1(target, fromValue(args[0], map), fromValues(args[1], map)));
+        }
+        case SET$1: return set$3(target, fromKey(args[0]), fromValue(args[1]));
+        case HAS: return has$1(target, fromKey(args[0]));
+        case OWN_KEYS: return toKeys(ownKeys$1(target), weakRefs);
+        case CONSTRUCT: return toValue(construct(target, fromValues(args[0])));
+        case GET_OWN_PROPERTY_DESCRIPTOR: {
+          const descriptor = getOwnPropertyDescriptor(target, fromKey(args[0]));
+          if (descriptor) {
+            for (const k in descriptor)
+              descriptor[k] = toValue(descriptor[k]);
+          }
+          return descriptor;
+        }
+        case DEFINE_PROPERTY: return defineProperty$2(target, fromKey(args[0]), fromValue(args[1]));
+        case DELETE_PROPERTY: return deleteProperty(target, fromKey(args[0]));
+        case GET_PROTOTYPE_OF: return toValue(getPrototypeOf(target));
+        case SET_PROTOTYPE_OF: return setPrototypeOf(target, fromValue(args[0]));
+        case ASSIGN: {
+          assign$2(target, fromValue(args[0]));
+          return;
+        }
+        case EVALUATE: {
+          const body = fromValue(args[0]);
+          const fn = Function(`return(${body}).apply(null,arguments)`);
+          return toValue(apply$1(fn, null, fromValues(args[1])));
+        }
+        case GATHER: {
+          args = fromKeys(args[0], weakRefs);
+          for (let k, i = 0, length = args.length; i < length; i++) {
+            k = args[i];
+            args[i] = toValue(typeof k === 'string' ? query(target, k) : target[k]);
+          }
+          return args;
+        }
+        case QUERY: return toValue(query(target, args[0]));
+        case UNREF: return unref(uid);
+        case IS_EXTENSIBLE: return isExtensible(target);
+      }
+    },
+
+    /**
+     * Terminates the local side of the communication,
+     * erasing and unregistering all the cached references.
+     */
+    terminate() {
+      for (const wr of weakRefs.values()) fr.unregister(wr);
+      weakRefs.clear();
+      clear();
+    },
+  };
+};
+
+// This is an optional utility that needs to patch `addEventListener`.
+// Its `default` return value can be used as `remote` field when
+// the `local({ remote: ... })` is invoked.
+
+const { addEventListener } = EventTarget.prototype;
+const eventsHandler = new WeakMap;
+Reflect.defineProperty(EventTarget.prototype, 'addEventListener', {
+  /**
+   * Intercepts `options` with an `invoke` field that could contain
+   * `preventDefault`, `stopPropagation` or `stopImmediatePropagation`
+   * strings so that when the event will be triggered locally,
+   * the remote side can still enforce one of those operations, even if
+   * invoked asynchronously (those calls will happen on the local thread).
+   * 
+   * @param {string} type
+   * @param {EventListenerOrEventListenerObject?} callback
+   * @param  {AddEventListenerOptions & { invoke?: string|string[]} | boolean} options
+   * @returns {void}
+   */
+  value(type, callback, options) {
+    //@ts-ignore
+    const invoke = options?.invoke;
+    if (invoke) {
+      let map = eventsHandler.get(this);
+      if (!map) eventsHandler.set(this, (map = new Map));
+      map.set(type, [].concat(invoke));
+      //@ts-ignore
+      delete options.invoke;
+    }
+    return addEventListener.apply(this, arguments);
+  },
+});
+
+/**
+ * This utility is used to perform `preventDefault` or `stopPropagation`
+ * on events that are triggered via functions defined on the remote side.
+ * It is meant to be passed as `remote`, or as part of `remote` field when
+ * the `local({ remote: ... })` is invoked, meaning it happens right before
+ * the *remote* event handler is requested to be called.
+ * @param {Event} event
+ */
+var patchEvent = event => {
+  const { currentTarget, target, type } = event;
+  const methods = eventsHandler.get(currentTarget || target)?.get(type);
+  if (methods) for (const method of methods) event[method]();
+};
+
+let i$1 = 0;
+
+const FALSE = i$1++;
+const TRUE = i$1++;
+
+const UNDEFINED = i$1++;
+const NULL = i$1++;
+
+const NUMBER = i$1++;
+const UI8 = i$1++;
+const NAN = i$1++;
+const INFINITY = i$1++;
+const N_INFINITY = i$1++;
+const ZERO = i$1++;
+const N_ZERO = i$1++;
+
+const BIGINT = i$1++;
+const BIGUINT = i$1++;
+
+const STRING = i$1++;
+
+const SYMBOL = i$1++;
+
+const ARRAY = i$1++;
+const BUFFER = i$1++;
+const DATE = i$1++;
+const ERROR = i$1++;
+const MAP = i$1++;
+const OBJECT = i$1++;
+const REGEXP = i$1++;
+const SET = i$1++;
+const VIEW = i$1++;
+
+const IMAGE_DATA = i$1++;
+
+const RECURSION = i$1++;
+
+// This is an Array facade for the encoder.
+
+class Stack {
+  /**
+   * @param {Stack} self
+   * @param {Uint8Array} value
+   */
+  static push(self, value) {
+    self.sync(false);
+    self._(value, value.length);
+  }
+
+  /**
+   * @param {ArrayBufferLike} buffer
+   * @param {number} offset
+   */
+  constructor(buffer, offset) {
+    /** @type {number[]} */
+    const output = [];
+
+    /** @private length */
+    this.l = 0;
+
+    /** @private output */
+    this.o = output;
+
+    /** @private view */
+    this.v = new Uint8Array(buffer, offset);
+
+    /** @type {typeof Array.prototype.push} */
+    this.push = output.push.bind(output);
+  }
+
+  /**
+   * @readonly
+   * @type {number}
+   */
+  get length() {
+    return this.l + this.o.length;
+  }
+
+  /**
+   * Sync all entries in the output to the buffer.
+   * @param {boolean} last `true` if it's the last sync.
+   */
+  sync(last) {
+    const output = this.o;
+    const length = output.length;
+    if (length) this._(last ? output : output.splice(0), length);
+  }
+
+  /**
+   * Set a value to the buffer
+   * @private
+   * @param {Uint8Array|number[]} value
+   * @param {number} byteLength
+   */
+  _(value, byteLength) {
+    const { buffer, byteOffset } = this.v;
+    const offset = this.l;
+    this.l += byteLength;
+    byteLength += byteOffset + offset;
+    if (buffer.byteLength < byteLength)
+      /** @type {SharedArrayBuffer} */(buffer).grow(byteLength);
+    this.v.set(value, offset);
+  }
+}
+
+const decoder$1 = new TextDecoder;
+
+const encoder$1 = new TextEncoder;
+
+const buffer = new ArrayBuffer(8);
+const dv = new DataView(buffer);
+const u8a8 = new Uint8Array(buffer);
+
+//@ts-check
+
+
+/** @typedef {Map<number, number[]>} Cache */
+
+const { isNaN, isFinite, isInteger } = Number;
+const { ownKeys } = Reflect;
+const { is } = Object;
+
+/**
+ * @param {any} input
+ * @param {number[]|Stack} output
+ * @param {Cache} cache
+ * @returns {boolean}
+ */
+const process = (input, output, cache) => {
+  const value = cache.get(input);
+  const unknown = !value;
+  if (unknown) {
+    dv.setUint32(0, output.length, true);
+    cache.set(input, [u8a8[0], u8a8[1], u8a8[2], u8a8[3]]);
+  }
+  else
+    output.push(RECURSION, value[0], value[1], value[2], value[3]);
+  return unknown;
+};
+
+/**
+ * @param {number[]|Stack} output
+ * @param {number} type
+ * @param {number} length
+ */
+const set$2 = (output, type, length) => {
+  dv.setUint32(0, length, true);
+  output.push(type, u8a8[0], u8a8[1], u8a8[2], u8a8[3]);
+};
+
+/**
+ * @param {any} input
+ * @param {number[]|Stack} output
+ * @param {Cache} cache
+ */
+const inflate = (input, output, cache) => {
+  switch (typeof input) {
+    case 'number': {
+      if (input && isFinite(input)) {
+        if (isInteger(input) && input < 256 && -1 < input)
+          output.push(UI8, input);
+        else {
+          dv.setFloat64(0, input, true);
+          output.push(NUMBER, u8a8[0], u8a8[1], u8a8[2], u8a8[3], u8a8[4], u8a8[5], u8a8[6], u8a8[7]);
+        }
+      }
+      else if (isNaN(input)) output.push(NAN);
+      else if (!input) output.push(is(input, 0) ? ZERO : N_ZERO);
+      else output.push(input < 0 ? N_INFINITY : INFINITY);
+      break;
+    }
+    case 'object': {
+      switch (true) {
+        case input === null:
+          output.push(NULL);
+          break;
+        case !process(input, output, cache): break;
+        case isArray$1(input): {
+          const length = input.length;
+          set$2(output, ARRAY, length);
+          for (let i = 0; i < length; i++)
+            inflate(input[i], output, cache);
+          break;
+        }
+        case isView(input): {
+          output.push(VIEW);
+          inflate(toTag(input), output, cache);
+          input = input.buffer;
+          if (!process(input, output, cache)) break;
+          // fallthrough
+        }
+        case input instanceof ArrayBuffer: {
+          const ui8a = new Uint8Array(input);
+          set$2(output, BUFFER, ui8a.length);
+          //@ts-ignore
+          pushView(output, ui8a);
+          break;
+        }
+        case input instanceof Date:
+          output.push(DATE);
+          inflate(input.getTime(), output, cache);
+          break;
+        case input instanceof Map: {
+          set$2(output, MAP, input.size);
+          for (const [key, value] of input) {
+            inflate(key, output, cache);
+            inflate(value, output, cache);
+          }
+          break;
+        }
+        case input instanceof Set: {
+          set$2(output, SET, input.size);
+          for (const value of input)
+            inflate(value, output, cache);
+          break;
+        }
+        case input instanceof Error:
+          output.push(ERROR);
+          inflate(input.name, output, cache);
+          inflate(input.message, output, cache);
+          inflate(input.stack, output, cache);
+          break;
+        /* c8 ignore start */
+        case input instanceof ImageData:
+          output.push(IMAGE_DATA);
+          inflate(input.data, output, cache);
+          inflate(input.width, output, cache);
+          inflate(input.height, output, cache);
+          inflate(input.colorSpace, output, cache);
+          //@ts-ignore
+          inflate(input.pixelFormat, output, cache);
+          break;
+        /* c8 ignore stop */
+        case input instanceof RegExp:
+          output.push(REGEXP);
+          inflate(input.source, output, cache);
+          inflate(input.flags, output, cache);
+          break;
+        default: {
+          if ('toJSON' in input) {
+            const json = input.toJSON();
+            inflate(json === input ? null : json, output, cache);
+          }
+          else {
+            const keys = ownKeys(input);
+            const length = keys.length;
+            set$2(output, OBJECT, length);
+            for (let i = 0; i < length; i++) {
+              const key = keys[i];
+              inflate(key, output, cache);
+              inflate(input[key], output, cache);
+            }
+          }
+          break;
+        }
+      }
+      break;
+    }
+    case 'string': {
+      if (process(input, output, cache)) {
+        const encoded = encoder$1.encode(input);
+        set$2(output, STRING, encoded.length);
+        //@ts-ignore
+        pushView(output, encoded);
+      }
+      break;
+    }
+    case 'boolean': {
+      output.push(input ? TRUE : FALSE);
+      break;
+    }
+    case 'symbol': {
+      output.push(SYMBOL);
+      inflate(toSymbol(input), output, cache);
+      break;
+    }
+    case 'bigint': {
+      let type = BIGINT;
+      if (9223372036854775807n < input) {
+        dv.setBigUint64(0, input, true);
+        type = BIGUINT;
+      }
+      else dv.setBigInt64(0, input, true);
+      output.push(type, u8a8[0], u8a8[1], u8a8[2], u8a8[3], u8a8[4], u8a8[5], u8a8[6], u8a8[7]);
+      break;
+    }
+    // this covers functions too
+    default: {
+      output.push(UNDEFINED);
+      break;
+    }
+  }
+};
+
+/** @type {typeof push|typeof Stack.push} */
+let pushView = push;
+
+/**
+ * @param {any} value
+ * @returns {number[]}
+ */
+const encode = value => {
+  const output = [];
+  pushView = push;
+  inflate(value, output, new Map);
+  return output;
+};
+
+/**
+ * @param {{ byteOffset?: number, Array?: typeof Stack }} [options]
+ * @returns {(value: any, buffer: ArrayBufferLike) => number}
+ */
+const encoder = ({ byteOffset = 0, Array = Stack } = {}) => (value, buffer) => {
+  const output = new Array(buffer, byteOffset);
+  pushView = Array.push;
+  inflate(value, output, new Map);
+  const length = output.length;
+  output.sync(true);
+  return length;
+};
+
+// ⚠️ AUTOMATICALLY GENERATED - DO NOT CHANGE
+const CHANNEL = 'dbf1617e';
+const MAIN = '=' + CHANNEL;
+const WORKER = '-' + CHANNEL;
+
+//@ts-check
+
+
+/**
+ * @template V
+ * @callback Resolve
+ * @param {V?} [value]
+ * @returns {void}
+ */
+
+/**
+ * @callback Reject
+ * @param {any?} [error]
+ * @returns {void}
+ */
+
+/**
+ * @template V
+ * @typedef {object} Resolvers
+ * @prop {Promise<V>} promise
+ * @prop {Resolve<V>} resolve
+ * @prop {Reject} reject
+ */
+
+/**
+ * @template K,V
+ * @typedef {() => [K, Promise<V>]} Next
+ */
+
+/**
+ * @template K,V
+ * @callback Resolver
+ * @param {K} uid
+ * @param {V?} [value]
+ * @param {any?} [error]
+ */
+
+/**
+ * @template K,V
+ * @typedef {[Next<K,V>, Resolver<K,V>]} NextResolver
+ */
+
+/**
+ * @template K,V
+ * @param {(id: number) => K} [as]
+ * @returns
+ */
+var nextResolver = (as = (id => /** @type {K} */(id))) => {
+  /** @type {Map<K,Resolvers<V>>} */
+  const map = new Map;
+  let id = 0;
+  return /** @type {NextResolver<K,V>} */([
+    /** @type {Next<K,V>} */
+    () => {
+      let uid;
+      do { uid = as(id++); }
+      while (map.has(uid));
+      const wr = /** @type {Resolvers<V>} */(/** @type {unknown} */(withResolvers$1()));
+      map.set(uid, wr);
+      return [uid, wr.promise];
+    },
+    /** @type {Resolver<K,V>} */
+    (uid, value, error) => {
+      const wr = map.get(uid);
+      map.delete(uid);
+      if (error) wr?.reject(error);
+      else wr?.resolve(value);
+    },
+  ]);
+};
+
+//@ts-check
+
+/** @type {ArrayBuffer[]} */
+const nothing = [];
+
+/** @type {WeakSet<ArrayBuffer[]>} */
+const buffers = new WeakSet;
+
+/**
+ * @param {boolean} check
+ * @param {any[]} args
+ * @returns
+ */
+const get = (check, args) => {
+  let transfer = nothing;
+  if (check && buffers.has(args.at(-1) || nothing)) {
+    transfer = args.pop();
+    buffers.delete(transfer);
+  }
+  return transfer;
+};
+
+/**
+ * @param  {...ArrayBuffer} args
+ * @returns
+ */
+const set$1 = (...args) => {
+  buffers.add(args);
+  return args;
+};
+
+// ⚠️ AUTOMATED ⚠️
+var BROADCAST_CHANNEL_UID = 'dc78209b-186c-4f83-80e9-406becb7d9f3';
+
+//@ts-check
+
+let { SharedArrayBuffer: SAB } = globalThis, native = true;
+
+try {
+  //@ts-ignore due valid options not recognized
+  new SAB(4, { maxByteLength: 8 });
+}
+catch (_) {
+  native = false;
+  SAB = /** @type {SharedArrayBufferConstructor} */(
+    /** @type {unknown} */(
+      class SharedArrayBuffer extends ArrayBuffer {
+        get growable() {
+          //@ts-ignore due valid property not recognized
+          return super.resizable;
+        }
+        /** @param {number} newLength */
+        grow(newLength) {
+          //@ts-ignore due valid method not recognized
+          super.resize(newLength);
+        }
+      }
+    )
+  );
+}
+
+const {
+  assign: assign$1,
+  create: create$1,
+} = Object;
+
+/* c8 ignore start */
+const ID = `coincident-${native ? crypto.randomUUID() : Math.random().toString(36).substring(2)}`;
+/* c8 ignore end */
+
+const byteOffset = 2 * Int32Array.BYTES_PER_ELEMENT;
+
+const defaults = {
+  // ⚠️ mandatory: first int32 to notify, second one to store the written length
+  byteOffset,
+};
+
+const result = async (data, proxied, transform) => {
+  try {
+    const result = await proxied[data[1]].apply(null, data[2]);
+    data[1] = transform ? transform(result) : result;
+    data[2] = null;
+  }
+  catch (error) { data[2] = error; }
+};
+
+const set = (proxied, name, callback) => {
+  const ok = name !== 'then';
+  if (ok) proxied[name] = callback;
+  return ok;
+};
+
+/** @param {Event} event */
+const stop = event => {
+  event.stopImmediatePropagation();
+  event.preventDefault();
+};
+
+const ffi_timeout = (options, fallback = -1) => (
+  options?.reflected_ffi_timeout ?? fallback
+);
+
+const { defineProperty: defineProperty$1 } = Object;
+
+const [next, resolve$2] = nextResolver();
+let [bootstrap, promise] = next();
+
+/**
+ * @callback sabayon
+ * @param {string|URL} [serviceWorkerURL] - The URL of the service worker to register on the main thread.
+ * @returns {Promise<void>} - A promise that resolves when the polyfill is ready.
+ */
+
+let register$1 = /** @type {sabayon} */(() => promise);
+
+let {
+  Atomics: Atomics$1,
+  MessageChannel: MessageChannel$1,
+  Worker: Worker$1} = globalThis;
+
+if (native) resolve$2(bootstrap);
+else {
+
+  const views = new Map;
+
+  const addListener = (target, ...args) => {
+    target.addEventListener(...args);
+  };
+
+  // Web Worker
+  if ('importScripts' in globalThis) {
+
+    addListener(
+      globalThis,
+      'message',
+      event => {
+        stop(event);
+        resolve$2(bootstrap, event.data);
+      },
+      { once: true }
+    );
+
+    // <Atomics Patch>
+    const { wait } = Atomics$1;
+    const { parse } = JSON;
+
+    const Request = view => {
+      const xhr = new XMLHttpRequest;
+      try {
+        xhr.timeout = 3e3;
+        xhr.open('POST', `${SW}?sabayon`, false);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(`["${UID}",${views.get(view)}]`);
+        if (xhr.status === 200) return xhr;
+        throw xhr;
+      }
+      catch {
+        xhr.abort();
+        return Request(view);
+      }
+    };
+
+    const Response = (view, xhr) => {
+      view.set(parse(xhr.responseText));
+      return 'ok';
+    };
+
+    Atomics$1 = {
+      wait: (view, ..._) => views.has(view) ?
+        Response(view, Request(view)) :
+        wait(view, ..._)
+      ,
+    };
+
+    let UID, SW;
+
+    promise = promise.then(data => {
+      [UID, SW] = data;
+    });
+  }
+  // Main
+  else {
+    const UID = [ID, Math.random()].join('-').replace(/\W/g, '-');
+
+    const bc = new BroadcastChannel(BROADCAST_CHANNEL_UID);
+    bc.onmessage = async event => {
+      const [swid, wid, vid] = event.data;
+      if (wid === UID) {
+        for (const [view, [id, wr]] of views) {
+          if (id === vid) {
+            await wr.promise;
+            let length = view.length;
+            while (length-- && !view[length]);
+            bc.postMessage([swid, view.slice(0, length + 1)]);
+            break;
+          }
+        }
+      }
+    };
+
+    const intercept = event => {
+      const [id, view, value] = event.data;
+      views.set(view, [id, withResolvers$1()]);
+      defineProperty$1(event, 'data', { value });
+    };
+
+    MessageChannel$1 = class extends MessageChannel$1 {
+      constructor() {
+        super();
+        addListener(this.port1, 'message', intercept);
+      }
+    };
+
+    Worker$1 = class extends Worker$1 {
+      /**
+       * @param {string | URL} scriptURL 
+       * @param {WorkerOptions} options 
+       */
+      constructor(scriptURL, options) {
+        super(scriptURL, options);
+        super.postMessage([UID, SW]);
+      }
+    };
+
+    const { notify } = Atomics$1;
+    Atomics$1 = {
+      notify(view, ..._) {
+        const details = views.get(view);
+        if (details) {
+          details[1].resolve();
+          return 0;
+        }
+        // this will throw with a proper error
+        return notify(view, ..._);
+      },
+    };
+
+    let SW = '';
+    let serviceWorker = null;
+
+    /**
+     * @param {ServiceWorkerContainer} swc
+     * @param {RegistrationOptions} [options]
+     */
+    const activate = (swc, options) => {
+      let w, c = true;
+      swc.getRegistration(SW)
+        .then(r => (r ?? swc.register(SW, options)))
+        .then(function ready(r) {
+          const { controller } = swc;
+          c = c && !!controller;
+          w = (r.installing || r.waiting || r.active);
+          if (w.state === 'activated') {
+            if (c) {
+              // allow ServiceWorker swap on different URL
+              if (controller.scriptURL === SW)
+                return resolve$2(bootstrap);
+              r.unregister();
+            }
+            location.reload();
+          }
+          else {
+            addListener(w, 'statechange', () => ready(r), { once: true });
+          }
+        });
+    };
+
+    register$1 = /** @type {sabayon} */((serviceWorkerURL, options) => {
+      if (!serviceWorker) {
+        // resolve the fully qualified URL for Blob based workers
+        const sw = new URL(serviceWorkerURL, location.href);
+        SW = `${sw.protocol}//${sw.host}${sw.pathname}`;
+        activate(navigator.serviceWorker, options);
+        serviceWorker = promise;
+      }
+      return serviceWorker;
+    });
+  }
+}
+
+// @bug https://bugzilla.mozilla.org/show_bug.cgi?id=1956778
+// Note: InstallTrigger is deprecated so once it's gone I do hope
+//       this workaround would be gone too!
+const UID = 'InstallTrigger' in globalThis ? ID : '';
+
+const Number$1 = value => value;
+
+const info = name => {
+  if (name === MAIN) return 'main';
+  if (name === WORKER) return 'worker';
+  return name;
+};
+
+// @bug https://bugzilla.mozilla.org/show_bug.cgi?id=1956778
+class MessageEvent extends Event {
+  #data;
+  constructor(data) {
+    super('message');
+    this.#data = data;
+  }
+  get data() {
+    return this.#data;
+  }
+}
+
+var coincident$1 = options => {
+  const transform = options?.transform;
+  const timeout = ffi_timeout(options);
+  const encode = (options?.encoder || encoder)(defaults);
+  const checkTransferred = options?.transfer !== false;
+
+  /** @type {Worker & { proxy: Record<string, function> }} */
+  class Worker extends Worker$1 {
+    constructor(url, options) {
+      const serviceWorker = native ? '' : (options?.serviceWorker || '');
+      const { notify } = (serviceWorker ? Atomics$1 : Atomics);
+      const { port1: channel, port2 } = new (
+        serviceWorker ? MessageChannel$1 : MessageChannel
+      );
+      const [ next, resolve ] = nextResolver(Number$1);
+      const callbacks = new Map;
+      const proxied = create$1(null);
+
+      if (serviceWorker) register$1(serviceWorker);
+
+      let resolving = '';
+
+      const deadlock = (promise, name) => {
+        if (resolving) {
+          const t = setTimeout(
+            console.warn,
+            3e3,
+            `💀🔒 - is proxy.${info(resolving)}() awaiting proxy.${info(name)}() ?`
+          );
+          promise = promise.then(
+            result => {
+              clearTimeout(t);
+              return result;
+            },
+            error => {
+              clearTimeout(t);
+              return Promise.reject(error);
+            },
+          );
+        }
+        return promise;
+      };
+
+      super(url, assign$1({ type: 'module' }, options));
+
+      this.proxy = new Proxy(proxied, {
+        get: (_, name) => {
+          // the curse of potentially awaiting proxies in the wild
+          // requires this ugly guard around `then`
+          if (name === 'then') return;
+          let cb = callbacks.get(name);
+          if (!cb) {
+            callbacks.set(name, cb = (...args) => {
+              const transfer = get(checkTransferred, args);
+              const [uid, promise] = next();
+              channel.postMessage(
+                [uid, name, transform ? args.map(transform) : args],
+                transfer
+              );
+              return deadlock(promise, name);
+            });
+          }
+          return cb;
+        },
+        set
+      });
+
+      // @bug https://bugzilla.mozilla.org/show_bug.cgi?id=1956778
+      if (UID && (native || serviceWorker)) {
+        super.addEventListener('message', event => {
+          const { data } = event;
+          if (data?.ID === UID) {
+            stop(event);
+            channel.dispatchEvent(new MessageEvent(data.data));
+          }
+        });
+      }
+
+      super.postMessage([UID, serviceWorker, ffi_timeout(options, timeout)], [port2]);
+
+      channel.addEventListener('message', async ({ data }) => {
+        const i32 = data[0];
+        const type = typeof i32;
+        if (type === 'number')
+          resolve.apply(null, data);
+        else {
+          resolving = data[1];
+          await result(data, proxied, transform);
+          resolving = '';
+          if (type === 'string')
+            channel.postMessage(data);
+          else {
+            const result = data[2] || data[1];
+            // at index 1 we store the written length or 0, if undefined
+            i32[1] = result === void 0 ? 0 : encode(result, i32.buffer);
+            // at index 0 we set the SharedArrayBuffer as ready
+            i32[0] = 1;
+            notify(i32, 0);
+          }
+        }
+      });
+
+      channel.start();
+    }
+  }
+
+  return {
+    Worker,
+    native,
+    transfer: set$1,
+  };
+};
+
+var coincident = options => {
+  const esm = options?.import;
+  const timeout = ffi_timeout(options);
+  const exports = coincident$1({
+    ...options,
+    encoder: options?.encoder || encoder,
+  });
+
+  /** @type {Worker & { proxy: Record<string, function> }} */
+  class Worker extends exports.Worker {
+    #terminate;
+
+    constructor(url, options) {
+      const { proxy } = super(url, options);
+      const ffi = local({
+        ...options,
+        buffer: true,
+        reflect: proxy[WORKER],
+        timeout: ffi_timeout(options, timeout),
+        remote(event) { if (event instanceof Event) patchEvent(event); },
+        module: options?.import || esm || (name => import(new URL(name, location).href)),
+      });
+
+      this.#terminate = ffi.terminate;
+
+      this.ffi = {  
+        assign: ffi.assign,
+        direct: ffi.direct,
+        evaluate: ffi.evaluate,
+        gather: ffi.gather,
+        query: ffi.query,
+      };
+
+      proxy[MAIN] = ffi.reflect;
+    }
+
+    terminate() {
+      this.#terminate();
+      super.terminate();
+    }
+  }
+
+  return { ...exports, Worker };
+};
+
+/* c8 ignore start */
+const js_modules$1 = Symbol.for('polyscript.js_modules');
+let transform$1;
+const { Worker } = coincident({ transfer: false, transform: value => (transform$1 || (transform$1 = globalThis[js_modules$1]?.get("-T-")))?.(value) ?? value });
+var xworker$1 = (...args) => new Worker('/dist/_template.js', ...args);
+/* c8 ignore stop */
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const io = new WeakMap();
+const stdio = (init) => {
+    const context = init || console;
+    const localIO = {
+        // allow plugins or other io manipulating logic to reuse
+        // the buffered utility exposed in here (see py-editor)
+        buffered,
+        stderr: (context.stderr || console.error).bind(context),
+        stdout: (context.stdout || console.log).bind(context),
+    };
+    return {
+        stderr: (...args) => localIO.stderr(...args),
+        stdout: (...args) => localIO.stdout(...args),
+        async get(engine) {
+            const interpreter = await engine;
+            io.set(interpreter, localIO);
+            return interpreter;
+        },
+    };
+};
+
+const decoder = new TextDecoder();
+const buffered = (callback, EOL = 10) => {
+    const buffer = [];
+    return (maybeUI8) => {
+        if (maybeUI8 instanceof Uint8Array) {
+            for (const c of maybeUI8) {
+                if (c === EOL)
+                    callback(decoder.decode(new Uint8Array(buffer.splice(0))));
+                else
+                    buffer.push(c);
+            }
+        }
+        // if io.stderr(error) is passed instead
+        // or any io.stdout("thing") this should
+        // still work as expected
+        else {
+            callback(maybeUI8);
+        }
+    };
+};
+/* c8 ignore stop */
+
+const registry$2 = new Map;
+
+const type$5 = 'dummy';
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const require = name => registry$2.get(name);
+
+const run$2 = (interpreter, code) => {
+    try {
+        return Function('require', code)(require);
+    }
+    catch (error) {
+        io.get(interpreter).stderr(error);
+    }
+};
+
+var dummy = {
+    type: type$5,
+    module: () => 'data:text/javascript,',
+    engine: module => stdio().get(module),
+    registerJSModule(_, name, value) {
+        registry$2.set(name, value);
+    },
+    run: run$2,
+    runAsync: run$2,
+    runEvent: async (interpreter, code, event) => {
+        try {
+            await Function('require', 'e', `return ${code}(e)`)(require, event);
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
+    transform: (_, value) => value,
+    writeFile() {},
+};
+
+function content (t) {
+  for (var s = t[0], i = 1, l = arguments.length; i < l; i++)
+    s += arguments[i] + t[i];
+  return s;
+}
+
+const dedent$1 = {
+  object(...args) {
+    return this.string(content(...args));
+  },
+  string(content) {
+    for (const line of content.split(/[\r\n]+/)) {
+      // skip initial empty lines
+      if (line.trim().length) {
+        // trap indentation at the very first line of code
+        if (/^(\s+)/.test(line))
+          content = content.replace(new RegExp('^' + RegExp.$1, 'gm'), '');
+        // no indentation? all good: get out of here!
+        break;
+      }
+    }
+    return content;
+  }
+};
+
+/**
+ * Usable both as template literal tag or just as callback for strings, removes all spaces found
+ * at the very first line of code encountered while sanitizing, keeping everything else around.
+ * @param {string | TemplateStringsArray} tpl either code as string or as template, when used as tag
+ * @param  {...any} values the template interpolations, when used as tag
+ * @returns {string} code without undesired indentation
+ */
+const codedent = (tpl, ...values) => dedent$1[typeof tpl](tpl, ...values);
+
+/**
+ * Copyright (C) 2017-present by Andrea Giammarchi - @WebReflection
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+const {replace} = '';
+
+// escape
+const es = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g;
+
+
+// unescape
+const unes = {
+  '&amp;': '&',
+  '&#38;': '&',
+  '&lt;': '<',
+  '&#60;': '<',
+  '&gt;': '>',
+  '&#62;': '>',
+  '&apos;': "'",
+  '&#39;': "'",
+  '&quot;': '"',
+  '&#34;': '"'
+};
+const cape = m => unes[m];
+
+/**
+ * Safely unescape previously escaped entities such as `&`, `<`, `>`, `"`,
+ * and `'`.
+ * @param {string} un a previously escaped string
+ * @returns {string} the unescaped input, and it **throws** an error if
+ *  the input type is unexpected, except for boolean and numbers,
+ *  converted as string.
+ */
+const unescape$1 = un => replace.call(un, es, cape);
+
+/** @type {(tpl: string | TemplateStringsArray, ...values:any[]) => string} */
+const dedent = codedent;
+
+/** @type {(value:string) => string} */
+const unescape = unescape$1;
+
+const { isArray } = Array;
+
+const { assign, create, defineProperties, defineProperty, entries } = Object;
+
+const { all, resolve: resolve$1 } = new Proxy(Promise, {
+    get: ($, name) => $[name].bind($),
+});
+
+const absoluteURL = (path, base = location.href) =>
+    new URL(path, base.replace(/^blob:/, '')).href;
+
+function fixedRelative(path) {
+    return path.startsWith('.') ? absoluteURL(path, this) : path;
+}
+
+/* c8 ignore start */
+let id = 0;
+const nodeInfo = (node, type) => ({
+    id: node.id || (node.id = `${type}-w${id++}`),
+    tag: node.tagName
+});
+
+/**
+ * Notify the main thread about element "readiness".
+ * @param {HTMLScriptElement | HTMLElement} target the script or custom-type element
+ * @param {string} type the custom/type as event prefix
+ * @param {string} what the kind of event to dispatch, i.e. `ready` or `done`
+ * @param {boolean} [worker = false] `true` if dispatched form a worker, `false` by default if in main
+ * @param {globalThis.CustomEvent} [CustomEvent = globalThis.CustomEvent] the `CustomEvent` to use
+ */
+const dispatch = (target, type, what, worker = false, CE = CustomEvent) => {
+    target.dispatchEvent(
+        new CE(`${type}:${what}`, {
+            bubbles: true,
+            detail: { worker },
+        })
+    );
+};
+
+const createResolved = (module, type, config, interpreter) => ({
+    type,
+    config,
+    interpreter,
+    io: io.get(interpreter),
+    run: (code, ...args) => module.run(interpreter, code, ...args),
+    runAsync: (code, ...args) => module.runAsync(interpreter, code, ...args),
+    runEvent: (...args) => module.runEvent(interpreter, ...args),
+});
+
+const dropLine0 = code => code.replace(/^(?:\n|\r\n)/, '');
+
+const createOverload = (module, name, before, after) => {
+    const method = module[name].bind(module);
+    module[name] = name === 'run' ?
+        // patch the sync method
+        (interpreter, code, ...args) => {
+            if (before) method(interpreter, before, ...args);
+            const result = method(interpreter, dropLine0(code), ...args);
+            if (after) method(interpreter, after, ...args);
+            return result;
+        } :
+        // patch the async one
+        async (interpreter, code, ...args) => {
+            if (before) await method(interpreter, before, ...args);
+            const result = await method(interpreter, dropLine0(code), ...args);
+            if (after) await method(interpreter, after, ...args);
+            return result;
+        };
+};
+
+const js_modules = Symbol.for('polyscript.js_modules');
+
+const jsModules = new Map;
+defineProperty(globalThis, js_modules, { value: jsModules });
+
+const JSModules = new Proxy(jsModules, {
+    get: (map, name) => map.get(name),
+    has: (map, name) => map.has(name),
+    ownKeys: map => [...map.keys()],
+});
+
+const has = (_, field) => !field.startsWith('_');
+
+const proxy = (modules, name) => new Proxy(
+    modules,
+    { has, get: (modules, field) => modules[name][field] }
+);
+
+const registerJSModules = (type, module, interpreter, modules) => {
+    // Pyodide resolves JS modules magically
+    if (type === 'pyodide') return;
+
+    // other runtimes need this pretty ugly dance (it works though)
+    const jsModules = 'polyscript.js_modules';
+    for (const name of Reflect.ownKeys(modules))
+        module.registerJSModule(interpreter, `${jsModules}.${name}`, proxy(modules, name));
+    module.registerJSModule(interpreter, jsModules, modules);
+};
+
+const importJS = (source, name) => import(source).then(esm => {
+    jsModules.set(name, { ...esm });
+});
+
+const importCSS = href => new Promise((onload, onerror) => {
+    if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+        onload();
+    }
+    else {
+        document.head.append(
+            assign(
+                document.createElement('link'),
+                { rel: 'stylesheet', href, onload, onerror },
+            )
+        );
+    }
+});
+
+const isCSS = source => /\.css$/i.test(new URL(source).pathname);
+
+const isSync = element =>
+    /^(?:false|0|no)$/i.test(element.getAttribute('async'));
+
+const RUNNING_IN_WORKER = !globalThis.window;
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+
+// This should be the only helper needed for all Emscripten based FS exports
+const writeFile = ({ FS, PATH, PATH_FS }, path, buffer) => {
+    const absPath = PATH_FS.resolve(path);
+    const dirPath = PATH.dirname(absPath);
+    if (FS.mkdirTree) FS.mkdirTree(dirPath);
+    else mkdirTree(FS, dirPath);
+    return FS.writeFile(absPath, new Uint8Array(buffer), {
+        canOwn: true,
+    });
+};
+
+// This is instead a fallback for Lua or others
+const writeFileShim = (FS, path, buffer) => {
+    mkdirTree(FS, dirname(path));
+    path = resolve(FS, path);
+    return FS.writeFile(path, new Uint8Array(buffer), { canOwn: true });
+};
+
+const dirname = (path) => {
+    const tree = path.split('/');
+    tree.pop();
+    return tree.join('/');
+};
+
+const mkdirTree = (FS, path) => {
+    const current = [];
+    for (const branch of path.split('/')) {
+        if (branch === '.' || branch === '..') continue;
+        current.push(branch);
+        if (branch) FS.mkdir(current.join('/'));
+    }
+};
+
+const resolve = (FS, path) => {
+    const tree = [];
+    for (const branch of path.split('/')) {
+        switch (branch) {
+            case '':
+                break;
+            case '.':
+                break;
+            case '..':
+                tree.pop();
+                break;
+            default:
+                tree.push(branch);
+        }
+    }
+    return [FS.cwd()].concat(tree).join('/').replace(/^\/+/, '/');
+};
+
+const calculateFetchPaths = (config_fetch) => {
+    for (const { files, to_file, from = '' } of config_fetch) {
+        if (files !== undefined && to_file !== undefined)
+            throw new Error(
+                'Cannot use \'to_file\' and \'files\' parameters together!',
+            );
+        if (files === undefined && to_file === undefined && from.endsWith('/'))
+            throw new Error(
+                `Couldn't determine the filename from the path ${from}, please supply 'to_file' parameter.`,
+            );
+    }
+    return config_fetch.flatMap(
+        ({ from = '', to_folder = '.', to_file, files }) => {
+            if (isArray(files))
+                return files.map((file) => ({
+                    url: joinPaths([from, file]),
+                    path: joinPaths([to_folder, file]),
+                }));
+            const filename = to_file || from.slice(1 + from.lastIndexOf('/'));
+            return [{ url: from, path: joinPaths([to_folder, filename]) }];
+        },
+    );
+};
+
+const joinPaths = (parts) => {
+    const res = parts
+        .map((part) => part.trim().replace(/(^[/]*|[/]*$)/g, ''))
+        .filter((p) => p !== '' && p !== '.')
+        .join('/');
+
+    return parts[0].startsWith('/') ? `/${res}` : res;
+};
+
+const fetchBuffer = (url, baseURL) =>
+    fetch$1(absoluteURL(url, baseURL)).arrayBuffer();
+
+const fetchPaths = (module, interpreter, config_fetch, baseURL) =>
+    all(
+        calculateFetchPaths(config_fetch).map(({ url, path }) =>
+            fetchBuffer(url, baseURL)
+                .then((buffer) => module.writeFile(interpreter, path, buffer)),
+        ),
+    );
+
+    const fillName = (source, dest) => dest.endsWith('/') ?
+                        `${dest}${source.split('/').pop()}` : dest;
+
+const parseTemplate = (src, map) => src.replace(
+  /\{.+?\}/g,
+  k => {
+    if (!map.has(k))
+      throw new SyntaxError(`Invalid template: ${k}`);
+    return map.get(k);
+  }
+);
+
+const calculateFilesPaths = files => {
+  const map = new Map;
+  const targets = new Set;
+  const sourceDest = [];
+  for (const [source, dest] of entries(files)) {
+    if (/^\{.+\}$/.test(source)) {
+      if (map.has(source))
+        throw new SyntaxError(`Duplicated template: ${source}`);
+      map.set(source, parseTemplate(dest, map));
+    }
+    else {
+      const url = parseTemplate(source, map);
+      const path = fillName(url, parseTemplate(dest || './', map));
+      if (targets.has(path) && !path.endsWith('/*'))
+        throw new SyntaxError(`Duplicated destination: ${path}`);
+      targets.add(path);
+      sourceDest.push({ url, path });
+    }
+  }
+  return sourceDest;
+};
+
+const fetchFiles = (module, interpreter, config_files, baseURL) =>
+    all(
+        calculateFilesPaths(config_files).map(({ url, path }) =>
+            fetchBuffer(url, baseURL)
+                .then((buffer) => module.writeFile(
+                    interpreter,
+                    path,
+                    buffer,
+                    url,
+                )),
+        ),
+    );
+
+const fetchJSModules = ({ main, worker }, baseURL) => {
+    const promises = [];
+    if (worker && RUNNING_IN_WORKER) {
+        for (let [source, name] of entries(worker)) {
+            source = absoluteURL(source, baseURL);
+            promises.push(importJS(source, name));
+        }
+    }
+    if (main && !RUNNING_IN_WORKER) {
+        for (let [source, name] of entries(main)) {
+            source = absoluteURL(source, baseURL);
+            if (isCSS(source)) importCSS(source);
+            else promises.push(importJS(source, name));
+        }
+    }
+    return all(promises);
+};
+
+const createProgress = prefix => detail => {
+    dispatchEvent(new CustomEvent(`${prefix}:progress`, { detail }));
+};
+/* c8 ignore stop */
+
+//@ts-check
+
+
+/** @typedef {Map<number, any>} Cache */
+
+/**
+ * @param {Cache} cache
+ * @param {number} index
+ * @param {any} value
+ * @returns {any}
+ */
+const $ = (cache, index, value) => {
+  cache.set(index, value);
+  return value;
+};
+
+/**
+ * @param {Uint8Array} input
+ */
+const number = input => {
+  u8a8[0] = input[i++];
+  u8a8[1] = input[i++];
+  u8a8[2] = input[i++];
+  u8a8[3] = input[i++];
+  u8a8[4] = input[i++];
+  u8a8[5] = input[i++];
+  u8a8[6] = input[i++];
+  u8a8[7] = input[i++];
+};
+
+/**
+ * @param {Uint8Array} input
+ * @returns {number}
+ */
+const size = input => {
+  u8a8[0] = input[i++];
+  u8a8[1] = input[i++];
+  u8a8[2] = input[i++];
+  u8a8[3] = input[i++];
+  return dv.getUint32(0, true);
+};
+
+/**
+ * @param {Uint8Array} input
+ * @param {Cache} cache
+ * @returns {any}
+ */
+const deflate = (input, cache) => {
+  switch (input[i++]) {
+    case NUMBER: {
+      number(input);
+      return dv.getFloat64(0, true);
+    }
+    case UI8: return input[i++];
+    case OBJECT: {
+      const object = $(cache, i - 1, {});
+      for (let j = 0, length = size(input); j < length; j++)
+        object[deflate(input, cache)] = deflate(input, cache);
+      return object;
+    }
+    case ARRAY: {
+      const array = $(cache, i - 1, []);
+      for (let j = 0, length = size(input); j < length; j++)
+        array.push(deflate(input, cache));
+      return array;
+    }
+    case VIEW: {
+      const index = i - 1;
+      const name = deflate(input, cache);
+      return $(cache, index, new globalThis[name](deflate(input, cache)));
+    }
+    case BUFFER: {
+      const index = i - 1;
+      const length = size(input);
+      return $(cache, index, input.slice(i, i += length).buffer);
+    }
+    case STRING: {
+      const index = i - 1;
+      const length = size(input);
+      // this could be a subarray but it's not supported on the Web and
+      // it wouldn't work with arrays instead of typed arrays.
+      return $(cache, index, decoder$1.decode(input.slice(i, i += length)));
+    }
+    case DATE: {
+      return $(cache, i - 1, new Date(deflate(input, cache)));
+    }
+    case MAP: {
+      const map = $(cache, i - 1, new Map);
+      for (let j = 0, length = size(input); j < length; j++)
+        map.set(deflate(input, cache), deflate(input, cache));
+      return map;
+    }
+    case SET: {
+      const set = $(cache, i - 1, new Set);
+      for (let j = 0, length = size(input); j < length; j++)
+        set.add(deflate(input, cache));
+      return set;
+    }
+    case ERROR: {
+      const name = deflate(input, cache);
+      const message = deflate(input, cache);
+      const stack = deflate(input, cache);
+      const Class = globalThis[name] || Error;
+      const error = new Class(message);
+      return $(cache, i - 1, defineProperty$3(error, 'stack', { value: stack }));
+    }
+    /* c8 ignore start */
+    case IMAGE_DATA: {
+      const data = deflate(input, cache);
+      const width = deflate(input, cache);
+      const height = deflate(input, cache);
+      const colorSpace = deflate(input, cache);
+      const pixelFormat = deflate(input, cache);
+      const settings = { colorSpace, pixelFormat };
+      return $(cache, i - 1, new ImageData(data, width, height, settings));
+    }
+    /* c8 ignore stop */
+    case REGEXP: {
+      const source = deflate(input, cache);
+      const flags = deflate(input, cache);
+      return $(cache, i - 1, new RegExp(source, flags));
+    }
+    case FALSE: return false;
+    case TRUE: return true;
+    case NAN: return NaN;
+    case INFINITY: return Infinity;
+    case N_INFINITY: return -Infinity;
+    case ZERO: return 0;
+    case N_ZERO: return -0;
+    case NULL: return null;
+    case BIGINT: return (number(input), dv.getBigInt64(0, true));
+    case BIGUINT: return (number(input), dv.getBigUint64(0, true));
+    case SYMBOL: return fromSymbol(deflate(input, cache));
+    case RECURSION: return cache.get(size(input));
+    // this covers functions too
+    default: return undefined;
+  }
+};
+
+let i = 0;
+
+/**
+ * @param {Uint8Array} value
+ * @returns {any}
+ */
+const decode = value => {
+  i = 0;
+  return deflate(value, new Map);
+};
+
+const JSON$1 = { parse: decode, stringify: encode };
+
+const loader = new WeakMap();
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const loadProgress = async (self, progress, interpreter, config, baseURL) => {
+    if (config.files) {
+        progress('Loading files');
+        await fetchFiles(self, interpreter, config.files, baseURL);
+        progress('Loaded files');
+    }
+    if (config.fetch) {
+        progress('Loading fetch');
+        await fetchPaths(self, interpreter, config.fetch, baseURL);
+        progress('Loaded fetch');
+    }
+    if (config.js_modules) {
+        progress('Loading JS modules');
+        await fetchJSModules(config.js_modules, baseURL);
+        progress('Loaded JS modules');
+    }
+};
+
+const registerJSModule = (interpreter, name, value) => {
+    if (name === 'polyscript') {
+        value.lazy_py_modules = async (...packages) => {
+            await loader.get(interpreter)(packages);
+            return packages.map(name => interpreter.pyimport(name));
+        };
+        value.storage = async (name) => {
+            const storage = new IDBMapSync(name);
+            await storage.sync();
+            return storage;
+        };
+        value.JSON = JSON$1;
+    }
+    interpreter.registerJsModule(name, value);
+};
+
+const getFormat = (path, url) => {
+    if (path.endsWith('/*')) {
+        if (/\.(zip|whl|tgz|tar(?:\.gz)?)$/.test(url))
+            return RegExp.$1;
+        throw new Error(`Unsupported archive ${url}`);
+    }
+    return '';
+};
+
+const run$1 = (interpreter, code, ...args) => {
+    try {
+        return interpreter.runPython(dedent(code), ...args);
+    }
+    catch (error) {
+        io.get(interpreter).stderr(error);
+    }
+};
+
+const runAsync = async (interpreter, code, ...args) => {
+    try {
+        return await interpreter.runPythonAsync(dedent(code), ...args);
+    }
+    catch (error) {
+        io.get(interpreter).stderr(error);
+    }
+};
+
+const runEvent = async (interpreter, code, event) => {
+    // allows method(event) as well as namespace.method(event)
+    // it does not allow fancy brackets names for now
+    const [name, ...keys] = code.split('.');
+    let target = interpreter.globals.get(name);
+    let context;
+    for (const key of keys) [context, target] = [target, target[key]];
+    try {
+        await target.call(context, event);
+    }
+    catch (error) {
+        io.get(interpreter).stderr(error);
+    }
+};
+/* c8 ignore stop */
+
+// ⚠️ DO NOT MODIFY - SOURCE FILE: "../../python/mip.py"
+var mip = new TextEncoder().encode("_F='github:'\n_E='user-agent'\n_D=True\n_C=False\n_B='/'\n_A=None\nfrom uio import StringIO\nimport sys\nclass Response:\n\tdef __init__(A,f):A.raw=f;A.encoding='utf-8';A._cached=_A\n\tdef close(A):\n\t\tif A.raw:A.raw.close();A.raw=_A\n\t\tA._cached=_A\n\t@property\n\tdef content(self):\n\t\tA=self\n\t\tif A._cached is _A:\n\t\t\ttry:A._cached=A.raw.read()\n\t\t\tfinally:A.raw.close();A.raw=_A\n\t\treturn A._cached\n\t@property\n\tdef text(self):return str(self.content,self.encoding)\n\tdef json(A):import ujson;return ujson.loads(A.content)\nHEADERS_TO_IGNORE=_E,\ntry:import js\nexcept Exception as err:raise OSError('This version of urequests can only be used in the browser')\nHEADERS_TO_IGNORE=_E,\ndef request(method,url,data=_A,json=_A,headers={},stream=_A,auth=_A,timeout=_A,parse_headers=_D):\n\tE=timeout;D=method;C=data;from js import XMLHttpRequest as G;A=G.new();A.withCredentials=_C\n\tif auth is not _A:import ubinascii;H,I=auth;A.open(D,url,_C,H,I)\n\telse:A.open(D,url,_C)\n\tfor(F,J)in headers.items():\n\t\tif F.lower()not in HEADERS_TO_IGNORE:A.setRequestHeader(F,J)\n\tif E:A.timeout=int(E*1000)\n\tif json is not _A:assert C is _A;import ujson;C=ujson.dumps(json);A.setRequestHeader('Content-Type','application/json')\n\tA.send(C);B=Response(StringIO(A.responseText));B.status_code=A.status;B.reason=A.statusText;B.headers=A.getAllResponseHeaders();return B\ndef get(url,**A):return request('GET',url,**A)\n_PACKAGE_INDEX=const('https://micropython.org/pi/v2')\n_CHUNK_SIZE=128\ndef _ensure_path_exists(path):\n\timport os;A=path.split(_B)\n\tif not A[0]:A.pop(0);A[0]=_B+A[0]\n\tB=''\n\tfor C in range(len(A)-1):\n\t\tB+=A[C]\n\t\ttry:os.stat(B)\n\t\texcept:os.mkdir(B)\n\t\tB+=_B\ndef _chunk(src,dest):\n\tA=memoryview(bytearray(_CHUNK_SIZE))\n\twhile _D:\n\t\tB=src.readinto(A)\n\t\tif B==0:break\n\t\tdest(A if B==_CHUNK_SIZE else A[:B])\ndef _check_exists(path,short_hash):\n\tA=short_hash;import os\n\ttry:\n\t\timport binascii as C,hashlib as D\n\t\twith open(path,'rb')as E:B=D.sha256();_chunk(E,B.update);F=str(C.hexlify(B.digest())[:len(A)],'utf-8');return F==A\n\texcept:return _C\ndef _rewrite_url(url,branch=_A):\n\tB=branch;A=url\n\tif not B:B='HEAD'\n\tif A.startswith(_F):A=A[7:].split(_B);A='https://raw.githubusercontent.com/'+A[0]+_B+A[1]+_B+B+_B+_B.join(A[2:])\n\treturn A\ndef _download_file(url,dest):\n\tB=dest;A=get(url)\n\ttry:\n\t\tif A.status_code!=200:print('Error',A.status_code,'requesting',url);return _C\n\t\tprint('Copying:',B);_ensure_path_exists(B)\n\t\twith open(B,'wb')as C:_chunk(A.raw,C.write)\n\t\treturn _D\n\tfinally:A.close()\ndef _install_json(package_json_url,index,target,version,mpy):\n\tK='File not found: {} {}';I=version;H=index;G=package_json_url;D=target;E=get(_rewrite_url(G,I))\n\ttry:\n\t\tif E.status_code!=200:print('Package not found:',G);return _C\n\t\tF=E.json()\n\tfinally:E.close()\n\tfor(A,C)in F.get('hashes',()):\n\t\tB=D+_B+A\n\t\tif _check_exists(B,C):print('Exists:',B)\n\t\telse:\n\t\t\tL='{}/file/{}/{}'.format(H,C[:2],C)\n\t\t\tif not _download_file(L,B):print(K.format(A,C));return _C\n\tfor(A,J)in F.get('urls',()):\n\t\tB=D+_B+A\n\t\tif not _download_file(_rewrite_url(J,I),B):print(K.format(A,J));return _C\n\tfor(M,N)in F.get('deps',()):\n\t\tif not _install_package(M,H,D,N,mpy):return _C\n\treturn _D\ndef _install_package(package,index,target,version,mpy):\n\tD=index;C=target;B=version;A=package\n\tif A.startswith('http://')or A.startswith('https://')or A.startswith(_F):\n\t\tif A.endswith('.py')or A.endswith('.mpy'):print('Downloading {} to {}'.format(A,C));return _download_file(_rewrite_url(A,B),C+_B+A.rsplit(_B)[-1])\n\t\telse:\n\t\t\tif not A.endswith('.json'):\n\t\t\t\tif not A.endswith(_B):A+=_B\n\t\t\t\tA+='package.json'\n\t\t\tprint('Installing {} to {}'.format(A,C))\n\telse:\n\t\tif not B:B='latest'\n\t\tprint('Installing {} ({}) from {} to {}'.format(A,B,D,C));E=sys.implementation._mpy&255 if mpy and hasattr(sys.implementation,'_mpy')else'py';A='{}/package/{}/{}/{}.json'.format(D,'py',A,B)\n\treturn _install_json(A,D,C,B,mpy)\ndef install(package,index=_A,target=_A,version=_A,mpy=_D):\n\tB=target;A=index\n\tif not B:\n\t\tfor C in sys.path:\n\t\t\tif C.endswith('/lib'):B=C;break\n\t\telse:print('Unable to find lib dir in sys.path');return\n\tif not A:A=_PACKAGE_INDEX\n\tif _install_package(package,A.rstrip(_B),B,version,mpy):print('Done')\n\telse:print('Package may be partially installed')");
+
+/* c8 ignore start */
+
+// toml
+const toml = async (text) => (
+  await import(/* webpackIgnore: true */'./toml-CkEFU7ly.js')
+).parse(text);
+
+// zip
+const zip = () => import(/* webpackIgnore: true */'./zip-Borv86S2.js');
+
+/* c8 ignore stop */
+
+async function syncfs(FS, direction) {
+    return new Promise((resolve, reject) => {
+        FS.syncfs(direction, err => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+}
+
+// (C) Pyodide  https://github.com/pyodide/pyodide - Mozilla Public License Version 2.0
+// JS port of https://github.com/pyodide/pyodide/blob/34fcd02172895d75db369994011409324f9e3cce/src/js/nativefs.ts
+function initializeNativeFS(module) {
+    const FS = module.FS;
+    const MEMFS = module.FS.filesystems.MEMFS;
+    const PATH = module.PATH;
+
+    const nativeFSAsync = {
+        // DIR_MODE: {{{ cDefine('S_IFDIR') }}} | 511 /* 0777 */,
+        // FILE_MODE: {{{ cDefine('S_IFREG') }}} | 511 /* 0777 */,
+        DIR_MODE: 16384 | 511,
+        FILE_MODE: 32768 | 511,
+        mount: function (mount) {
+            if (!mount.opts.fileSystemHandle) {
+                throw new Error('opts.fileSystemHandle is required');
+            }
+
+            // reuse all of the core MEMFS functionality
+            return MEMFS.mount.apply(null, arguments);
+        },
+        syncfs: async (mount, populate, callback) => {
+            try {
+                const local = nativeFSAsync.getLocalSet(mount);
+                const remote = await nativeFSAsync.getRemoteSet(mount);
+                const src = populate ? remote : local;
+                const dst = populate ? local : remote;
+                await nativeFSAsync.reconcile(mount, src, dst);
+                callback(null);
+            } catch (e) {
+                callback(e);
+            }
+        },
+        // Returns file set of emscripten's filesystem at the mountpoint.
+        getLocalSet: (mount) => {
+            let entries = Object.create(null);
+
+            function isRealDir(p) {
+                return p !== '.' && p !== '..';
+            }
+
+            function toAbsolute(root) {
+                return (p) => {
+                    return PATH.join2(root, p);
+                };
+            }
+
+            let check = FS.readdir(mount.mountpoint)
+                .filter(isRealDir)
+                .map(toAbsolute(mount.mountpoint));
+
+            while (check.length) {
+                let path = check.pop();
+                let stat = FS.stat(path);
+
+                if (FS.isDir(stat.mode)) {
+                    check.push.apply(
+                        check,
+                        FS.readdir(path).filter(isRealDir).map(toAbsolute(path)),
+                    );
+                }
+
+                entries[path] = { timestamp: stat.mtime, mode: stat.mode };
+            }
+
+            return { type: 'local', entries: entries };
+        },
+        // Returns file set of the real, on-disk filesystem at the mountpoint.
+        getRemoteSet: async (mount) => {
+            // TODO: this should be a map.
+            const entries = Object.create(null);
+
+            const handles = await getFsHandles(mount.opts.fileSystemHandle);
+            for (const [path, handle] of handles) {
+                if (path === '.') continue;
+
+                entries[PATH.join2(mount.mountpoint, path)] = {
+                    timestamp:
+                        handle.kind === 'file'
+                            ? (await handle.getFile()).lastModifiedDate
+                            : new Date(),
+                    mode:
+                        handle.kind === 'file'
+                            ? nativeFSAsync.FILE_MODE
+                            : nativeFSAsync.DIR_MODE,
+                };
+            }
+
+            return { type: 'remote', entries, handles };
+        },
+        loadLocalEntry: (path) => {
+            const lookup = FS.lookupPath(path);
+            const node = lookup.node;
+            const stat = FS.stat(path);
+
+            if (FS.isDir(stat.mode)) {
+                return { timestamp: stat.mtime, mode: stat.mode };
+            } else if (FS.isFile(stat.mode)) {
+                node.contents = MEMFS.getFileDataAsTypedArray(node);
+                return {
+                    timestamp: stat.mtime,
+                    mode: stat.mode,
+                    contents: node.contents,
+                };
+            } else {
+                throw new Error('node type not supported');
+            }
+        },
+        storeLocalEntry: (path, entry) => {
+            if (FS.isDir(entry['mode'])) {
+                FS.mkdirTree(path, entry['mode']);
+            } else if (FS.isFile(entry['mode'])) {
+                FS.writeFile(path, entry['contents'], { canOwn: true });
+            } else {
+                throw new Error('node type not supported');
+            }
+
+            FS.chmod(path, entry['mode']);
+            FS.utime(path, entry['timestamp'], entry['timestamp']);
+        },
+        removeLocalEntry: (path) => {
+            var stat = FS.stat(path);
+
+            if (FS.isDir(stat.mode)) {
+                FS.rmdir(path);
+            } else if (FS.isFile(stat.mode)) {
+                FS.unlink(path);
+            }
+        },
+        loadRemoteEntry: async (handle) => {
+            if (handle.kind === 'file') {
+                const file = await handle.getFile();
+                return {
+                    contents: new Uint8Array(await file.arrayBuffer()),
+                    mode: nativeFSAsync.FILE_MODE,
+                    timestamp: file.lastModifiedDate,
+                };
+            } else if (handle.kind === 'directory') {
+                return {
+                    mode: nativeFSAsync.DIR_MODE,
+                    timestamp: new Date(),
+                };
+            } else {
+                throw new Error('unknown kind: ' + handle.kind);
+            }
+        },
+        storeRemoteEntry: async (handles, path, entry) => {
+            const parentDirHandle = handles.get(PATH.dirname(path));
+            const handle = FS.isFile(entry.mode)
+                ? await parentDirHandle.getFileHandle(PATH.basename(path), {
+                    create: true,
+                })
+                : await parentDirHandle.getDirectoryHandle(PATH.basename(path), {
+                    create: true,
+                });
+            if (handle.kind === 'file') {
+                const writable = await handle.createWritable();
+                await writable.write(entry.contents);
+                await writable.close();
+            }
+            handles.set(path, handle);
+        },
+        removeRemoteEntry: async (handles, path) => {
+            const parentDirHandle = handles.get(PATH.dirname(path));
+            await parentDirHandle.removeEntry(PATH.basename(path));
+            handles.delete(path);
+        },
+        reconcile: async (mount, src, dst) => {
+            let total = 0;
+
+            const create = [];
+            Object.keys(src.entries).forEach(function (key) {
+                const e = src.entries[key];
+                const e2 = dst.entries[key];
+                if (
+                    !e2 ||
+                    (FS.isFile(e.mode) &&
+                        e['timestamp'].getTime() > e2['timestamp'].getTime())
+                ) {
+                    create.push(key);
+                    total++;
+                }
+            });
+            // sort paths in ascending order so directory entries are created
+            // before the files inside them
+            create.sort();
+
+            const remove = [];
+            Object.keys(dst.entries).forEach(function (key) {
+                if (!src.entries[key]) {
+                    remove.push(key);
+                    total++;
+                }
+            });
+            // sort paths in descending order so files are deleted before their
+            // parent directories
+            remove.sort().reverse();
+
+            if (!total) {
+                return;
+            }
+
+            const handles = src.type === 'remote' ? src.handles : dst.handles;
+
+            for (const path of create) {
+                const relPath = PATH.normalize(
+                    path.replace(mount.mountpoint, '/'),
+                ).substring(1);
+                if (dst.type === 'local') {
+                    const handle = handles.get(relPath);
+                    const entry = await nativeFSAsync.loadRemoteEntry(handle);
+                    nativeFSAsync.storeLocalEntry(path, entry);
+                } else {
+                    const entry = nativeFSAsync.loadLocalEntry(path);
+                    await nativeFSAsync.storeRemoteEntry(handles, relPath, entry);
+                }
+            }
+
+            for (const path of remove) {
+                if (dst.type === 'local') {
+                    nativeFSAsync.removeLocalEntry(path);
+                } else {
+                    const relPath = PATH.normalize(
+                        path.replace(mount.mountpoint, '/'),
+                    ).substring(1);
+                    await nativeFSAsync.removeRemoteEntry(handles, relPath);
+                }
+            }
+        },
+    };
+
+    module.FS.filesystems.NATIVEFS_ASYNC = nativeFSAsync;
+
+    function ensureMountPathExists(path) {
+        if (FS.mkdirTree) FS.mkdirTree(path);
+        else mkdirTree(FS, path);
+
+        const { node } = FS.lookupPath(path, {
+            follow_mount: false,
+        });
+
+        if (FS.isMountpoint(node)) {
+            throw new Error(`path '${path}' is already a file system mount point`);
+        }
+        if (!FS.isDir(node.mode)) {
+            throw new Error(`path '${path}' points to a file not a directory`);
+        }
+        // eslint-disable-next-line
+        for (const _ in node.contents) {
+            throw new Error(`directory '${path}' is not empty`);
+        }
+    }
+
+    return async function mountNativeFS(path, fileSystemHandle) {
+        if (fileSystemHandle.constructor.name !== 'FileSystemDirectoryHandle') {
+            throw new TypeError(
+              'Expected argument \'fileSystemHandle\' to be a FileSystemDirectoryHandle',
+            );
+        }
+        ensureMountPathExists(path);
+      
+        FS.mount(
+            FS.filesystems.NATIVEFS_ASYNC,
+            { fileSystemHandle },
+            path,
+        );
+
+        // sync native ==> browser
+        await syncfs(FS, true);
+
+        return {
+            // sync browser ==> native
+            syncfs: async () => await syncfs(FS, false),
+        };
+    };
+}
+
+const getFsHandles = async (dirHandle) => {
+    const handles = [];
+
+    async function collect(curDirHandle) {
+        for await (const entry of curDirHandle.values()) {
+            handles.push(entry);
+            if (entry.kind === 'directory') {
+                await collect(entry);
+            }
+        }
+    }
+
+    await collect(dirHandle);
+
+    const result = new Map();
+    result.set('.', dirHandle);
+    for (const handle of handles) {
+        const relativePath = (await dirHandle.resolve(handle)).join('/');
+        result.set(relativePath, handle);
+    }
+    return result;
+};
+
+const { parse: parse$1 } = JSON;
+
+const href = (key, pkg) => new URL(key, pkg).href;
+
+const addPath = (target, key, value) => {
+  if (key in target)
+    throw new Error(`Duplicated path: ${key}`);
+  target[key] = value;
+};
+
+const addPaths = (target, source, pkg) => {
+  for (const key in source)
+    addPath(target, href(key, pkg), source[key]);
+};
+
+const pollute = (t_js_modules, s_js_modules, name, pkg) => {
+  const source = s_js_modules[name];
+  if (source) {
+    t_js_modules[name] ??= {};
+    addPaths(t_js_modules[name], source, pkg);
+  }
+};
+
+const remote = async (
+  config,
+  packages = config.packages,
+  set = new Set(),
+) => {
+  const repackaged = [];
+  for (const pkg of packages) {
+    // avoid re-processing already processed packages
+    if (set.has(pkg)) continue;
+    set.add(pkg);
+    const isTOML = pkg.endsWith('.toml');
+    if (isTOML || pkg.endsWith('.json')) {
+      const text = await fetch$1(pkg).text();
+      const {
+        name,
+        files,
+        js_modules,
+        packages,
+      } = isTOML ? await toml(text) : parse$1(text);
+
+      if (set.has(name))
+        throw new Error(`Unable to process ${name} @ ${pkg}`);
+
+      set.add(name);
+
+      if (packages) {
+        // process nested packages from the remote config
+        repackaged.push(...(await remote(config, packages, set)));
+      }
+
+      if (js_modules) {
+        config.js_modules ??= {};
+        pollute(config.js_modules, js_modules, 'main', pkg);
+        pollute(config.js_modules, js_modules, 'worker', pkg);
+      }
+
+      if (files) {
+        config.files ??= {};
+        addPaths(config.files, files, pkg);
+      }
+    }
+    else repackaged.push(pkg);
+  }
+  return repackaged;
+};
+
+const type$4 = 'micropython';
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const mkdir = (FS, path) => {
+    try {
+        FS.mkdir(path);
+    }
+    // eslint-disable-next-line no-unused-vars
+    catch (_) {
+        // ignore as there's no path.exists here
+    }
+};
+
+const progress$1 = createProgress('mpy');
+
+var micropython = {
+    type: type$4,
+    module: (version = '1.27.0-preview-283') =>
+        `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
+    async engine({ loadMicroPython }, config, url, baseURL) {
+        const { stderr, stdout, get } = stdio({
+            stderr: buffered(console.error),
+            stdout: buffered(console.log),
+        });
+        url = url.replace(/\.m?js$/, '.wasm');
+        progress$1('Loading MicroPython');
+        const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
+        globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
+        const py_imports = importPackages$1.bind(this, interpreter, baseURL);
+        loader.set(interpreter, py_imports);
+        await loadProgress(this, progress$1, interpreter, config, baseURL);
+        // Install Micropython Package
+        this.writeFile(interpreter, './mip.py', mip);
+        if (config.packages) {
+            if (config.experimental_remote_packages) {
+                progress$1('Loading remote packages');
+                config.packages = await remote(config);
+                progress$1('Loaded remote packages');
+            }
+            progress$1('Loading packages');
+            await py_imports(config.packages.map(fixedRelative, baseURL));
+            progress$1('Loaded packages');
+        }
+        progress$1('Loaded MicroPython');
+        if (!interpreter.mountNativeFS)
+            interpreter.mountNativeFS = initializeNativeFS(interpreter._module);
+        return interpreter;
+    },
+    registerJSModule,
+    run: run$1,
+    runAsync,
+    runEvent,
+    transform: (interpreter, value) => interpreter.PyProxy.toJs(value),
+    writeFile: (interpreter, path, buffer, url) => {
+        const { FS, _module: { PATH, PATH_FS } } = interpreter;
+        const fs = { FS, PATH, PATH_FS };
+        const format = getFormat(path, url);
+        if (format) {
+            const extractDir = path.slice(0, -1);
+            if (extractDir !== './') FS.mkdir(extractDir);
+            switch (format) {
+                case 'whl':
+                case 'zip': {
+                    const blob = new Blob([buffer], { type: 'application/zip' });
+                    return zip().then(async ({ BlobReader, Uint8ArrayWriter, ZipReader }) => {
+                        const zipFileReader = new BlobReader(blob);
+                        const zipReader = new ZipReader(zipFileReader);
+                        for (const entry of await zipReader.getEntries()) {
+                            const { directory, filename } = entry;
+                            const name = extractDir + filename;
+                            if (directory) mkdir(FS, name);
+                            else {
+                                mkdir(FS, PATH.dirname(name));
+                                const buffer = await entry.getData(new Uint8ArrayWriter);
+                                FS.writeFile(name, buffer, {
+                                    canOwn: true,
+                                });
+                            }
+                        }
+                        zipReader.close();
+                    });
+                }
+                case 'tgz':
+                case 'tar.gz': {
+                    const TMP = './_.tar.gz';
+                    writeFile(fs, TMP, buffer);
+                    interpreter.runPython(`
+                        import os, gzip, tarfile
+                        tar = tarfile.TarFile(fileobj=gzip.GzipFile(fileobj=open("${TMP}", "rb")))
+                        for f in tar:
+                            name = f"${extractDir}{f.name}"
+                            if f.type == tarfile.DIRTYPE:
+                                if f.name != "./":
+                                    os.mkdir(name.strip("/"))
+                            else:
+                                dir = os.path.dirname(name)
+                                if not os.path.exists(dir):
+                                    os.mkdir(dir)
+                                source = tar.extractfile(f)
+                                with open(name, "wb") as dest:
+                                    dest.write(source.read())
+                                    dest.close()
+                        tar.close()
+                        os.remove("${TMP}")
+                    `);
+                    return;
+                }
+            }
+        }
+        return writeFile(fs, path, buffer);
+    },
+};
+
+async function importPackages$1(interpreter, baseURL, packages) {
+    let mip;
+    for (const mpyPackage of packages) {
+        if (mpyPackage.endsWith('.whl')) {
+            const url = absoluteURL(mpyPackage, baseURL);
+            const buffer = await fetch$1(url).arrayBuffer();
+            await this.writeFile(interpreter, './*', buffer, url);
+        }
+        else {
+            if (!mip) mip = interpreter.pyimport('mip');
+            mip.install(mpyPackage);
+        }
+    }
+}
+/* c8 ignore stop */
+
+const type$3 = 'pyodide';
+const toJsOptions = { dict_converter: Object.fromEntries };
+
+const { stringify } = JSON;
+
+const { apply } = Reflect;
+const FunctionPrototype = Function.prototype;
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const overrideMethod = method => function (...args) {
+    return apply(method, this, args);
+};
+
+let pyproxy, to_js;
+const override = intercept => {
+
+    const proxies = new WeakMap;
+
+    const patch = args => {
+        for (let arg, i = 0; i < args.length; i++) {
+            switch (typeof(arg = args[i])) {
+                case 'object':
+                    if (arg === null) break;
+                    // falls through
+                case 'function': {
+                    if (pyproxy in arg && !arg[pyproxy].shared?.gcRegistered) {
+                        intercept = false;
+                        let proxy = proxies.get(arg)?.deref();
+                        if (!proxy) {
+                            proxy = to_js(arg);
+                            const wr = new WeakRef(proxy);
+                            proxies.set(arg, wr);
+                            proxies.set(proxy, wr);
+                        }
+                        args[i] = proxy;
+                        intercept = true;
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    // the patch
+    Object.defineProperties(FunctionPrototype, {
+        apply: {
+            value(context, args) {
+                if (intercept) patch(args);
+                return apply(this, context, args);
+            }
+        },
+        call: {
+            value(context, ...args) {
+                if (intercept) patch(args);
+                return apply(this, context, args);
+            }
+        }
+    });
+};
+
+const progress = createProgress('py');
+const indexURLs = new WeakMap();
+
+var pyodide = {
+    type: type$3,
+    module: (version = '0.28.3') =>
+        `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
+    async engine({ loadPyodide, version }, config, url, baseURL) {
+        progress('Loading Pyodide');
+        let { packages, index_urls } = config;
+        if (packages) packages = packages.map(fixedRelative, baseURL);
+        progress('Loading Storage');
+        const indexURL = url.slice(0, url.lastIndexOf('/'));
+        // each pyodide version shares its own cache
+        const storage = new IDBMapSync(`${indexURL}@${version}`);
+        const options = { indexURL };
+        // 0.28.0 has a bug where lockFileURL cannot be used directly
+        // https://github.com/pyodide/pyodide/issues/5736
+        const save = config.packages_cache !== 'never' && version !== '0.28.0';
+        await storage.sync();
+        progress('Loaded Storage');
+        // packages_cache = 'never' means: erase the whole DB
+        if (!save) storage.clear();
+        // otherwise check if cache is known
+        if (packages) {
+            if (config.experimental_remote_packages) {
+                progress('Loading remote packages');
+                config.packages = (packages = await remote(config, packages));
+                progress('Loaded remote packages');
+            }
+            if (save) {
+                // packages_cache = 'passthrough' means: do not use micropip.install
+                if (config.packages_cache === 'passthrough') {
+                    options.packages = packages;
+                    packages = null;
+                    storage.clear();
+                }
+                else {
+                    packages = packages.sort();
+                    // packages are uniquely stored as JSON key
+                    const key = stringify(packages);
+                    if (storage.has(key)) {
+                        const value = storage.get(key);
+
+                        // versions are not currently understood by pyodide when
+                        // a lockFileURL is used instead of micropip.install(packages)
+                        // https://github.com/pyodide/pyodide/issues/5135#issuecomment-2441038644
+                        // https://github.com/pyscript/pyscript/issues/2245
+                        options.packages = packages.map(name => name.split(/[>=<]=/)[0]);
+
+                        if (version.startsWith('0.27')) {
+                            const blob = new Blob([value], { type: 'application/json' });
+                            options.lockFileURL = URL.createObjectURL(blob);
+                        }
+                        else {
+                        options.lockFileContents = value;
+                        }
+
+                        packages = null;
+                    }
+                }
+            }
+        }
+        const { stderr, stdout, get } = stdio();
+        progress('Loading interpreter');
+        const interpreter = await get(
+            loadPyodide({ stderr, stdout, ...options }),
+        );
+        progress('Loaded interpreter');
+        globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
+        if (config.debug) interpreter.setDebug(true);
+        const py_imports = importPackages.bind(interpreter);
+        if (index_urls) indexURLs.set(interpreter, index_urls);
+        loader.set(interpreter, py_imports);
+        await loadProgress(this, progress, interpreter, config, baseURL);
+        // if cache wasn't know, import and freeze it for the next time
+        if (packages) await py_imports(packages, storage, save);
+        await storage.close();
+        if (options.lockFileURL) URL.revokeObjectURL(options.lockFileURL);
+        progress('Loaded Pyodide');
+        if (config.experimental_create_proxy === 'auto') {
+            interpreter.runPython([
+                'import js',
+                'from pyodide.ffi import to_js',
+                'o=js.Object.fromEntries',
+                'js.experimental_create_proxy=lambda r:to_js(r,dict_converter=o)'
+            ].join(';'), { globals: interpreter.toPy({}) });
+            to_js = globalThis.experimental_create_proxy;
+            delete globalThis.experimental_create_proxy;
+            [pyproxy] = Reflect.ownKeys(to_js).filter(
+                k => (
+                    typeof k === 'symbol' &&
+                    String(k) === 'Symbol(pyproxy.attrs)'
+                )
+            );
+            override(true);
+        }
+        return interpreter;
+    },
+    registerJSModule,
+    run: overrideMethod(run$1),
+    runAsync: overrideMethod(runAsync),
+    runEvent: overrideMethod(runEvent),
+    transform: (interpreter, value) => apply(transform, interpreter, [value]),
+    writeFile: (interpreter, path, buffer, url) => {
+        const format = getFormat(path, url);
+        if (format) {
+            return interpreter.unpackArchive(buffer, format, {
+                extractDir: path.slice(0, -1)
+            });
+        }
+        const { FS, PATH, _module: { PATH_FS } } = interpreter;
+        return writeFile({ FS, PATH, PATH_FS }, path, buffer);
+    },
+};
+
+function transform(value) {
+    const { ffi: { PyProxy } } = this;
+    if (value && typeof value === 'object') {
+        if (value instanceof PyProxy) return value.toJs(toJsOptions);
+        // I believe this case is for LiteralMap which is not a PyProxy
+        // and yet it needs to be re-converted to something useful.
+        if (value instanceof Map) return new Map([...value.entries()]);
+        if (isArray(value)) return value.map(transform, this);
+    }
+    return value;
+}
+
+// exposed utility to import packages via polyscript.lazy_py_modules
+async function importPackages(packages, storage, save = false) {
+    // temporary patch/fix console.log which is used
+    // not only by Pyodide but by micropip too and there's
+    // no way to intercept those calls otherwise
+    const { log } = console;
+    const _log = (detail, ...rest) => {
+        log(detail, ...rest);
+        console.log = log;
+        progress(detail);
+        console.log = _log;
+    };
+    console.log = _log;
+    await this.loadPackage('micropip');
+    const micropip = this.pyimport('micropip');
+    if (indexURLs.has(this)) micropip.set_index_urls(indexURLs.get(this));
+    await micropip.install(packages, { keep_going: true });
+    console.log = log;
+    if (save && (storage instanceof IDBMapSync)) {
+        const frozen = micropip.freeze();
+        storage.set(stringify(packages), frozen);
+    }
+    micropip.destroy();
+}
+/* c8 ignore stop */
+
+const type$2 = 'ruby-wasm-wasi';
+const jsType = type$2.replace(/\W+/g, '_');
+
+// MISSING:
+//  * there is no VFS apparently or I couldn't reach any
+//  * I've no idea how to override the stderr and stdout
+//  * I've no idea how to import packages
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+var ruby_wasm_wasi = {
+    type: type$2,
+    experimental: true,
+    module: (version = '2.7.2') =>
+        `https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@${version}/dist/browser/+esm`,
+    async engine({ DefaultRubyVM }, config, url, baseURL) {
+        url = url.replace(/\/browser\/\+esm$/, '/ruby.wasm');
+        const buffer = await fetch$1(url).arrayBuffer();
+        const module = await WebAssembly.compile(buffer);
+        const { vm: interpreter } = await DefaultRubyVM(module);
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
+        return interpreter;
+    },
+    // Fallback to globally defined module fields (i.e. $xworker)
+    registerJSModule(interpreter, name, value) {
+        name = name.replace(/\W+/g, '__');
+        const id = `__module_${jsType}_${name}`;
+        globalThis[id] = value;
+        this.run(interpreter, `require "js";$${name}=JS.global[:${id}]`);
+        delete globalThis[id];
+    },
+    run: (interpreter, code, ...args) => interpreter.eval(dedent(code), ...args),
+    runAsync: (interpreter, code, ...args) => interpreter.evalAsync(dedent(code), ...args),
+    async runEvent(interpreter, code, event) {
+        // patch common xworker.onmessage/onerror cases
+        if (/^xworker\.(on\w+)$/.test(code)) {
+            const { $1: name } = RegExp;
+            const id = `__module_${jsType}_event`;
+            globalThis[id] = event;
+            this.run(
+                interpreter,
+                `require "js";$xworker.call("${name}",JS.global[:${id}])`,
+            );
+            delete globalThis[id];
+        } else {
+            // Experimental: allows only events by fully qualified method name
+            const method = this.run(interpreter, `method(:${code})`);
+            await method.call(code, interpreter.wrap(event));
+        }
+    },
+    transform: (_, value) => value,
+    writeFile: () => {
+        throw new Error(`writeFile is not supported in ${type$2}`);
+    },
+};
+/* c8 ignore stop */
+
+const type$1 = 'wasmoon';
+
+// MISSING:
+//  * I've no idea how to import packages
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+var wasmoon = {
+    type: type$1,
+    module: (version = '1.16.0') =>
+        `https://cdn.jsdelivr.net/npm/wasmoon@${version}/+esm`,
+    async engine({ LuaFactory, LuaLibraries }, config, _, baseURL) {
+        const { stderr, stdout, get } = stdio();
+        const interpreter = await get(new LuaFactory().createEngine());
+        interpreter.global.getTable(LuaLibraries.Base, (index) => {
+            interpreter.global.setField(index, 'print', stdout);
+            interpreter.global.setField(index, 'printErr', stderr);
+        });
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
+        return interpreter;
+    },
+    // Fallback to globally defined module fields
+    registerJSModule: (interpreter, name, value) => {
+        interpreter.global.set(name, value);
+    },
+    run: (interpreter, code, ...args) => {
+        try {
+            return interpreter.doStringSync(dedent(code), ...args);
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
+    runAsync: async (interpreter, code, ...args) => {
+        try {
+            return await interpreter.doString(dedent(code), ...args);
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
+    runEvent: async (interpreter, code, event) => {
+        // allows method(event) as well as namespace.method(event)
+        // it does not allow fancy brackets names for now
+        const [name, ...keys] = code.split('.');
+        let target = interpreter.global.get(name);
+        let context;
+        for (const key of keys) [context, target] = [target, target[key]];
+        try {
+            await target.call(context, event);
+        }
+        catch (error) {
+            io.get(interpreter).stderr(error);
+        }
+    },
+    transform: (_, value) => value,
+    writeFile: (
+        {
+            cmodule: {
+                module: { FS },
+            },
+        },
+        path,
+        buffer,
+    ) => writeFileShim(FS, path, buffer),
+};
+/* c8 ignore stop */
+
+const type = 'webr';
+const r = new WeakMap();
+const fr = new FinalizationRegistry(fn => fn());
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const run = async (interpreter, code) => {
+  const { shelter, destroy, io } = r.get(interpreter);
+  const { output, result } = await shelter.captureR(dedent(code));
+  for (const { type, data } of output) io[type](data);
+  fr.register(result, destroy);
+  return result;
+};
+
+var webr = {
+    type,
+    experimental: true,
+    module: (version = '0.5.6') =>
+        `https://cdn.jsdelivr.net/npm/webr@${version}/dist/webr.mjs`,
+    async engine(module, config, _, baseURL) {
+        const { get } = stdio();
+        const interpreter = new module.WebR();
+        await get(interpreter.init().then(() => interpreter));
+        const shelter = await new interpreter.Shelter();
+        r.set(interpreter, {
+          module,
+          shelter,
+          destroy: shelter.destroy.bind(shelter),
+          io: io.get(interpreter),
+        });
+        if (config.files) await fetchFiles(this, interpreter, config.files, baseURL);
+        if (config.fetch) await fetchPaths(this, interpreter, config.fetch, baseURL);
+        if (config.js_modules) await fetchJSModules(config.js_modules, baseURL);
+        return interpreter;
+    },
+    // Fallback to globally defined module fields (i.e. $xworker)
+    registerJSModule(_, name) {
+        console.warn(`Experimental interpreter: module ${name} is not supported (yet)`);
+        // TODO: as complex JS objects / modules are not allowed
+        // it's not clear how we can bind anything or import a module
+        // in a context that doesn't understand methods from JS
+        // https://docs.r-wasm.org/webr/latest/convert-js-to-r.html#constructing-r-objects-from-javascript-objects
+    },
+    run,
+    runAsync: run,
+    async runEvent(interpreter, code, event) {
+        // TODO: WebR cannot convert exoteric objects or any literal
+        // to an easy to reason about data/frame ... that conversion
+        // is reserved for the future:
+        // https://docs.r-wasm.org/webr/latest/convert-js-to-r.html#constructing-r-objects-from-javascript-objects
+        await interpreter.evalRVoid(`${code}(event)`, {
+          env: { event: { type: [ event.type ] } }
+        });
+    },
+    transform: (_, value) => value,
+    writeFile: () => {
+        // MAYBE ???
+    },
+};
+/* c8 ignore stop */
+
+// ⚠️ Part of this file is automatically generated
+//    The :RUNTIMES comment is a delimiter and no code should be written/changed after
+//    See rollup/build_interpreters.cjs to know more
+
+/** @type {Map<string, object>} */
+const registry$1 = new Map();
+
+/** @type {Map<string, object>} */
+const configs = new Map();
+
+/** @type {string[]} */
+const selectors = [];
+
+/** @type {string[]} */
+const prefixes = [];
+
+/* c8 ignore start */
+const interpreter = new Proxy(new Map(), {
+    get(map, id) {
+        if (!map.has(id)) {
+            const [type, ...rest] = id.split('@');
+            const interpreter = registry$1.get(type);
+            const url = /^(?:\.?\.?\/|[a-z0-9-]+:\/\/)/i.test(rest)
+                ? rest.join('@')
+                : interpreter.module(...rest);
+            map.set(id, {
+                url,
+                module: import(/* webpackIgnore: true */url),
+                engine: interpreter.engine.bind(interpreter),
+            });
+        }
+        const { url, module, engine } = map.get(id);
+        return (config, baseURL) =>
+            module.then((module) => {
+                configs.set(id, config);
+                return engine(module, config, url, baseURL);
+            });
+    },
+});
+/* c8 ignore stop */
+
+const register = (interpreter) => {
+    for (const type of [].concat(interpreter.type)) {
+        registry$1.set(type, interpreter);
+        selectors.push(`script[type="${type}"]`);
+        prefixes.push(`${type}-`);
+    }
+};
+for (const interpreter of [dummy, micropython, pyodide, ruby_wasm_wasi, wasmoon, webr])
+    register(interpreter);
+
+const { parse } = JSON;
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+const getConfigURLAndType = (config, configURL = './config.txt') => {
+    let type = typeof config;
+    if (type === 'string' && /\.(json|toml|txt)$/.test(config))
+        type = RegExp.$1;
+    else
+        config = configURL;
+    return [absoluteURL(config), type];
+};
+
+const resolveConfig = (config, configURL, options = {}) => {
+    const [absolute, type] = getConfigURLAndType(config, configURL);
+    if (type === 'json') {
+        options = fetch$1(absolute).json();
+    } else if (type === 'toml') {
+        options = fetch$1(absolute).text().then(toml);
+    } else if (type === 'string') {
+        options = parseString(config);
+    } else if (type === 'object' && config) {
+        options = config;
+    } else if (type === 'txt' && typeof options === 'string') {
+        options = parseString(options);
+    }
+    config = absolute;
+    return [options, config];
+};
+
+const parseString = config => {
+    try {
+        return parse(config);
+    }
+    // eslint-disable-next-line no-unused-vars
+    catch (_) {
+        return toml(config);
+    }
+};
+/* c8 ignore stop */
+
+/**
+ * Parse a generic config if it came from an attribute either as URL
+ * or as a serialized string. In XWorker case, accepts a pre-defined
+ * options to use as it is to avoid needing at all a fetch operation.
+ * In latter case, config will be suffixed as `config.txt`.
+ * @param {string} id the interpreter name @ version identifier
+ * @param {string | object} config optional config file to parse
+ * @param {string} [configURL] optional config URL if config is not string
+ * @param {object} [options] optional options used to bootstrap XWorker
+ * @returns
+ */
+const getRuntime = (id, config, configURL, options = {}) => {
+    if (config) {
+        // REQUIRES INTEGRATION TEST
+        /* c8 ignore start */
+        [options, config] = resolveConfig(config, configURL, options);
+        /* c8 ignore stop */
+    }
+    return resolve$1(options).then(options => interpreter[id](options, config));
+};
+
+/**
+ * @param {string} type the interpreter type
+ * @param {string} [version] the optional interpreter version
+ * @returns
+ */
+const getRuntimeID = (type, version = '') =>
+    `${type}@${version}`.replace(/@$/, '');
+
+// (c) https://github.com/WebReflection/to-json-callback
+// brought in here to avoid a dependency for quick testing
+
+/**
+ * @param {Function} [callback=this]
+ * @returns {string}
+ */
+function toJSONCallback (callback = this) {
+  return String(callback).replace(
+    /^(async\s*)?(\bfunction\b)?(.*?)\(/,
+    (_, isAsync, fn, name) => (
+      name && !fn ?
+        `${isAsync || ""}function ${name}(` :
+        _
+    ),
+  );
+}
+
+const beforeRun = 'BeforeRun';
+const afterRun = 'AfterRun';
+
+const code = [
+    `code${beforeRun}`,
+    `code${beforeRun}Async`,
+    `code${afterRun}`,
+    `code${afterRun}Async`,
+];
+
+const js = [
+    'onWorker',
+    'onReady',
+    `on${beforeRun}`,
+    `on${beforeRun}Async`,
+    `on${afterRun}`,
+    `on${afterRun}Async`,
+];
+
+/* c8 ignore start */
+// create a copy of the resolved wrapper with the original
+// run and runAsync so that, if used within onBeforeRun/Async
+// or onAfterRun/Async polluted entries won't matter and just
+// the native utilities will be available without seppuku.
+// The same applies if called within `onReady` worker hook.
+function patch(resolved, interpreter) {
+    const { run, runAsync } = registry$1.get(this.type);
+    return {
+        ...resolved,
+        run: run.bind(this, interpreter),
+        runAsync: runAsync.bind(this, interpreter)
+    };
+}
+
+/**
+ * Created the wrapper to pass along hooked callbacks.
+ * @param {object} module the details module
+ * @param {object} ref the node or reference to pass as second argument
+ * @param {boolean} isAsync if run should be async
+ * @param {function?} before callback to run before
+ * @param {function?} after callback to run after
+ * @returns {object}
+ */
+const polluteJS = (module, resolved, ref, isAsync, before, after) => {
+    if (before || after) {
+        const patched = patch.bind(module, resolved);
+        const name = isAsync ? 'runAsync' : 'run';
+        const method = module[name];
+        module[name] = isAsync ?
+            async function (interpreter, code, ...args) {
+                if (before) await before.call(this, patched(interpreter), ref);
+                const result = await method.call(
+                    this,
+                    interpreter,
+                    code,
+                    ...args
+                );
+                if (after) await after.call(this, patched(interpreter), ref);
+                return result;
+            } :
+            function (interpreter, code, ...args) {
+                if (before) before.call(this, patched(interpreter), ref);
+                const result = method.call(this, interpreter, code, ...args);
+                if (after) after.call(this, patched(interpreter), ref);
+                return result;
+            }
+        ;
+    }
+};
+/* c8 ignore stop */
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+let Hook$1 = class Hook {
+    constructor(interpreter, hooks = {}) {
+        const { main, worker } = hooks;
+        this.interpreter = interpreter;
+        this.onWorker = main?.onWorker;
+        // ignore onWorker as that's main only
+        for (const key of js.slice(1))
+            this[key] = worker?.[key];
+        for (const key of code)
+            this[key] = worker?.[key];
+    }
+    toJSON() {
+        const hooks = {};
+        // ignore onWorker as that's main only
+        for (const key of js.slice(1)) {
+            if (this[key]) hooks[key] = toJSONCallback(this[key]);
+        }
+        // code related: exclude `onReady` callback
+        for (const key of code) {
+            if (this[key]) hooks[key] = dedent(this[key]());
+        }
+        return hooks;
+    }
+};
+/* c8 ignore stop */
+
+/**
+ * @typedef {Object} WorkerOptions custom configuration
+ * @prop {string} type the interpreter type to use
+ * @prop {string} [version] the optional interpreter version to use
+ * @prop {string | object} [config] the optional config to use within such interpreter
+ * @prop {string} [configURL] the optional configURL used to resolve config entries
+ * @prop {string} [serviceWorker] the optional Service Worker for SharedArrayBuffer fallback
+ * @prop {string} [service_worker] alias for `serviceWorker`
+ */
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+var xworker = (...args) =>
+    /**
+     * A XWorker is a Worker facade able to bootstrap a channel with any desired interpreter.
+     * @param {string} url the remote file to evaluate on bootstrap
+     * @param {WorkerOptions} [options] optional arguments to define the interpreter to use
+     * @returns {Worker}
+     */
+    function XWorker(url, options) {
+        if (args.length) {
+            const [type, version] = args;
+            options = assign({}, options || { type, version });
+            if (!options.type) options.type = type;
+        }
+
+        // provide a base url to fetch or load config files from a Worker
+        // because there's no location at all in the Worker as it's embedded.
+        // fallback to a generic, ignored, config.txt file to still provide a URL.
+        const [ config ] = getConfigURLAndType(options.config, options.configURL);
+
+        const serviceWorker = options?.serviceWorker || options?.service_worker;
+        const worker = xworker$1({
+            serviceWorker,
+            reflected_ffi_timeout: globalThis.reflected_ffi_timeout ?? -1,
+        });
+        const { postMessage } = worker;
+        const isHook = this instanceof Hook$1;
+
+        const sync = assign(
+            worker.proxy,
+            { importJS, importCSS },
+        );
+
+        const resolver = withResolvers$1();
+
+        let bootstrap = fetch$1(url)
+            .text()
+            .then(code => {
+                const hooks = isHook ? this.toJSON() : void 0;
+                postMessage.call(worker, { options, config, code, hooks });
+            })
+            .then(() => {
+                // boost postMessage performance
+                bootstrap = { then: fn => fn() };
+            });
+
+        defineProperties(worker, {
+            sync: { value: sync },
+            ready: { value: resolver.promise },
+            postMessage: {
+                value: (data, ...rest) => bootstrap.then(
+                    () => postMessage.call(worker, data, ...rest),
+                ),
+            },
+            onerror: {
+                writable: true,
+                configurable: true,
+                value: console.error
+            }
+        });
+
+        worker.addEventListener('message', event => {
+            const { data } = event;
+            const isError = data instanceof Error;
+            if (isError || data === 'polyscript:done') {
+                event.stopImmediatePropagation();
+                if (isError) {
+                    resolver.reject(data);
+                    worker.onerror(create(event, {
+                        type: { value: 'error' },
+                        error: { value: data }
+                    }));
+                }
+                else resolver.resolve(worker);
+            }
+        });
+
+        if (isHook) this.onWorker?.(this.interpreter, worker);
+
+        return worker;
+    };
+
+/* c8 ignore stop */
+
+const INVALID_CONTENT = 'Invalid content';
+const INVALID_SRC_ATTR = 'Invalid worker attribute';
+const INVALID_WORKER_ATTR = 'Invalid worker attribute';
+
+const hasCommentsOnly = text => !text
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*(?:\/\/|#).*/gm, '')
+    .trim()
+;
+
+/* c8 ignore start */ // tested via integration
+var workerURL = element => {
+  const { src, worker } = element.attributes;
+  if (worker) {
+      let { value } = worker;
+      // throw on worker values as ambiguous
+      // @see https://github.com/pyscript/polyscript/issues/43
+      if (value) throw new SyntaxError(INVALID_WORKER_ATTR);
+      value = src?.value;
+      if (!value) {
+          // throw on empty src attributes
+          if (src) throw new SyntaxError(INVALID_SRC_ATTR);
+          if (!element.childElementCount)
+              value = element.textContent;
+          else {
+              const { innerHTML, localName, type } = element;
+              const name = type || localName.replace(/-script$/, '');
+              value = unescape(innerHTML);
+              console.warn(
+                  `Deprecated: use <script type="${name}"> for an always safe content parsing:\n`,
+                  value,
+              );
+          }
+
+          const url = URL.createObjectURL(new Blob([dedent(value)], { type: 'text/plain' }));
+          // TODO: should we really clean up this? debugging non-existent resources
+          //       at distance might be very problematic if the url is revoked.
+          // setTimeout(URL.revokeObjectURL, 5000, url);
+          return url;
+      }
+      return value;
+  }
+  // validate ambiguous cases with src and not empty/commented content
+  if (src && !hasCommentsOnly(element.textContent))
+    throw new SyntaxError(INVALID_CONTENT);
+};
+/* c8 ignore stop */
+
+const getRoot = (script) => {
+    let parent = script;
+    while (parent.parentNode) parent = parent.parentNode;
+    return parent;
+};
+
+const queryTarget = (script, idOrSelector) => {
+    const root = getRoot(script);
+    return root.getElementById(idOrSelector) || $$1(idOrSelector, root);
+};
+
+const targets = new WeakMap();
+const targetDescriptor = {
+    get() {
+        let target = targets.get(this);
+        if (!target) {
+            target = document.createElement(`${this.type}-script`);
+            targets.set(this, target);
+            handle(this);
+        }
+        return target;
+    },
+    set(target) {
+        if (typeof target === 'string')
+            targets.set(this, queryTarget(this, target));
+        else {
+            targets.set(this, target);
+            handle(this);
+        }
+    },
+};
+
+const handled = new WeakMap();
+
+const interpreters = new Map();
+
+const execute = async (currentScript, source, XWorker, isAsync) => {
+    const { type } = currentScript;
+    const module = registry$1.get(type);
+    /* c8 ignore start */
+    if (module.experimental)
+        console.warn(`The ${type} interpreter is experimental`);
+    const [interpreter, content] = await all([
+        handled.get(currentScript).interpreter,
+        source,
+    ]);
+    try {
+        registerJSModules(type, module, interpreter, JSModules);
+        module.registerJSModule(interpreter, 'polyscript', {
+            IDBMap,
+            IDBMapSync,
+            XWorker,
+            currentScript,
+            js_modules: JSModules,
+            workers: workersHandler,
+        });
+        dispatch(currentScript, type, 'ready');
+        // temporarily override inherited document.currentScript in a non writable way
+        // but it deletes it right after to preserve native behavior (as it's sync: no trouble)
+        defineProperty(document, 'currentScript', {
+            configurable: true,
+            get: () => currentScript,
+        });
+        const done = dispatch.bind(null, currentScript, type, 'done');
+        let result = module[isAsync ? 'runAsync' : 'run'](interpreter, content);
+        if (isAsync) result = await result;
+        done();
+        return result;
+    } finally {
+        delete document.currentScript;
+    }
+    /* c8 ignore stop */
+};
+
+const getValue = (ref, prefix) => {
+    const value = ref?.value;
+    return value ? prefix + value : '';
+};
+
+const getDetails = (type, id, name, version, config, configURL, runtime = type) => {
+    if (!interpreters.has(id)) {
+        const details = {
+            interpreter: getRuntime(name, config, configURL),
+            queue: resolve$1(),
+            XWorker: xworker(type, version),
+        };
+        interpreters.set(id, details);
+        // enable sane defaults when single interpreter *of kind* is used in the page
+        // this allows `xxx-*` attributes to refer to such interpreter without `env` around
+        /* c8 ignore start *//* this is tested very well in PyScript */
+        if (!interpreters.has(type)) interpreters.set(type, details);
+        if (!interpreters.has(runtime)) interpreters.set(runtime, details);
+        /* c8 ignore stopt */
+    }
+    return interpreters.get(id);
+};
+
+/**
+ * @param {HTMLScriptElement} script a special type of <script>
+ */
+const handle = async (script) => {
+    // known node, move its companion target after
+    // vDOM or other use cases where the script is a tracked element
+    if (handled.has(script)) {
+        const { target } = script;
+        if (target) {
+            // if the script is in the head just append target to the body
+            if (script.closest('head')) document.body.append(target);
+            // in any other case preserve the script position
+            else script.after(target);
+        }
+    }
+    // new script to handle ... allow newly created scripts to work
+    // just exactly like any other script would
+    else {
+        // allow a shared config among scripts, beside interpreter,
+        // and/or source code with different config or interpreter
+        const {
+            attributes: {
+                config,
+                env,
+                name: wn,
+                target,
+                version,
+                ['service-worker']: sw,
+            },
+            src,
+            type,
+        } = script;
+
+        /* c8 ignore start */
+        const isAsync = !isSync(script);
+
+        const versionValue = version?.value;
+        const name = getRuntimeID(type, versionValue);
+        let configValue = getValue(config, '|');
+        const id = getValue(env, '') || `${name}${configValue}`;
+        configValue = configValue.slice(1);
+
+        const url = workerURL(script);
+        if (url) {
+            const XWorker = xworker(type, versionValue);
+            const xworker$1 = new XWorker(url, {
+                ...nodeInfo(script, type),
+                version: versionValue,
+                async: isAsync,
+                config: configValue,
+                serviceWorker: sw?.value,
+            });
+            handled.set(
+                defineProperty(script, 'xworker', { value: xworker$1 }),
+                { xworker: xworker$1 },
+            );
+            const workerName = wn?.value;
+            if (workerName) workers[workerName].resolve(xworker$1.ready);
+            return;
+        }
+        /* c8 ignore stop */
+
+        const targetValue = getValue(target, '');
+        const details = getDetails(type, id, name, versionValue, configValue);
+
+        handled.set(
+            defineProperty(script, 'target', targetDescriptor),
+            details,
+        );
+
+        if (targetValue) targets.set(script, queryTarget(script, targetValue));
+
+        // start fetching external resources ASAP
+        const source = src ? fetch$1(src).text() : script.textContent;
+        details.queue = details.queue.then(() =>
+            execute(script, source, details.XWorker, isAsync),
+        );
+    }
+};
+
+/* c8 ignore start */
+const env$1 = new Proxy(create(null), {
+    get: (_, name) => new Promise(queueMicrotask).then(
+        () => awaitInterpreter(name)
+    ),
+});
+
+// attributes are tested via integration / e2e
+// ensure both interpreter and its queue are awaited then returns the interpreter
+const awaitInterpreter = async (key) => {
+    if (interpreters.has(key)) {
+        const { interpreter, queue } = interpreters.get(key);
+        return (await all([interpreter, queue]))[0];
+    }
+
+    const available = interpreters.size
+        ? `Available interpreters are: ${[...interpreters.keys()]
+              .map((r) => `"${r}"`)
+              .join(', ')}.`
+        : 'There are no interpreters in this page.';
+
+    throw new Error(`The interpreter "${key}" was not found. ${available}`);
+};
+
+const listener = async (event) => {
+    const { type, currentTarget } = event;
+    if (!prefixes.length) return;
+    for (let { name, value, ownerElement: el } of $x(
+        `./@*[${prefixes.map((p) => `name()="${p}${type}"`).join(' or ')}]`,
+        currentTarget,
+    )) {
+        name = name.slice(0, -(type.length + 1));
+        const interpreter = await awaitInterpreter(
+            el.getAttribute(`${name}-env`) || name,
+        );
+        const handler = registry$1.get(name);
+        handler.runEvent(interpreter, value, event);
+    }
+};
+
+/**
+ * Look for known prefixes and add related listeners.
+ * @param {Document | Element} root
+ */
+const addAllListeners = (root) => {
+    if (!prefixes.length) return;
+    for (let { name, ownerElement: el } of $x(
+        `.//@*[${prefixes
+            .map((p) => `starts-with(name(),"${p}")`)
+            .join(' or ')}]`,
+        root,
+    )) {
+        const i = name.lastIndexOf('-');
+        const type = name.slice(i + 1);
+        if (type !== 'env') {
+            el.addEventListener(type, listener);
+            // automatically disable form controls that are not disabled already
+            if ('disabled' in el && !el.disabled) {
+                el.disabled = true;
+                // set these to enable once the interpreter is known (registered + loaded)
+                env$1[name.slice(0, i)].then(() => {
+                    el.disabled = false;
+                });
+            }
+        }
+    }
+};
+/* c8 ignore stop */
+
+const XWorker$1 = xworker();
+
+const CUSTOM_SELECTORS = [];
+
+const customObserver$1 = new Map();
+
+/**
+ * @typedef {Object} Runtime custom configuration
+ * @prop {object} interpreter the bootstrapped interpreter
+ * @prop {(url:string, options?: object) => Worker} XWorker an XWorker constructor that defaults to same interpreter on the Worker.
+ * @prop {object} config a cloned config used to bootstrap the interpreter
+ * @prop {(code:string) => any} run an utility to run code within the interpreter
+ * @prop {(code:string) => Promise<any>} runAsync an utility to run code asynchronously within the interpreter
+ * @prop {(path:string, data:ArrayBuffer) => void} writeFile an utility to write a file in the virtual FS, if available
+ */
+
+const types = new Map();
+const waitList = new Map();
+
+// REQUIRES INTEGRATION TEST
+/* c8 ignore start */
+/**
+ * @param {Element} node any DOM element registered via define.
+ */
+const handleCustomType = async (node) => {
+    for (const selector of CUSTOM_SELECTORS) {
+        if (node.matches(selector)) {
+            const type = types.get(selector);
+            const details = registry.get(type);
+            const { resolve } = waitList.get(type);
+            const { options, known } = details;
+
+            if (known.has(node)) return;
+            known.add(node);
+
+            for (const [selector, callback] of customObserver$1) {
+                if (node.matches(selector)) await callback(node);
+            }
+
+            const {
+                interpreter: runtime,
+                configURL,
+                config,
+                version,
+                env,
+                onerror,
+                hooks,
+            } = options;
+
+            let error;
+            try {
+                const worker = workerURL(node);
+                if (worker) {
+                    let v = version;
+                    let url = configURL;
+                    let cfg = node.getAttribute('config') || config || {};
+                    if (!v || !cfg) {
+                        const [o, u] = resolveConfig(cfg, configURL);
+                        cfg = await o;
+                        url = u;
+                        v = cfg.version || cfg.interpreter;
+                        if (v && /\.m?js$/.test(v))
+                            v = new URL(v, url).href;
+                    }
+
+                    if (Number.isSafeInteger(cfg?.experimental_ffi_timeout))
+                        globalThis.reflected_ffi_timeout = cfg.experimental_ffi_timeout;
+
+                    const xworker = XWorker$1.call(new Hook$1(null, hooks), worker, {
+                        ...nodeInfo(node, type),
+                        configURL: url,
+                        version: v,
+                        type: runtime,
+                        custom: type,
+                        config: cfg,
+                        async: !isSync(node),
+                        serviceWorker: node.getAttribute('service-worker'),
+                    });
+                    defineProperty(node, 'xworker', { value: xworker });
+                    resolve({ type, xworker });
+                    const workerName = node.getAttribute('name');
+                    if (workerName) workers[workerName].resolve(xworker.ready);
+                    return;
+                }
+            }
+            // let the custom type handle errors via its `io`
+            catch (workerError) {
+                error = workerError;
+            }
+
+            const name = getRuntimeID(runtime, version);
+            const id = env || `${name}${config ? `|${config}` : ''}`;
+            const { interpreter: engine, XWorker: Worker } = getDetails(
+                type,
+                id,
+                name,
+                version,
+                config,
+                configURL,
+                runtime
+            );
+
+            const interpreter = await engine;
+
+            const module = create(registry$1.get(runtime));
+
+            const hook = new Hook$1(interpreter, hooks);
+
+            const XWorker = function XWorker(...args) {
+                return Worker.apply(hook, args);
+            };
+
+            const resolved = {
+                ...createResolved(
+                    module,
+                    type,
+                    structuredClone(configs.get(name)),
+                    interpreter,
+                ),
+                XWorker,
+            };
+
+            registerJSModules(runtime, module, interpreter, JSModules);
+            module.registerJSModule(interpreter, 'polyscript', {
+                IDBMap,
+                IDBMapSync,
+                XWorker,
+                config: resolved.config,
+                currentScript: type.startsWith('_') ? null : node,
+                js_modules: JSModules,
+                workers: workersHandler,
+            });
+
+            // patch methods accordingly to hooks (and only if needed)
+            for (const suffix of ['Run', 'RunAsync']) {
+                let before = '';
+                let after = '';
+
+                for (const key of code) {
+                    const value = hooks?.main?.[key];
+                    if (value && key.endsWith(suffix)) {
+                        if (key.startsWith('codeBefore'))
+                            before = dedent(value());
+                        else
+                            after = dedent(value());
+                    }
+                }
+
+                if (before || after) {
+                    createOverload(
+                        module,
+                        `r${suffix.slice(1)}`,
+                        before,
+                        after,
+                    );
+                }
+
+                let beforeCB, afterCB;
+                // ignore onReady and onWorker
+                for (let i = 2; i < js.length; i++) {
+                    const key = js[i];
+                    const value = hooks?.main?.[key];
+                    if (value && key.endsWith(suffix)) {
+                        if (key.startsWith('onBefore'))
+                            beforeCB = value;
+                        else
+                            afterCB = value;
+                    }
+                }
+                polluteJS(module, resolved, node, suffix.endsWith('Async'), beforeCB, afterCB);
+            }
+
+            details.queue = details.queue.then(() => {
+                resolve(resolved);
+                if (error) onerror?.(error, node);
+                return hooks?.main?.onReady?.(resolved, node);
+            });
+        }
+    }
+};
+
+/**
+ * @type {Map<string, {options:object, known:WeakSet<Element>}>}
+ */
+const registry = new Map();
+
+/**
+ * @typedef {Object} CustomOptions custom configuration
+ * @prop {'pyodide' | 'micropython' | 'ruby-wasm-wasi' | 'wasmoon'} interpreter the interpreter to use
+ * @prop {string} [version] the optional interpreter version to use
+ * @prop {string} [config] the optional config to use within such interpreter
+ */
+
+let dontBotherCount = 0;
+
+/**
+ * Allows custom types and components on the page to receive interpreters to execute any code
+ * @param {string} type the unique `<script type="...">` identifier
+ * @param {CustomOptions} options the custom type configuration
+ */
+const define$1 = (type, options) => {
+    // allow no-type to be bootstrapped out of the box
+    let dontBother = type == null;
+
+    if (dontBother)
+        type = `_ps${dontBotherCount++}`;
+    else if (registry$1.has(type) || registry.has(type))
+        throw new Error(`<script type="${type}"> already registered`);
+
+    if (!registry$1.has(options?.interpreter))
+        throw new Error('Unspecified interpreter');
+
+    // allows reaching out the interpreter helpers on events
+    registry$1.set(type, registry$1.get(options.interpreter));
+
+    // allows selector -> registry by type
+    const selectors = [`script[type="${type}"]`];
+
+    // ensure a Promise can resolve once a custom type has been bootstrapped
+    whenDefined$1(type);
+
+    if (dontBother) {
+        // add a script then cleanup everything once that's ready
+        const { hooks } = options;
+        const onReady = hooks?.main?.onReady;
+        options = {
+            ...options,
+            hooks: {
+                ...hooks,
+                main: {
+                    ...hooks?.main,
+                    onReady(resolved, node) {
+                        CUSTOM_SELECTORS.splice(CUSTOM_SELECTORS.indexOf(type), 1);
+                        registry$1.delete(type);
+                        registry.delete(type);
+                        waitList.delete(type);
+                        node.remove();
+                        onReady?.(resolved);
+                    }
+                }
+            },
+        };
+        document.head.append(
+            assign(document.createElement('script'), { type })
+        );
+    }
+    else {
+        selectors.push(`${type}-script`);
+        prefixes.push(`${type}-`);
+    }
+
+    for (const selector of selectors) types.set(selector, type);
+    CUSTOM_SELECTORS.push(...selectors);
+
+    // ensure always same env for this custom type
+    registry.set(type, {
+        options: assign({ env: type }, options),
+        known: new WeakSet(),
+        queue: Promise.resolve(),
+    });
+
+    if (!dontBother) addAllListeners(document);
+    $$(selectors.join(',')).forEach(handleCustomType);
+};
+
+/**
+ * Resolves whenever a defined custom type is bootstrapped on the page
+ * @param {string} type the unique `<script type="...">` identifier
+ * @returns {Promise<object>}
+ */
+const whenDefined$1 = (type) => {
+    if (!waitList.has(type)) waitList.set(type, withResolvers$1());
+    return waitList.get(type).promise;
+};
+/* c8 ignore stop */
+
+/** @typedef {(type: string, options: import("./custom.js").CustomOptions) => void} CustomOptions */
+
+
+// avoid multiple initialization of the same library
+const [
+    {
+        customObserver,
+        define,
+        whenDefined,
+        env,
+        Hook,
+        XWorker
+    },
+    alreadyLive
+] = stickyModule(
+    'polyscript',
+    {
+        customObserver: customObserver$1,
+        define: define$1,
+        whenDefined: whenDefined$1,
+        env: env$1,
+        Hook: Hook$1,
+        XWorker: XWorker$1
+    }
+);
+
+
+if (!alreadyLive) {
+    const mo = new MutationObserver((records) => {
+        const selector = selectors.join(',');
+        for (const { type, target, attributeName, addedNodes } of records) {
+            // attributes are tested via integration / e2e
+            /* c8 ignore start */
+            if (type === 'attributes') {
+                const i = attributeName.lastIndexOf('-') + 1;
+                if (i) {
+                    const prefix = attributeName.slice(0, i);
+                    for (const p of prefixes) {
+                        if (prefix === p) {
+                            const type = attributeName.slice(i);
+                            if (type !== 'env') {
+                                const method = target.hasAttribute(attributeName)
+                                    ? 'add'
+                                    : 'remove';
+                                target[`${method}EventListener`](type, listener);
+                            }
+                            break;
+                        }
+                    }
+                }
+                continue;
+            }
+            for (const node of addedNodes) {
+                if (node.nodeType === 1) {
+                    addAllListeners(node);
+                    if (selector && node.matches(selector)) handle(node);
+                    else bootstrap(selector, node, true);
+                }
+            }
+            /* c8 ignore stop */
+        }
+    });
+
+    /* c8 ignore start */
+    const bootstrap = (selector, node, shouldHandle) => {
+        if (selector) $$(selector, node).forEach(handle);
+        selector = CUSTOM_SELECTORS.join(',');
+        if (selector) {
+            if (shouldHandle) handleCustomType(node);
+            $$(selector, node).forEach(handleCustomType);
+        }
+    };
+    /* c8 ignore stop */
+
+    const observe = (root) => {
+        mo.observe(root, { childList: true, subtree: true, attributes: true });
+        return root;
+    };
+
+    const { attachShadow } = Element.prototype;
+    assign(Element.prototype, {
+        attachShadow(init) {
+            return observe(attachShadow.call(this, init));
+        },
+    });
+
+    // give 3rd party a chance to apply changes before this happens
+    queueMicrotask(() => {
+        addAllListeners(observe(document));
+        bootstrap(selectors.join(','), document, false);
+    });
+
+}
+
+export { Hook, INVALID_CONTENT, INVALID_SRC_ATTR, INVALID_WORKER_ATTR, XWorker, customObserver, define, env, whenDefined };
 //# sourceMappingURL=index.js.map

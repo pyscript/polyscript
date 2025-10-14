@@ -3,10 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script>
+      globalThis.fn = () => ({ test() { return 1 } }).test.bind(null);
+    </script>
     <script type="module" src="../../dist/index.js"></script>
     <script type="pyodide" async worker>
-      from polyscript import xworker
-      print(xworker.window.Function('return 1')())
+from polyscript import xworker
+print(xworker.window.fn()())
     </script>
   </head>
 </html>
