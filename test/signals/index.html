@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>body { font-family: monospace; }</style>
+    <script type="module">
+      // PyScript (actually just Polyscript)
+      import "../../dist/index.js";
+
+      // the smallest signals library I could think of
+      import * as signals from "https://esm.run/dom-cue";
+      globalThis.signals = signals;
+    </script>
+</head>
+<body>
+  <button id="increment">+</button>
+  <span id="value">0</span>
+  <button id="decrement">-</button>
+  <script type="micropython" config="./config.toml" src="./main.py"></script>
+</body>
+</html>
