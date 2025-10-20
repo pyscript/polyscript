@@ -13,6 +13,19 @@ export default (playwright, baseURL) => {
 
     test('Pyodide config as JSON', python.configAsJSON(playwright, baseURL));
 
+    test('Pyodide unknown package', async ({ page }) => {
+        const errors = [];
+        page.on('console', message => {
+            if (message.type() === 'error') {
+                errors.push(message.text());
+            }
+        });
+        await page.goto(`${baseURL}/packages.html`);
+        await page.waitForSelector('html.error');
+        await expect(errors.length).toBe(1);
+        await expect(errors[0]).toBe('These packages are not supported in Pyodide 0.29.0: unknown_package_name');
+    });
+
     test('Pyodide config with passthrough', async ({ page }) => {
         // Test that a config passed as object works out of the box.
         const logs = [];

@@ -51,8 +51,9 @@ const register = (interpreter) => {
 import dummy from './interpreter/dummy.js';
 import micropython from './interpreter/micropython.js';
 import pyodide from './interpreter/pyodide.js';
+import pyodide_graph from './interpreter/pyodide_graph.js';
 import ruby_wasm_wasi from './interpreter/ruby-wasm-wasi.js';
 import wasmoon from './interpreter/wasmoon.js';
 import webr from './interpreter/webr.js';
-for (const interpreter of [dummy, micropython, pyodide, ruby_wasm_wasi, wasmoon, webr])
+for (const interpreter of [dummy, micropython, pyodide, pyodide_graph, ruby_wasm_wasi, wasmoon, webr])
     register(interpreter);
