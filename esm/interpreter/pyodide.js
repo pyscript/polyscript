@@ -88,7 +88,7 @@ export default {
                         if (/^[a-zA-Z0-9_]/.test(entry)) {
                             const [name, ...rest] = entry.split(/[>=<]=/);
                             const known = hasOwn(graph[version], name);
-                            return !known || (rest.length > 0 && rest[1] !== graph[version][name]);
+                            return !known || (rest.length > 0 && rest[0] !== graph[version][name]);
                         }
                         return false;
                     });
