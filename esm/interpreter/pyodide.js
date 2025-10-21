@@ -8,6 +8,7 @@ const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
 
 const { stringify } = JSON;
+const { hasOwn } = Object;
 
 const { apply } = Reflect;
 const FunctionPrototype = Function.prototype;
@@ -70,12 +71,35 @@ const indexURLs = new WeakMap();
 
 export default {
     type,
-    module: (version = '0.28.3') =>
+    module: (version = '0.29.0') =>
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
         let { packages, index_urls } = config;
-        if (packages) packages = packages.map(fixedRelative, baseURL);
+        if (packages) {
+            packages = packages.map(fixedRelative, baseURL);
+            if (!index_urls) {
+                progress('Loading Packages Graph');
+                const { default: graph } = await import(/* webpackIgnore: true */'./pyodide_graph.js');
+                progress('Loaded Packages Graph');
+                if (hasOwn(graph, version)) {
+                    const invalid = packages.filter(entry => {
+                        // consider only packages by name
+                        if (/^[a-zA-Z0-9_]/.test(entry)) {
+                            const [name, ...rest] = entry.split(/[>=<]=/);
+                            const known = hasOwn(graph[version], name);
+                            return !known || (rest.length > 0 && rest[1] !== graph[version][name]);
+                        }
+                        return false;
+                    });
+                    if (invalid.length > 0) {
+                        throw new Error(
+                            `These packages are not supported in Pyodide ${version}: ${invalid.join(', ')}`
+                        );
+                    }
+                }
+            }
+        }
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
         // each pyodide version shares its own cache

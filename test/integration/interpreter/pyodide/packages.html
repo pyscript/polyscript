@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="module">
+            import { init } from '../utils.js';
+            try {
+                await init('pyodide');
+            } catch ({ message }) {
+                console.error(message);
+                document.documentElement.classList.add('error');
+            }
+        </script>
+    </head>
+    <body>
+        <script type="pyodide" config="./packages.toml"></script>
+    </body>
+</html>
