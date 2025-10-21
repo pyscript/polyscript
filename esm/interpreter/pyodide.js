@@ -76,25 +76,27 @@ export default {
     async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
         let { packages, index_urls } = config;
-        if (packages && !index_urls) {
+        if (packages) {
             packages = packages.map(fixedRelative, baseURL);
-            progress('Loading Packages Graph');
-            const { default: graph } = await import(/* webpackIgnore: true */'./pyodide_graph.js');
-            progress('Loaded Packages Graph');
-            if (hasOwn(graph, version)) {
-                const invalid = packages.filter(entry => {
-                    // consider only packages by name
-                    if (/^[a-zA-Z0-9_-]/.test(entry)) {
-                        const [name, ...rest] = entry.split(/[>=<]=/);
-                        const known = hasOwn(graph[version], name);
-                        return !known || (rest.length > 0 && rest[1] !== graph[version][name]);
+            if (!index_urls) {
+                progress('Loading Packages Graph');
+                const { default: graph } = await import(/* webpackIgnore: true */'./pyodide_graph.js');
+                progress('Loaded Packages Graph');
+                if (hasOwn(graph, version)) {
+                    const invalid = packages.filter(entry => {
+                        // consider only packages by name
+                        if (/^[a-zA-Z0-9_]/.test(entry)) {
+                            const [name, ...rest] = entry.split(/[>=<]=/);
+                            const known = hasOwn(graph[version], name);
+                            return !known || (rest.length > 0 && rest[1] !== graph[version][name]);
+                        }
+                        return false;
+                    });
+                    if (invalid.length > 0) {
+                        throw new Error(
+                            `These packages are not supported in Pyodide ${version}: ${invalid.join(', ')}`
+                        );
                     }
-                    return false;
-                });
-                if (invalid.length > 0) {
-                    throw new Error(
-                        `These packages are not supported in Pyodide ${version}: ${invalid.join(', ')}`
-                    );
                 }
             }
         }
