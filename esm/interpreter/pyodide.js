@@ -85,7 +85,7 @@ export default {
                 if (hasOwn(graph, version)) {
                     const invalid = packages.filter(entry => {
                         // consider only packages by name but not remote/local ones
-                        if (/^https?:\/\//.test(entry) || entry.startsWith('.')) return false;
+                        if (/^https?:\/\//.test(entry)) return false;
                         const [name, ...rest] = entry.split(/[>=<]=/);
                         const known = hasOwn(graph[version], name);
                         return !known || (rest.length > 0 && rest[0] !== graph[version][name]);
