@@ -41,15 +41,15 @@ export default {
         globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
         const py_imports = importPackages.bind(this, interpreter, baseURL);
         loader.set(interpreter, py_imports);
+        if (config.experimental_remote_packages) {
+            progress('Loading remote packages');
+            config.packages = await _remote_package(config);
+            progress('Loaded remote packages');
+        }
         await loadProgress(this, progress, interpreter, config, baseURL);
         // Install Micropython Package
         this.writeFile(interpreter, './mip.py', mip);
         if (config.packages) {
-            if (config.experimental_remote_packages) {
-                progress('Loading remote packages');
-                config.packages = await _remote_package(config);
-                progress('Loaded remote packages');
-            }
             progress('Loading packages');
             await py_imports(config.packages.map(fixedRelative, baseURL));
             progress('Loaded packages');

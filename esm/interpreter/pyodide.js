@@ -97,6 +97,11 @@ export default {
                     }
                 }
             }
+            if (config.experimental_remote_packages) {
+                progress('Loading remote packages');
+                config.packages = (packages = await _remote_package(config, packages));
+                progress('Loaded remote packages');
+            }
         }
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
@@ -112,11 +117,6 @@ export default {
         if (!save) storage.clear();
         // otherwise check if cache is known
         if (packages) {
-            if (config.experimental_remote_packages) {
-                progress('Loading remote packages');
-                config.packages = (packages = await _remote_package(config, packages));
-                progress('Loaded remote packages');
-            }
             if (save) {
                 // packages_cache = 'passthrough' means: do not use micropip.install
                 if (config.packages_cache === 'passthrough') {
