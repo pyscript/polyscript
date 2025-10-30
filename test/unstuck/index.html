@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script type="module" src="../../dist/index.js"></script>
+    <script id="terminal" type="micropython" worker>
+      from polyscript import xworker
+      is_stuck = xworker.sync.isStuck
+      not_stuck = xworker.sync.notStuck
+
+      def unstuck(condition):
+          if condition and is_stuck():
+              not_stuck()
+              raise RuntimeError('Worker is stuck')
+
+          return condition
+
+      while unstuck(True):
+          import time
+          time.sleep(1)
+          print('stuck in a loop')
+    </script>
+  </head>
+  <body>
+    <button onclick="terminal.xworker.unstuck()">Unstuck</button>
+  </body>
+</html>

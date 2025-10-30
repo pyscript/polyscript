@@ -44,9 +44,22 @@ export default (...args) =>
         const { postMessage } = worker;
         const isHook = this instanceof Hook;
 
+        // basic per-worker semaphore to help loops getting unstuck
+        let stuck = false;
+
         const sync = assign(
             worker.proxy,
-            { importJS, importCSS },
+            {
+                importJS,
+                importCSS,
+                // returns the current status of the semaphore
+                isStuck: () => stuck,
+                // when invoked through the worker it resets the semaphore
+                // to make it unstuck again
+                notStuck() {
+                    stuck = false;
+                },
+            },
         );
 
         const resolver = withResolvers();
@@ -63,6 +76,10 @@ export default (...args) =>
             });
 
         defineProperties(worker, {
+            // when invoked on the main thread it will set stuck
+            // so that any worker loop checking the status can
+            // eventually throw an error.
+            unstuck: { value() { stuck = true } },
             sync: { value: sync },
             ready: { value: resolver.promise },
             postMessage: {
