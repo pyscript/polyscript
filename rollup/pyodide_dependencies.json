@@ -1,0 +1,22 @@
+{
+  "Jinja2": [],
+  "MarkupSafe": [],
+  "bleach": [],
+  "bokeh": {
+    "js": [
+      "https://cdn.bokeh.org/bokeh/release/bokeh-${VERSION}.min.js",
+      "https://cdn.bokeh.org/bokeh/release/bokeh-gl-${VERSION}.min.js",
+      "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-${VERSION}.min.js",
+      "https://cdn.bokeh.org/bokeh/release/bokeh-tables-${VERSION}.min.js",
+      "https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-${VERSION}.min.js",
+      "https://cdn.bokeh.org/bokeh/release/bokeh-api-${VERSION}.min.js"
+    ]
+  },
+  "fastapi": [],
+  "httpcore": [],
+  "httpx": [],
+  "pyinstrument": [],
+  "requests": [],
+  "starlette": [],
+  "urllib3": []
+}

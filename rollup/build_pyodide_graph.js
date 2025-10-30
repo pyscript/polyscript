@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 // avoid fetching details for version below this one
 const IGNORE_BELOW = '0.27';
 
+// query pypi to find Web Environment related packages
+const QUERY_ALL_PACKAGES = false;
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pyodideVersion = join(__dirname, '..', 'versions', 'pyodide');
 const pyodideGraph = join(__dirname, 'pyodide_graph.json');
@@ -65,6 +68,42 @@ const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) :
   await browser.close();
   // save content as readable JSON and get out
   writeFileSync(join(__dirname, 'pyodide_graph.json'), JSON.stringify(json, null, '\t'));
+})();
+
+const packages = [];
+for (const version in json) {
+  packages.push(...Object.keys(json[version]));
+}
+
+(async () => {
+  if (!QUERY_ALL_PACKAGES) return;
+  let i = 0;
+  const braile = '⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏'.split(' ');
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  const webEnvironment = [];
+  console.log('');
+  for (const pkg of new Set(packages.sort())) {
+    console.log(`\x1b[1B\x1b[1A\x1b[1K${braile[i++ % braile.length]}`);
+    await page.goto(`https://pypi.org/project/${pkg}/`);
+    await page.waitForLoadState();
+    if (await page.evaluate(() => {
+      const ul = 'ul.sidebar-section__classifiers';
+      const we = 'a[href="/search/?c=Environment+%3A%3A+Web+Environment"]';
+      return !!document.querySelector(ul)?.querySelector(we);
+    })) {
+      console.log([
+        `\x1b[1B\x1b[1A\x1b[1K${braile[i++ % braile.length]}`,
+        `\x1b[1m${pkg}\x1b[0m has a Web Environment`,
+      ].join(' '));
+      webEnvironment.push(pkg);
+    }
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+  await browser.close();
+  console.log('\x1b[1B\x1b[1A\x1b[1K', ' '.repeat(80));
+  console.log('\x1b[1mWeb Environment Packages:\x1b[0m');
+  console.log('\n \u2022', webEnvironment.join('\n \u2022'));
 })();
 
 // store the graph as JS module so we can optionally import it
