@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module" src="../../dist/index.js"></script>
-    <script type="pyodide" async worker>
-      from polyscript import xworker
-      print(xworker.window.Function('return 1')())
+    <script type="pyodide" config='{"packages_cache":"passthrough","packages":["bitarray"],"site-packages":{"./example.pth":"/example.pth"}}'>
+      print('Hello, world!')
     </script>
   </head>
 </html>

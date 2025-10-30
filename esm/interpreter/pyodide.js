@@ -75,7 +75,19 @@ export default {
         `https://cdn.jsdelivr.net/pyodide/v${version}/full/pyodide.mjs`,
     async engine({ loadPyodide, version }, config, url, baseURL) {
         progress('Loading Pyodide');
-        let { packages, index_urls } = config;
+        let fsInit, { ['site-packages']: sitePackages, packages, index_urls } = config;
+        if (sitePackages) {
+            const paths = Object.values(sitePackages);
+            const sources = await Promise.all(
+                Object.keys(sitePackages)
+                    .map(fixedRelative, baseURL)
+                    .map(url => fetch(url).then(response => response.arrayBuffer()))
+            );
+            fsInit = (FS, { sitePackages }) => {
+                for (let i = 0; i < sources.length; i++)
+                    FS.writeFile(`${sitePackages}${paths[i]}`, new Uint8Array(sources[i]));
+            };
+        }
         if (packages) {
             packages = packages.map(fixedRelative, baseURL);
             if (!index_urls) {
@@ -153,7 +165,7 @@ export default {
         const { stderr, stdout, get } = stdio();
         progress('Loading interpreter');
         const interpreter = await get(
-            loadPyodide({ stderr, stdout, ...options }),
+            loadPyodide({ stderr, stdout, fsInit, ...options }),
         );
         progress('Loaded interpreter');
         globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
