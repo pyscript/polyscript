@@ -14,16 +14,16 @@ export default (playwright, baseURL) => {
     test('Pyodide config as JSON', python.configAsJSON(playwright, baseURL));
 
     test('Pyodide unknown package', async ({ page }) => {
-        const errors = [];
+        const warnings = [];
         page.on('console', message => {
-            if (message.type() === 'error') {
-                errors.push(message.text());
+            if (message.type() === 'warning') {
+                warnings.push(message.text());
             }
         });
         await page.goto(`${baseURL}/packages.html`);
         await page.waitForSelector('html.error');
-        await expect(errors.length).toBe(1);
-        await expect(errors[0]).toBe('These packages are not supported in Pyodide 0.29.0: unknown_package_name');
+        await expect(warnings.length).toBe(1);
+        await expect(/Pyodide [0-9.]+ might not support unknown_package_name/.test(warnings[0])).toBe(true);
     });
 
     test('Pyodide config with passthrough', async ({ page }) => {
