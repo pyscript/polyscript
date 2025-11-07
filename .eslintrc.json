@@ -8,7 +8,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "ignorePatterns": ["__template.js", "xworker.js", "esm/python/*.js", "esm/3rd-party/*"],
+    "ignorePatterns": ["__template.js", "xworker.js", "esm/python/*.js", "esm/3rd-party/*", "esm/interpreter/pyodide_graph.js"],
     "rules": {
         "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "single"]

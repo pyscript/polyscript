@@ -8,7 +8,6 @@ const type = 'pyodide';
 const toJsOptions = { dict_converter: Object.fromEntries };
 
 const { stringify } = JSON;
-const { hasOwn } = Object;
 
 const { apply } = Reflect;
 const FunctionPrototype = Function.prototype;
@@ -81,21 +80,17 @@ export default {
             if (!index_urls) {
                 progress('Loading Packages Graph');
                 const { default: graph } = await import(/* webpackIgnore: true */'./pyodide_graph.js');
-                progress('Loaded Packages Graph');
-                if (hasOwn(graph, version)) {
-                    const invalid = packages.filter(entry => {
+                if (version in graph) {
+                    const current = graph[version];
+                    for (const entry of packages) {
                         // consider only packages by name but not remote/local ones
-                        if (/^https?:\/\//.test(entry)) return false;
-                        const [name, ...rest] = entry.split(/[>=<]=/);
-                        const known = hasOwn(graph[version], name);
-                        return !known || (rest.length > 0 && rest[0] !== graph[version][name]);
-                    });
-                    if (invalid.length > 0) {
-                        throw new Error(
-                            `These packages are not supported in Pyodide ${version}: ${invalid.join(', ')}`
-                        );
+                        if (/^(?:\.|\/|https?:\/\/)/.test(entry)) continue;
+                        const name = entry.split(/[>=<]=/)[0];
+                        if (name in current) continue;
+                        console.warn(`Pyodide ${version} might not support ${entry}`);
                     }
                 }
+                progress('Loaded Packages Graph');
             }
             if (config.experimental_remote_packages) {
                 progress('Loading remote packages');

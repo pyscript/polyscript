@@ -67,8 +67,33 @@ const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) :
   writeFileSync(join(__dirname, 'pyodide_graph.json'), JSON.stringify(json, null, '\t'));
 })();
 
+const reduced = {
+  v: Object.keys(json),
+  p: {},
+};
+
+for (let i = 0; i < reduced.v.length; i++) {
+  for (const pkg of Object.keys(json[reduced.v[i]])) {
+    reduced.p[pkg] ??= [];
+    reduced.p[pkg].push(i)
+  }
+}
+
 // store the graph as JS module so we can optionally import it
 writeFileSync(
   join(__dirname, '..', 'esm', 'interpreter', 'pyodide_graph.js'),
-  `export default ${JSON.stringify(json, null, ' '.repeat(4)).replace(/"/g, "'")}`,
+  `// ⚠️ GENERATED AUTOMATICALLY - DO NOT MODIFY
+export default new Proxy(
+    ${JSON.stringify(reduced).replace(/"/g, "'")},
+    {
+        has: (target, version) => target.v.includes(version),
+        get: (target, version) => {
+          const i = target.v.indexOf(version);
+          return new Proxy(target.p, {
+            has: (target, pkg) => target[pkg]?.includes(i),
+          });
+        },
+    },
+);
+`,
 );
