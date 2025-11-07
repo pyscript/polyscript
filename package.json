@@ -51,7 +51,7 @@
         "@playwright/test": "^1.56.1",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "@zip.js/zip.js": "^2.8.8",
+        "@zip.js/zip.js": "^2.8.9",
         "c8": "^10.1.3",
         "chokidar": "^4.0.3",
         "eslint": "^9.39.1",
@@ -96,6 +96,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-KgWr/xnodcIdvml7DIJvg7HHck0ZyeGvEcJogwCjNf0="
+        "blob": "sha256-GPc2dvnJ6c5kyUHSwFTDoBkI/m/BCWnSbbGMIyyoxUU="
     }
 }
