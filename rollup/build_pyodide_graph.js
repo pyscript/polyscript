@@ -48,7 +48,8 @@ const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) :
 
     console.log(`Fetching ${version} related packages`);
     try {
-      await page.goto(pyodideURL());
+      await page.goto(pyodideURL(version));
+      await page.waitForLoadState();
       json[version] = Object.fromEntries(
         await page.evaluate(() => [
           ...document.querySelectorAll('#packages-built-in-pyodide table > tbody > tr')
