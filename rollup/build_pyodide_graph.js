@@ -14,7 +14,7 @@ const pyodideURL = (version = 'stable') => `https://pyodide.org/en/${version}/us
 const semver = value => value.split('.').map(i => parseInt(i, 10));
 const [bmaj, bmin] = semver(IGNORE_BELOW);
 
-const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) : {};
+let json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) : {};
 
 (async () => {
   // prevent useless fetching of Pyodide site
@@ -23,6 +23,9 @@ const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) :
     console.log(`Graph already updated up to ${latest}`);
     return;
   }
+
+  delete json.latest;
+  delete json.stable;
 
   const browser = await chromium.launch();  // Or 'firefox' or 'webkit'.
   const page = await browser.newPage();
@@ -64,6 +67,13 @@ const json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) :
     }
   }
   await browser.close();
+
+  const ordered = {};
+  for (const version of versions)
+    ordered[version] = json[version];
+
+  json = ordered;
+
   // save content as readable JSON and get out
   writeFileSync(join(__dirname, 'pyodide_graph.json'), JSON.stringify(json, null, '\t'));
 })();
