@@ -12,7 +12,6 @@ pyscript/
 rollup/
 test/
 docs/
-versions/
 index.html
 node.importmap
 sw.js
