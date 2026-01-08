@@ -34,7 +34,10 @@ let json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) : {
 
   // fetch from stable all known versions
   const versions = await page.evaluate(async () => {
-    const ce = document.querySelector('readthedocs-flyout');
+    let ce;
+    while (!(ce = document.querySelector('readthedocs-flyout')))
+      await new Promise(resolve => setTimeout(resolve, 100));
+
     const dds = ce.shadowRoot.querySelectorAll('dl.versions dd');
     return [...dds].map(dd => dd.innerText);
   });
