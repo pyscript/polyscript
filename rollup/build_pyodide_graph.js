@@ -61,8 +61,9 @@ let json = existsSync(pyodideGraph) ? JSON.parse(readFileSync(pyodideGraph)) : {
           ...document.querySelectorAll('#packages-built-in-pyodide table > tbody > tr')
         ].map(tr => [
           ...tr.querySelectorAll('td')
-        ].map(td => td.innerText)))
+        ].map(td => td.innerText.toLowerCase())))
       );
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
     catch (error) {
       console.error(error);

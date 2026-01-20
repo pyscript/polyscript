@@ -86,8 +86,8 @@ export default {
                         // consider only packages by name but not remote/local ones
                         if (/^(?:\.|\/|https?:\/\/)/.test(entry)) continue;
                         const name = entry.split(/[>=<]=/)[0];
-                        if (name in current) continue;
-                        console.warn(`Pyodide ${version} might not support ${entry}`);
+                        if (name.toLowerCase() in current) continue;
+                        console.warn(`Pyodide ${version} might not support ${entry}. See: https://pyscript.github.io/pyscript-packages/package/?package=${name}`);
                     }
                 }
                 progress('Loaded Packages Graph');
