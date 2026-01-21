@@ -87,7 +87,7 @@ export default {
                         if (/^(?:\.|\/|https?:\/\/)/.test(entry)) continue;
                         const name = entry.split(/[>=<]=/)[0];
                         if (name.toLowerCase() in current) continue;
-                        console.warn(`Pyodide ${version} might not support ${entry}. See: https://pyscript.github.io/pyscript-packages/package/?package=${name}`);
+                        console.warn(`Pyodide ${version} might not support ${entry}. See: https://packages.pyscript.net/?q=${name}`);
                     }
                 }
                 progress('Loaded Packages Graph');
