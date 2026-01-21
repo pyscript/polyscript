@@ -1,1 +1,1 @@
-packages = ['unknown_package_name']
+packages = ['unknown_package_name', 'pillow', 'Pillow']
