@@ -12,18 +12,27 @@
 
             await (await workers["mpy"]).greetings()
             await (await workers["py"]).greetings()
+
+            # print(await (await workers["mpy"]).__export__)
+            print(list(await (await workers["mpy"]).test()))
         </script>
         <script type="micropython" worker name="mpy">
             def greetings():
                 print("micropython")
 
-            __export__ = ['greetings']
+            def test():
+                return __export__
+
+            __export__ = ['greetings', 'test']
         </script>
         <script type="pyodide" worker name="py">
             def greetings():
                 print("pyodide")
 
-            __export__ = ['greetings']
+            def test():
+                return __export__
+
+            __export__ = ['greetings', 'test']
         </script>
     </body>
 </html>
