@@ -14,11 +14,18 @@ export const workers = new Proxy(new Map, {
 // @issue https://github.com/pyscript/pyscript/issues/2106
 const ignore = new Set(['__dict__', 'constructor', 'get', 'has', 'includes', 'next', 'set', 'then']);
 
+const exportHandler = {
+  get: (target, prop) => {
+    const method = target[prop];
+    return prop === '__export__' ? method() : method;
+  }
+};
+
 export const workersHandler = new Proxy(Object.freeze({}), {
   // guard against forever pending Promises in Pyodide
   // @issue https://github.com/pyscript/pyscript/issues/2106
   get: (_, name) => (typeof name === 'string' && !ignore.has(name)) ?
-    workers[name].promise.then(w => w.sync) :
+    workers[name].promise.then(w => new Proxy(w.sync, exportHandler)) :
     void 0,
 });
 /* c8 ignore stop */

@@ -203,6 +203,7 @@ add('message', ({ data: { options, config: baseURL, configURL, code, hooks } }) 
                 if (list.length) {
                     interpreter.runPython([
                         `from ${polyscript} import xworker as ${workers}`,
+                        `${workers}.sync.__export__ = lambda:${JSON.stringify(list)}`,
                         ...list.map(util => `${workers}.sync.${util} = ${util}`),
                         `del ${workers}`,
                     ].join('\n'));
