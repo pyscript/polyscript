@@ -59,6 +59,7 @@ export const handleCustomType = async (node) => {
                 env,
                 onerror,
                 hooks,
+                parser,
             } = options;
 
             let error;
@@ -69,7 +70,7 @@ export const handleCustomType = async (node) => {
                     let url = configURL;
                     let cfg = node.getAttribute('config') || config || {};
                     if (!v || !cfg) {
-                        const [o, u] = resolveConfig(cfg, configURL);
+                        const [o, u] = resolveConfig(cfg, configURL, { parser });
                         cfg = await o;
                         url = u;
                         v = cfg.version || cfg.interpreter;
@@ -82,6 +83,7 @@ export const handleCustomType = async (node) => {
 
                     const xworker = XW.call(new Hook(null, hooks), worker, {
                         ...nodeInfo(node, type),
+                        parser,
                         configURL: url,
                         version: v,
                         type: runtime,
