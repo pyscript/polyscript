@@ -4,10 +4,11 @@ import { buffered } from './interpreter/_io.js';
 import { createProgress } from './interpreter/_utils.js';
 import { loadProgress as lP } from './interpreter/_python.js';
 import { registry } from './interpreters.js';
+import { toml } from './3rd-party.js';
 
 const loadProgress = (type, ...rest) => lP(registry.get(type), ...rest);
 
-export { buffered, createProgress, loadProgress };
+export { buffered, createProgress, loadProgress, toml };
 export * from './index.js';
 export * from './script-handler.js';
 export * from './utils.js';
