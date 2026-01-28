@@ -22,9 +22,9 @@ export const resolveConfig = (config, configURL, options = {}) => {
     if (type === 'json') {
         options = fetch(absolute).json();
     } else if (type === 'toml') {
+        const { parser } = options;
         options = fetch(absolute).text().then(async value => {
-            const { parser } = options;
-            const module = parser ? await import(parser) : { parse: toml };
+            const module = parser ? (await import(parser)) : { parse: toml };
             return (module.parse || module.default)(value);
         });
     } else if (type === 'string') {
