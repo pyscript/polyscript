@@ -28,7 +28,7 @@ const progress = createProgress('mpy');
 
 export default {
     type,
-    module: (version = '1.28.0-preview-230') =>
+    module: (version = '1.28.0-preview-233') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url, baseURL) {
         const { stderr, stdout, get } = stdio({
