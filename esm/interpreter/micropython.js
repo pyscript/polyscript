@@ -35,7 +35,19 @@ export default {
             stderr: buffered(console.error),
             stdout: buffered(console.log),
         });
+
+        // ordered extra variants: settrace, settrace-ulab, ulab
+        const variants = [];
+        if (config.debug) variants.push('settrace');
+        if (config.packages?.includes('ulab')) {
+            config.packages.splice(config.packages.indexOf('ulab'), 1);
+            variants.push('ulab');
+        }
+
         url = url.replace(/\.m?js$/, '.wasm');
+        for (const variant of variants)
+            url = url.replace(/\.wasm$/, `-${variant}.wasm`);
+
         progress('Loading MicroPython');
         const interpreter = await get(loadMicroPython({ linebuffer: false, stderr, stdout, url }));
         globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
