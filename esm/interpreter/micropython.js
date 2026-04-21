@@ -28,7 +28,7 @@ const progress = createProgress('mpy');
 
 export default {
     type,
-    module: (version = '1.28.0-preview-233') =>
+    module: (version = '1.28.0-6') =>
         `https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@${version}/micropython.mjs`,
     async engine({ loadMicroPython }, config, url, baseURL) {
         const { stderr, stdout, get } = stdio({
@@ -53,9 +53,9 @@ export default {
         globalThis[js_modules].set('-T-', this.transform.bind(this, interpreter));
         const py_imports = importPackages.bind(this, interpreter, baseURL);
         loader.set(interpreter, py_imports);
-        if (config.experimental_remote_packages) {
+        if (config.packages) {
             progress('Loading remote packages');
-            config.packages = await _remote_package(config);
+            config.packages = await _remote_package([config, baseURL]);
             progress('Loaded remote packages');
         }
         await loadProgress(this, progress, interpreter, config, baseURL);

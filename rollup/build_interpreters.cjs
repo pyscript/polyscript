@@ -10,8 +10,8 @@ const RUNTIMES_JS = resolve(join(__dirname, '..', 'esm', 'interpreters.js'));
 const createRuntimes = () => {
     const interpreters = [];
     for (const file of readdirSync(RUNTIMES_DIR)) {
-        // ignore files starting with underscore
-        if (/^[a-z].+?\.js/.test(file)) interpreters.push(file.slice(0, -3));
+        // ignore other files
+        if (/^(pyodide|micropython)\.js/.test(file)) interpreters.push(file.slice(0, -3));
     }
     // generate the output to append at the end of the file
     const output = [];

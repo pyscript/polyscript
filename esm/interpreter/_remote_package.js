@@ -26,7 +26,7 @@ const pollute = (t_js_modules, s_js_modules, name, pkg) => {
 };
 
 const remote = async (
-  config,
+  [config, baseURL],
   packages = config.packages,
   set = new Set(),
 ) => {
@@ -37,7 +37,8 @@ const remote = async (
     set.add(pkg);
     const isTOML = pkg.endsWith('.toml');
     if (isTOML || pkg.endsWith('.json')) {
-      const text = await fetch(pkg).text();
+      const { href } = new URL(pkg, baseURL);
+      const text = await fetch(href).text();
       const {
         name,
         files,
@@ -52,7 +53,7 @@ const remote = async (
 
       if (packages) {
         // process nested packages from the remote config
-        repackaged.push(...(await remote(config, packages, set)));
+        repackaged.push(...(await remote([config, href], packages, set)));
       }
 
       if (js_modules) {
