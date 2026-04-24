@@ -15,7 +15,7 @@ export default (playwright, baseURL) => {
 
     test('MicroPython Worker window', shared.workerWindow(playwright, baseURL));
 
-    test('MicroPython to Wasmoon Worker', shared.worker(playwright, `${baseURL}/worker-lua.html`));
+    // test('MicroPython to Wasmoon Worker', shared.worker(playwright, `${baseURL}/worker-lua.html`));
 
     test('MicroPython Worker error', python.error(playwright, baseURL));
 

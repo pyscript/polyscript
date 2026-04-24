@@ -92,11 +92,9 @@ export default {
                 }
                 progress('Loaded Packages Graph');
             }
-            if (config.experimental_remote_packages) {
-                progress('Loading remote packages');
-                config.packages = (packages = await _remote_package(config, packages));
-                progress('Loaded remote packages');
-            }
+            progress('Loading remote packages');
+            config.packages = (packages = await _remote_package([config, baseURL], packages));
+            progress('Loaded remote packages');
         }
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
