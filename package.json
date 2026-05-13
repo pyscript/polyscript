@@ -1,6 +1,6 @@
 {
     "name": "polyscript",
-    "version": "0.20.12",
+    "version": "0.20.13",
     "description": "PyScript single core to rule them all",
     "main": "./esm/index.js",
     "types": "./types/polyscript/esm/index.d.ts",
@@ -58,10 +58,10 @@
         "@zip.js/zip.js": "^2.8.26",
         "c8": "^11.0.0",
         "chokidar": "^5.0.0",
-        "eslint": "^10.2.1",
-        "globals": "^17.5.0",
+        "eslint": "^10.3.0",
+        "globals": "^17.6.0",
         "linkedom": "^0.18.12",
-        "rollup": "^4.60.2",
+        "rollup": "^4.60.3",
         "static-handler": "^0.5.3",
         "typescript": "^5.9.3"
     },
@@ -91,7 +91,7 @@
     "dependencies": {
         "@webreflection/fetch": "^0.2.0",
         "@webreflection/idb-map": "^0.3.2",
-        "@webreflection/utils": "^0.1.2",
+        "@webreflection/utils": "^0.2.12",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
         "coincident": "^4.1.1",
@@ -101,6 +101,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-pal7r7eqBWDyLBBwneoKNW0A2MBNohyGdUH5T+//DUk="
+        "blob": "sha256-yJJtUtrxQBo5SC2RTr4LgVEi2/uWPDn8mloFKec8ncg="
     }
 }
