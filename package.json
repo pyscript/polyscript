@@ -52,18 +52,18 @@
         "@eslint/eslintrc": "^3.3.5",
         "@eslint/js": "^10.0.1",
         "@node-loader/import-maps": "^2.0.0",
-        "@playwright/test": "^1.59.1",
+        "@playwright/test": "^1.60.0",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-terser": "^1.0.0",
         "@zip.js/zip.js": "^2.8.26",
         "c8": "^11.0.0",
         "chokidar": "^5.0.0",
-        "eslint": "^10.3.0",
+        "eslint": "^10.4.1",
         "globals": "^17.6.0",
         "linkedom": "^0.18.12",
-        "rollup": "^4.60.3",
+        "rollup": "^4.61.1",
         "static-handler": "^0.5.3",
-        "typescript": "^5.9.3"
+        "typescript": "^6.0.3"
     },
     "type": "module",
     "module": "./dist/index.js",
@@ -91,7 +91,7 @@
     "dependencies": {
         "@webreflection/fetch": "^0.2.0",
         "@webreflection/idb-map": "^0.3.2",
-        "@webreflection/utils": "^0.2.12",
+        "@webreflection/utils": "^0.2.22",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.2",
         "coincident": "^4.1.1",
@@ -101,6 +101,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-yJJtUtrxQBo5SC2RTr4LgVEi2/uWPDn8mloFKec8ncg="
+        "blob": "sha256-pIIGxzR4doBTb6C2t9k2lAErbGb8T2OxnPRDYjqgk1c="
     }
 }
