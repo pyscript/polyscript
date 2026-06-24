@@ -4,22 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script type="module">
-      import { serialize } from 'https://esm.run/@ungap/serialization-registry';
-      import '../converter.js';
-
-      globalThis.test = arg => {
-        console.log(...serialize(arg));
-      };
-
-      const base = 'https://cdn.jsdelivr.net/npm/@micropython/micropython-webassembly-pyscript@latest';
-      const { loadMicroPython } = await import(`${base}/micropython.mjs`);
-      const interpreter = await loadMicroPython({ url: `${base}/micropython.wasm` });
       const { textContent } = document.querySelector('script[type=micropython]');
-      interpreter.runPythonAsync(textContent);
+      const worker = new Worker('./worker.js', { type: 'module' });
+      worker.postMessage(textContent);
+      let i = 0;
+      (function idle() {
+        requestAnimationFrame(idle);
+        document.body.textContent = i++;
+      }());
     </script>
     <script type="micropython" async>
-      import js
-      js.test([{'a': 123}, {'a': 456}])
+      import pyodide
+
+      print("importing pyodide.sys")
+
+      sys = await pyodide.sys
+      print(sys.version)
+
+      print("---")
+
+      sys = await pyodide.sys
+      print(sys.version)
+
+      print("---")
+
+      pandas = await pyodide.pandas
+      print(pandas.__version__)
     </script>
   </head>
 </html>
