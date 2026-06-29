@@ -52,16 +52,16 @@
         "@eslint/eslintrc": "^3.3.5",
         "@eslint/js": "^10.0.1",
         "@node-loader/import-maps": "^2.0.0",
-        "@playwright/test": "^1.60.0",
+        "@playwright/test": "^1.61.1",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-terser": "^1.0.0",
         "@zip.js/zip.js": "^2.8.26",
         "c8": "^11.0.0",
         "chokidar": "^5.0.0",
-        "eslint": "^10.4.1",
-        "globals": "^17.6.0",
+        "eslint": "^10.6.0",
+        "globals": "^17.7.0",
         "linkedom": "^0.18.12",
-        "rollup": "^4.61.1",
+        "rollup": "^4.62.2",
         "static-handler": "^0.5.3",
         "typescript": "^6.0.3"
     },
@@ -91,9 +91,9 @@
     "dependencies": {
         "@webreflection/fetch": "^0.2.0",
         "@webreflection/idb-map": "^0.3.2",
-        "@webreflection/utils": "^0.2.22",
+        "@webreflection/utils": "^0.3.14",
         "basic-devtools": "^0.1.6",
-        "codedent": "^0.1.2",
+        "codedent": "^0.1.3",
         "coincident": "^4.1.1",
         "html-escaper": "^3.0.3",
         "reflected-ffi": "^0.7.2",
@@ -101,6 +101,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-tN7+11LM6xIabhM7jXzocXoPhEr6maOBKBqWouE8kdQ="
+        "blob": "sha256-AvnfLxMs9pxo+uvouZXrM0YTtuWqwh/hHqjwxMGsqcw="
     }
 }
