@@ -232,4 +232,16 @@ async function importPackages(packages, storage, save = false) {
     }
     micropip.destroy();
 }
+interpreter.runPython([
+    'import builtins, asyncio, inspect',
+    'inputs = input',
+    'def _input(prompt=""):',
+    '    """Asks for user input"""',
+    '    result = inputs(str(prompt))',
+    '    if inspect.isawaitable(result):',
+    '        return asyncio.run(result)',
+    '    else:',
+    '        return result',
+    'builtins.input = _input'
+].join(';'), { globals: interpreter.toPy({}) });
 /* c8 ignore stop */
