@@ -95,6 +95,15 @@ export default {
             progress('Loading remote packages');
             config.packages = (packages = await _remote_package([config, baseURL], packages));
             progress('Loaded remote packages');
+            // Detect local wheels: packages that are paths (./ ../ / emfs:// file://)
+            // or URLs ending in .whl. When local wheels are present, disable IndexedDB
+            // caching unless the user explicitly sets packages_cache = "all".
+            // See https://github.com/pyscript/pyscript/issues/2282
+            if (packages && packages.some(pkg => /^(?:\.{1,2}\/|\/|emfs:\/\/|file:\/\/)/.test(pkg) || /\.whl(?:\?|$)/.test(pkg))) {
+                if (config.packages_cache !== 'all') {
+                    config.packages_cache = 'never';
+                }
+            }
         }
         progress('Loading Storage');
         const indexURL = url.slice(0, url.lastIndexOf('/'));
