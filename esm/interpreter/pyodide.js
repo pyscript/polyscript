@@ -99,7 +99,7 @@ export default {
             // or URLs ending in .whl. When local wheels are present, disable IndexedDB
             // caching unless the user explicitly sets packages_cache = "all".
             // See https://github.com/pyscript/pyscript/issues/2282
-            if (packages && packages.some(pkg => /^(?:\.{1,2}\/|\/|emfs:\/\/|file:\/\/)/.test(pkg) || /\.whl(?:\?|$)/.test(pkg))) {
+            if (packages && packages.some(pkg => /^(?:\.{1,2}\/|\/|(?:emfs|file):\/\/)/.test(pkg) || /\.whl(?:\?|$)/.test(pkg))) {
                 if (config.packages_cache !== 'all') {
                     config.packages_cache = 'never';
                 }
