@@ -6,7 +6,7 @@
     "types": "./types/polyscript/esm/index.d.ts",
     "scripts": {
         "server": "npx static-handler --coi .",
-        "build": "export ESLINT_USE_FLAT_CONFIG=false; npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && eslint esm/ && npm run rollup:integrations && npm run build:docs",
+        "build": "npm run build:3rd-party && rm -rf dist && mkdir -p esm/python && node rollup/build_python.cjs && npm run rollup:xworker && npm run rollup:core && oxlint esm/ && npm run rollup:integrations && npm run build:docs",
         "build:graph": "node rollup/build_pyodide_graph.js",
         "build:3rd-party": "node rollup/3rd-party.cjs",
         "build:docs": "mv docs/coi.js ./; rm -f docs/*.{js,map}; cp dist/* docs/; rm -f docs/_template.js; mv coi.js docs/",
@@ -49,8 +49,6 @@
     "author": "Anaconda Inc.",
     "license": "APACHE-2.0",
     "devDependencies": {
-        "@eslint/eslintrc": "^3.3.6",
-        "@eslint/js": "^10.0.1",
         "@node-loader/import-maps": "^2.0.0",
         "@playwright/test": "^1.62.0",
         "@rollup/plugin-node-resolve": "^16.0.3",
@@ -58,9 +56,8 @@
         "@zip.js/zip.js": "^2.8.34",
         "c8": "^12.0.0",
         "chokidar": "^5.0.0",
-        "eslint": "^10.8.0",
-        "globals": "^17.8.0",
         "linkedom": "^0.18.13",
+        "oxlint": "^1.76.0",
         "rollup": "^4.62.3",
         "static-handler": "^0.5.3",
         "typescript": "^7.0.2"
@@ -101,6 +98,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-zTawdrFpi+WxDJWO87mS9GIgIJFy7B6qgsPQJoU1CIs="
+        "blob": "sha256-KUBdo+qYz4erneYkW/7ADPBhHENUvyXHx6rg8q5Rmz8="
     }
 }

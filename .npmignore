@@ -1,9 +1,8 @@
 .DS_Store
 .nyc_output
-.eslintrc.json
+.oxlintrc.json
 .github/
 .travis.yml
-.eslintrc.json
 *.log
 coverage/
 micropython/
