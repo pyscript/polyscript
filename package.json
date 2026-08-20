@@ -53,11 +53,11 @@
         "@playwright/test": "^1.62.1",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-terser": "^1.0.0",
-        "@zip.js/zip.js": "^2.8.51",
+        "@zip.js/zip.js": "^2.8.53",
         "c8": "^12.0.0",
         "chokidar": "^5.0.0",
         "linkedom": "^0.18.13",
-        "oxlint": "^1.78.0",
+        "oxlint": "^1.79.0",
         "rollup": "^4.62.4",
         "static-handler": "^0.5.3",
         "typescript": "^7.0.2"
@@ -88,7 +88,7 @@
     "dependencies": {
         "@webreflection/fetch": "^0.2.0",
         "@webreflection/idb-map": "^0.3.2",
-        "@webreflection/utils": "^0.4.13",
+        "@webreflection/utils": "^0.4.16",
         "basic-devtools": "^0.1.6",
         "codedent": "^0.1.3",
         "coincident": "^4.1.1",
@@ -98,6 +98,6 @@
         "to-json-callback": "^0.1.1"
     },
     "worker": {
-        "blob": "sha256-uCIX5a241v5eTBvL5YqrGdWgqyQj8zvaG7cJjttoosg="
+        "blob": "sha256-CyjAwksf6tfZaxYtlchntV0QpQ/kioxHm3j0GxEIk0I="
     }
 }
