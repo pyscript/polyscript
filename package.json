@@ -25,6 +25,7 @@
         "size:module": "echo module is $(cat dist/index.js | brotli | wc -c) bytes once compressed",
         "size:worker": "echo worker is $(cat esm/worker/xworker.js | brotli | wc -c) bytes once compressed",
         "ts": "rm -rf types && tsc -p .",
+        "update:pyodide": "npm run version:pyodide && node rollup/update_versions.cjs && npm run build && npm run test",
         "update:interpreters": "npm run version:pyodide && npm run version:wasmoon && npm run version:webr && npm run version:micropython && npm run version:ruby-wasm-wasi && node rollup/update_versions.cjs && npm run build && npm run test",
         "version:micropython": "npm view @micropython/micropython-webassembly-pyscript version>versions/micropython",
         "version:pyodide": "npm view pyodide version>versions/pyodide",
